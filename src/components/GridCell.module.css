@@ -1,0 +1,154 @@
+.emptyCell {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  background: #f9fafb;
+  border: 2px dashed #d1d5db;
+  border-radius: 8px;
+  cursor: pointer;
+  min-height: 110px;
+  transition: background 0.15s, border-color 0.15s;
+  padding: 8px;
+}
+
+.emptyCell:hover {
+  background: #eff6ff;
+  border-color: #3b82f6;
+}
+
+.addIcon {
+  font-size: 1.5rem;
+  color: #9ca3af;
+  line-height: 1;
+}
+
+.positionLabel {
+  font-size: 0.65rem;
+  color: #d1d5db;
+}
+
+.occupiedCell {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  background: #fff;
+  border: 1px solid #e5e7eb;
+  border-radius: 8px;
+  padding: 8px 6px;
+  min-height: 110px;
+}
+
+.iconButton {
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 2px;
+  border-radius: 6px;
+  transition: background 0.15s;
+}
+
+.iconButton:hover {
+  background: #f3f4f6;
+}
+
+.buildingIcon {
+  font-size: 1.75rem;
+  line-height: 1;
+  display: block;
+}
+
+.buildingName {
+  font-size: 0.65rem;
+  font-weight: 600;
+  color: #374151;
+  text-align: center;
+  line-height: 1.2;
+  max-width: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.levelLabel {
+  font-size: 0.6rem;
+  color: #6b7280;
+  background: #f3f4f6;
+  padding: 1px 5px;
+  border-radius: 10px;
+}
+
+.progressBarWrapper {
+  width: 100%;
+  height: 4px;
+  background: #e5e7eb;
+  border-radius: 2px;
+  overflow: hidden;
+}
+
+.progressBar {
+  height: 100%;
+  border-radius: 2px;
+  transition: width 0.2s ease;
+}
+
+.timerRow {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  width: 100%;
+  justify-content: center;
+}
+
+.timeRemaining {
+  font-size: 0.7rem;
+  color: #6b7280;
+}
+
+.startButton,
+.finishButton,
+.completeButton {
+  font-size: 0.65rem;
+  font-weight: 600;
+  padding: 3px 8px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background 0.15s;
+}
+
+.startButton {
+  background: #3b82f6;
+  color: #fff;
+  width: 100%;
+}
+
+.startButton:hover:not(:disabled) {
+  background: #2563eb;
+}
+
+.startButton:disabled {
+  background: #9ca3af;
+  cursor: not-allowed;
+}
+
+.finishButton {
+  background: #f59e0b;
+  color: #fff;
+}
+
+.finishButton:hover {
+  background: #d97706;
+}
+
+.completeButton {
+  background: #22c55e;
+  color: #fff;
+  width: 100%;
+}
+
+.completeButton:hover {
+  background: #16a34a;
+}
