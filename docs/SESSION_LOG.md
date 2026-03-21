@@ -1,5 +1,24 @@
 # Session Log
 
+## Session 2.0 — 2026-03-21
+### Goals
+- Update session log and start 2.0 session
+- Remove "Tap to start" idle label from building cells
+
+### What got done
+- **Chore:** Removed the "Tap to start" idle label shown on unstarted building cells — buildings now auto-start on placement, so the label is no longer needed
+- **Chore:** Updated SESSION_LOG.md with latest changes and started 2.0 session
+
+### What's broken/missing
+- No prestige system
+- No building detail/info panel (icon click is wired but renders nothing)
+
+### Next session priorities
+- Building detail modal (show full stats, upgrade cost, production at next level)
+- Prestige system
+
+---
+
 ## Session 1.2 — 2026-03-20 → 2026-03-21
 ### Goals
 - Bug fixes and QoL improvements to the building timer and placement flow
