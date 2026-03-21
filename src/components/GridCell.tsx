@@ -117,9 +117,7 @@ function OccupiedCell({
         <span className={styles.completeLabel}>{'✔ Done'}</span>
       ) : timerState.hasStarted ? (
         <span className={styles.timeRemaining}>{formatTime(timerState.timeRemaining)}</span>
-      ) : (
-        <span className={styles.idleLabel}>{'Tap to start'}</span>
-      )}
+      ) : null}
 
       {showDetail && (
         <BuildingDetail
