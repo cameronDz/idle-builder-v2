@@ -1,6 +1,7 @@
 import type { BuildingConfig } from '../config/buildings';
-import type { BuildingInstance, BuildingTimer } from '../types/game';
+import type { BuildingInstance, BuildingTimer, Resources } from '../types/game';
 import { formatTime } from '../utils/timeUtils';
+import { getUpgradeCost, formatCost, hasAnyCost } from '../utils/buildingUtils';
 import styles from './BuildingDetail.module.css';
 
 interface BuildingDetailProps {
@@ -8,6 +9,7 @@ interface BuildingDetailProps {
   instance: BuildingInstance;
   timerState: BuildingTimer;
   isBuildLimitReached: boolean;
+  canAfford: (cost: Resources) => boolean;
   onStart: () => void;
   onFinish: () => void;
   onAcknowledge: () => void;
@@ -19,12 +21,18 @@ export function BuildingDetail({
   instance,
   timerState,
   isBuildLimitReached,
+  canAfford,
   onStart,
   onFinish,
   onAcknowledge,
   onClose,
 }: BuildingDetailProps) {
   const level = timerState.level;
+
+  const upgradeCost = getUpgradeCost(config, level);
+  const upgradeCostStr = formatCost(upgradeCost);
+  const hasUpgradeCost = hasAnyCost(upgradeCost);
+  const canAffordUpgrade = !hasUpgradeCost || canAfford(upgradeCost);
 
   const currentIcon =
     level >= 5 ? config.ultraIcon : level >= 2 ? config.enhancedIcon : config.icon;
@@ -85,6 +93,15 @@ export function BuildingDetail({
             </span>
           </div>
 
+          {!timerState.hasStarted && !timerState.isComplete && hasUpgradeCost && (
+            <div className={styles.row}>
+              <span className={styles.label}>{'Upgrade Cost'}</span>
+              <span className={`${styles.value} ${canAffordUpgrade ? '' : styles.costUnaffordable}`}>
+                {upgradeCostStr}
+              </span>
+            </div>
+          )}
+
           {(timerState.hasStarted || timerState.isComplete) && (
             <div className={styles.progressBarWrapper}>
               <div
@@ -110,8 +127,14 @@ export function BuildingDetail({
             <button
               className={styles.startButton}
               onClick={onStart}
-              disabled={isBuildLimitReached}
-              title={isBuildLimitReached ? 'Max concurrent builds reached' : 'Start construction'}
+              disabled={isBuildLimitReached || !canAffordUpgrade}
+              title={
+                isBuildLimitReached
+                  ? 'Max concurrent builds reached'
+                  : !canAffordUpgrade
+                    ? 'Not enough resources'
+                    : 'Start construction'
+              }
             >
               {'▶ Start Construction'}
             </button>
