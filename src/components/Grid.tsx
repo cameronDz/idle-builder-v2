@@ -1,24 +1,42 @@
 import { useState } from 'react';
-import { useGridSystem } from '../hooks/useGridSystem';
 import { GridCell } from './GridCell';
 import { BuildingSelector } from './BuildingSelector';
-import type { GridPosition, BuildingTimer } from '../types/game';
+import type { GridCell as GridCellType, GridPosition, BuildingInstance, BuildingTimer, Resources } from '../types/game';
+import type { BuildingConfig } from '../config/buildings';
 import styles from './Grid.module.css';
 
-export function Grid() {
-  const {
-    grid,
-    buildingInstances,
-    placeBuilding,
-    updateBuildingInstance,
-    clearGrid,
-    getBuildingConfig,
-    getBuildingCount,
-    getBuildingsBeingBuiltCount,
-    getMaxConcurrentBuilds,
-    isBuildingLimitReached,
-  } = useGridSystem();
+interface GridProps {
+  // From useGridSystem
+  grid: GridCellType[][];
+  buildingInstances: BuildingInstance[];
+  placeBuilding: (position: GridPosition, buildingTypeId: string) => BuildingInstance | null;
+  updateBuildingInstance: (instanceId: string, timerState: BuildingTimer) => void;
+  clearGrid: () => void;
+  getBuildingConfig: (buildingTypeId: string) => BuildingConfig | undefined;
+  getBuildingCount: (buildingTypeId: string) => number;
+  getBuildingsBeingBuiltCount: () => number;
+  getMaxConcurrentBuilds: () => number;
+  isBuildingLimitReached: () => boolean;
+  // From useResources
+  resources: Resources;
+  canAfford: (cost: Resources) => boolean;
+  spend: (cost: Resources) => boolean;
+}
 
+export function Grid({
+  grid,
+  buildingInstances,
+  placeBuilding,
+  updateBuildingInstance,
+  clearGrid,
+  getBuildingConfig,
+  getBuildingCount,
+  getBuildingsBeingBuiltCount,
+  getMaxConcurrentBuilds,
+  isBuildingLimitReached,
+  canAfford,
+  spend,
+}: GridProps) {
   const [selectorPosition, setSelectorPosition] = useState<GridPosition | null>(null);
   const [pendingDetailId, setPendingDetailId] = useState<string | null>(null);
 
@@ -33,6 +51,11 @@ export function Grid() {
 
   const handleBuildingSelect = (buildingTypeId: string) => {
     if (!selectorPosition) return;
+    const config = getBuildingConfig(buildingTypeId);
+    if (!config) return;
+    const { x, y } = selectorPosition;
+    if (grid[y]?.[x]?.isOccupied) return;
+    if (!spend(config.cost)) return;
     placeBuilding(selectorPosition, buildingTypeId);
     setSelectorPosition(null);
   };
@@ -97,6 +120,7 @@ export function Grid() {
           onSelect={handleBuildingSelect}
           onCancel={handleSelectorCancel}
           getBuildingCount={getBuildingCount}
+          canAfford={canAfford}
         />
       )}
 

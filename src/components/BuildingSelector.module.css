@@ -109,6 +109,15 @@
   color: #374151;
 }
 
+.cantAfford {
+  color: #dc2626;
+}
+
+.cantAffordLabel {
+  font-size: 0.75rem;
+  font-style: italic;
+}
+
 .count {
   font-size: 0.85rem;
   color: #6b7280;
