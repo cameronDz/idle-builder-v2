@@ -45,7 +45,6 @@ function OccupiedCell({
       hasStarted: true,
     };
     syncAndUpdate(next);
-    setShowDetail(false);
   };
 
   const handleFinish = () => {
@@ -58,7 +57,6 @@ function OccupiedCell({
       timeRemaining: 0,
     };
     syncAndUpdate(next);
-    setShowDetail(false);
   };
 
   const handleAcknowledge = () => {
@@ -71,7 +69,6 @@ function OccupiedCell({
       timeRemaining: config.duration,
     };
     syncAndUpdate(next);
-    setShowDetail(false);
   };
 
   const progressColor =
