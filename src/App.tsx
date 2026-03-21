@@ -1,8 +1,15 @@
 import { Grid } from './components/Grid';
 import { ResourceBar } from './components/ResourceBar';
+import { useResources } from './hooks/useResources';
+import { useProductionTick } from './hooks/useProductionTick';
+import { useGridSystem } from './hooks/useGridSystem';
 import styles from './App.module.css';
 
 function App() {
+  const { resources, canAfford, spend, earn } = useResources();
+  const gridSystem = useGridSystem();
+  const { productionPerSecond } = useProductionTick(gridSystem.buildingInstances, earn);
+
   return (
     <div className={styles.app}>
       <header className={styles.header}>
@@ -10,11 +17,16 @@ function App() {
         <p className={styles.subtitle}>{'Settlement building idle game with resource production'}</p>
       </header>
 
-      <ResourceBar />
+      <ResourceBar resources={resources} productionPerSecond={productionPerSecond} />
 
       <main className={styles.main}>
         <div className={styles.container}>
-          <Grid />
+          <Grid
+            {...gridSystem}
+            resources={resources}
+            canAfford={canAfford}
+            spend={spend}
+          />
         </div>
       </main>
     </div>

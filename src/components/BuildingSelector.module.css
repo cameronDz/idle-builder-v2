@@ -109,6 +109,10 @@
   color: #374151;
 }
 
+.costUnaffordable {
+  color: #ef4444;
+}
+
 .count {
   font-size: 0.85rem;
   color: #6b7280;
