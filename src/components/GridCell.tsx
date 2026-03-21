@@ -1,4 +1,6 @@
+import { useState } from 'react';
 import { useTimer } from '../hooks/useTimer';
+import { BuildingDetail } from './BuildingDetail';
 import type { BuildingInstance, BuildingTimer } from '../types/game';
 import type { BuildingConfig } from '../config/buildings';
 import { formatTime } from '../utils/timeUtils';
@@ -9,7 +11,6 @@ interface OccupiedCellProps {
   config: BuildingConfig;
   isBuildLimitReached: boolean;
   onBuildingUpdate: (instanceId: string, timerState: BuildingTimer) => void;
-  onBuildingIconClick: (instanceId: string) => void;
 }
 
 function OccupiedCell({
@@ -17,12 +18,12 @@ function OccupiedCell({
   config,
   isBuildLimitReached,
   onBuildingUpdate,
-  onBuildingIconClick,
 }: OccupiedCellProps) {
   const { timerState, startTimer, completeTimer, acknowledgeComplete } = useTimer(
     config.duration,
     instance.id
   );
+  const [showDetail, setShowDetail] = useState(false);
 
   const syncAndUpdate = (updatedState: BuildingTimer) => {
     onBuildingUpdate(instance.id, updatedState);
@@ -35,6 +36,7 @@ function OccupiedCell({
       hasStarted: true,
     };
     syncAndUpdate(next);
+    setShowDetail(false);
   };
 
   const handleFinish = () => {
@@ -47,6 +49,7 @@ function OccupiedCell({
       timeRemaining: 0,
     };
     syncAndUpdate(next);
+    setShowDetail(false);
   };
 
   const handleAcknowledge = () => {
@@ -59,6 +62,7 @@ function OccupiedCell({
       timeRemaining: config.duration,
     };
     syncAndUpdate(next);
+    setShowDetail(false);
   };
 
   const progressColor =
@@ -93,7 +97,7 @@ function OccupiedCell({
     <div className={styles.occupiedCell}>
       <button
         className={styles.iconButton}
-        onClick={() => onBuildingIconClick(instance.id)}
+        onClick={() => setShowDetail(true)}
         title={`${config.name} — click for details`}
       >
         <span className={styles.buildingIcon}>{currentIcon}</span>
@@ -110,27 +114,24 @@ function OccupiedCell({
       </div>
 
       {timerState.isComplete ? (
-        <button className={styles.completeButton} onClick={handleAcknowledge}>
-          {'✔ Complete'}
-        </button>
+        <span className={styles.completeLabel}>{'✔ Done'}</span>
       ) : timerState.hasStarted ? (
-        <div className={styles.timerRow}>
-          <span className={styles.timeRemaining}>{formatTime(timerState.timeRemaining)}</span>
-          {timerState.timeRemaining <= 30000 && (
-            <button className={styles.finishButton} onClick={handleFinish}>
-              {'Finish'}
-            </button>
-          )}
-        </div>
+        <span className={styles.timeRemaining}>{formatTime(timerState.timeRemaining)}</span>
       ) : (
-        <button
-          className={styles.startButton}
-          onClick={handleStart}
-          disabled={isBuildLimitReached}
-          title={isBuildLimitReached ? 'Max concurrent builds reached' : 'Start construction'}
-        >
-          {'▶ Start'}
-        </button>
+        <span className={styles.idleLabel}>{'Tap to start'}</span>
+      )}
+
+      {showDetail && (
+        <BuildingDetail
+          config={config}
+          instance={instance}
+          timerState={timerState}
+          isBuildLimitReached={isBuildLimitReached}
+          onStart={handleStart}
+          onFinish={handleFinish}
+          onAcknowledge={handleAcknowledge}
+          onClose={() => setShowDetail(false)}
+        />
       )}
     </div>
   );
@@ -145,7 +146,6 @@ interface GridCellProps {
   isBuildLimitReached: boolean;
   onEmptyCellClick: (position: { x: number; y: number }) => void;
   onBuildingUpdate: (instanceId: string, timerState: BuildingTimer) => void;
-  onBuildingIconClick: (instanceId: string) => void;
   getBuildingConfig: (buildingTypeId: string) => BuildingConfig | undefined;
 }
 
@@ -154,7 +154,6 @@ export function GridCell({
   isBuildLimitReached,
   onEmptyCellClick,
   onBuildingUpdate,
-  onBuildingIconClick,
   getBuildingConfig,
 }: GridCellProps) {
   if (!cell.isOccupied || !cell.buildingInstance) {
@@ -179,7 +178,6 @@ export function GridCell({
       config={config}
       isBuildLimitReached={isBuildLimitReached}
       onBuildingUpdate={onBuildingUpdate}
-      onBuildingIconClick={onBuildingIconClick}
     />
   );
 }

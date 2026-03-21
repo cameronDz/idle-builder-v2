@@ -34,12 +34,12 @@ export function Grid({
   getActiveOrCompleteCount,
   getMaxConcurrentBuilds,
   isBuildingLimitReached,
+  resources,
   canAfford,
   spend,
   resetResources,
 }: GridProps) {
   const [selectorPosition, setSelectorPosition] = useState<GridPosition | null>(null);
-  const [pendingDetailId, setPendingDetailId] = useState<string | null>(null);
 
   const totalCells = grid.length * (grid[0]?.length ?? 0);
   const placedCount = buildingInstances.length;
@@ -66,11 +66,6 @@ export function Grid({
 
   const handleBuildingUpdate = (instanceId: string, timerState: BuildingTimer) => {
     updateBuildingInstance(instanceId, timerState);
-  };
-
-  const handleBuildingIconClick = (instanceId: string) => {
-    setPendingDetailId(instanceId);
-    console.log('Building detail requested for:', instanceId);
   };
 
   const handleClearGrid = () => {
@@ -116,7 +111,6 @@ export function Grid({
               isBuildLimitReached={buildLimitReached}
               onEmptyCellClick={handleEmptyCellClick}
               onBuildingUpdate={handleBuildingUpdate}
-              onBuildingIconClick={handleBuildingIconClick}
               getBuildingConfig={getBuildingConfig}
             />
           ))
@@ -129,10 +123,9 @@ export function Grid({
           onCancel={handleSelectorCancel}
           getBuildingCount={getBuildingCount}
           canAfford={canAfford}
+          resources={resources}
         />
       )}
-
-      {pendingDetailId && null}
     </section>
   );
 }

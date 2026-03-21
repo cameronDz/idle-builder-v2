@@ -9,17 +9,20 @@ interface BuildingSelectorProps {
   onCancel: () => void;
   getBuildingCount: (buildingTypeId: string) => number;
   canAfford: (cost: Resources) => boolean;
+  resources: Resources;
 }
 
 function BuildingCard({
   config,
   count,
   affordable,
+  resources,
   onSelect,
 }: {
   config: BuildingConfig;
   count: number;
   affordable: boolean;
+  resources: Resources;
   onSelect: () => void;
 }) {
   const isMaxed = count >= config.maxCount;
@@ -32,6 +35,13 @@ function BuildingCard({
   if (config.production.ore > 0) productionParts.push(`🔩${config.production.ore}`);
   if (config.production.food > 0) productionParts.push(`🍖${config.production.food}`);
   const productionStr = productionParts.length > 0 ? productionParts.join(' ') + '/s' : null;
+
+  const isFree =
+    config.cost.gold === 0 &&
+    config.cost.wood === 0 &&
+    config.cost.stone === 0 &&
+    config.cost.ore === 0 &&
+    config.cost.food === 0;
 
   return (
     <button
@@ -50,13 +60,33 @@ function BuildingCard({
       <div className={styles.info}>
         <span className={styles.name}>{config.name}</span>
         <span className={styles.duration}>{formatTime(config.duration)}</span>
-        <span className={`${styles.cost} ${!affordable ? styles.costUnaffordable : ''}`}>
-          {config.cost.gold > 0 && `💰${config.cost.gold} `}
-          {config.cost.wood > 0 && `🌲${config.cost.wood} `}
-          {config.cost.stone > 0 && `🪨${config.cost.stone} `}
-          {config.cost.ore > 0 && `🔩${config.cost.ore} `}
-          {config.cost.food > 0 && `🍖${config.cost.food} `}
-          {config.cost.gold === 0 && config.cost.wood === 0 && config.cost.stone === 0 && config.cost.ore === 0 && config.cost.food === 0 && 'Free'}
+        <span className={styles.cost}>
+          {config.cost.gold > 0 && (
+            <span className={resources.gold < config.cost.gold ? styles.costUnaffordable : ''}>
+              {`💰${config.cost.gold} `}
+            </span>
+          )}
+          {config.cost.wood > 0 && (
+            <span className={resources.wood < config.cost.wood ? styles.costUnaffordable : ''}>
+              {`🌲${config.cost.wood} `}
+            </span>
+          )}
+          {config.cost.stone > 0 && (
+            <span className={resources.stone < config.cost.stone ? styles.costUnaffordable : ''}>
+              {`🪨${config.cost.stone} `}
+            </span>
+          )}
+          {config.cost.ore > 0 && (
+            <span className={resources.ore < config.cost.ore ? styles.costUnaffordable : ''}>
+              {`🔩${config.cost.ore} `}
+            </span>
+          )}
+          {config.cost.food > 0 && (
+            <span className={resources.food < config.cost.food ? styles.costUnaffordable : ''}>
+              {`🍖${config.cost.food} `}
+            </span>
+          )}
+          {isFree && 'Free'}
         </span>
         {productionStr && <span className={styles.production}>{`+${productionStr}`}</span>}
       </div>
@@ -67,7 +97,7 @@ function BuildingCard({
   );
 }
 
-export function BuildingSelector({ onSelect, onCancel, getBuildingCount, canAfford }: BuildingSelectorProps) {
+export function BuildingSelector({ onSelect, onCancel, getBuildingCount, canAfford, resources }: BuildingSelectorProps) {
   return (
     <div className={styles.overlay} onClick={onCancel}>
       <div className={styles.modal} onClick={e => e.stopPropagation()}>
@@ -82,6 +112,7 @@ export function BuildingSelector({ onSelect, onCancel, getBuildingCount, canAffo
               config={config}
               count={getBuildingCount(config.id)}
               affordable={canAfford(config.cost)}
+              resources={resources}
               onSelect={() => onSelect(config.id)}
             />
           ))}
