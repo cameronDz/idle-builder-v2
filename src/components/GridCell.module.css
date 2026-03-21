@@ -115,6 +115,18 @@
   color: #6b7280;
 }
 
+.idleLabel {
+  font-size: 0.65rem;
+  color: #9ca3af;
+  font-style: italic;
+}
+
+.completeLabel {
+  font-size: 0.65rem;
+  font-weight: 700;
+  color: #22c55e;
+}
+
 .startButton,
 .finishButton,
 .completeButton {
