@@ -9,10 +9,10 @@
 ### What got done
 - **Chore:** Removed the "Tap to start" idle label shown on unstarted building cells — buildings now auto-start on placement, so the label is no longer needed
 - **Chore:** Updated SESSION_LOG.md with latest changes and started 2.0 session
-- **Bug fix:** ResourceBar mobile overflow — three layout options were evaluated and Option 1 was activated:
-  - **Option 1 (active):** `flex-wrap: wrap` — on screens ≤600 px resources wrap onto a second row and the `|` separators are hidden; all values are always visible
+- **Bug fix:** ResourceBar mobile overflow — three layout options were evaluated; **Option 3 is now active**:
+  - **Option 1 (commented in CSS):** `flex-wrap: wrap` — on screens ≤600 px resources wrap onto a second row and the `|` separators are hidden; all values are always visible
   - **Option 2 (commented in CSS):** Horizontal scroll — keeps the single row and adds `overflow-x: auto`; user swipes to see all resources; no height change but resources hidden until scrolled
-  - **Option 3 (commented in CSS):** Scale-down — `font-size: 0.75rem` + tighter gap/padding at ≤600 px so all 5 items fit on one line; most compact but can feel tight
+  - **Option 3 (active):** Scale-down — `font-size: 0.75rem` + tighter gap/padding at ≤600 px so all 5 items fit on one line; most compact but can feel tight
 
 ### What's broken/missing
 - No prestige system

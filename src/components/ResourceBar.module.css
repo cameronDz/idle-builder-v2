@@ -14,20 +14,20 @@
 /*
  * ─── Mobile responsiveness — 3 options (activate one at a time) ───────────────
  *
- * OPTION 1 (ACTIVE): flex-wrap — resources wrap onto a second row; separators
+ * OPTION 1 (commented): flex-wrap — resources wrap onto a second row; separators
  * are hidden.  All data is always visible; bar height increases slightly.
+ *
+ * @media (max-width: 600px) {
+ *   .resourceBar {
+ *     flex-wrap: wrap;
+ *     gap: 6px 10px;
+ *     padding: 8px 12px;
+ *   }
+ *   .separator {
+ *     display: none;
+ *   }
+ * }
  */
-@media (max-width: 600px) {
-  .resourceBar {
-    flex-wrap: wrap;
-    gap: 6px 10px;
-    padding: 8px 12px;
-  }
-
-  .separator {
-    display: none;
-  }
-}
 
 /*
  * OPTION 2 (commented): Horizontal scroll — keeps the single-row layout and
@@ -49,20 +49,20 @@
  */
 
 /*
- * OPTION 3 (commented): Scale-down — shrink font size, gap, and padding so all
+ * OPTION 3 (ACTIVE): Scale-down — shrink font size, gap, and padding so all
  * 5 items fit on one line even on narrow screens.  Most compact; may feel tight.
- *
- * @media (max-width: 600px) {
- *   .resourceBar {
- *     gap: 6px;
- *     padding: 6px 8px;
- *     font-size: 0.75rem;
- *   }
- *   .perSecond {
- *     font-size: 0.7em;
- *   }
- * }
  */
+@media (max-width: 600px) {
+  .resourceBar {
+    gap: 6px;
+    padding: 6px 8px;
+    font-size: 0.75rem;
+  }
+
+  .perSecond {
+    font-size: 0.7em;
+  }
+}
 
 .resource {
   display: flex;
