@@ -1,8 +1,9 @@
 import { useState } from 'react';
 import { useTimer } from '../hooks/useTimer';
 import { BuildingDetail } from './BuildingDetail';
-import type { BuildingInstance, BuildingTimer } from '../types/game';
+import type { BuildingInstance, BuildingTimer, Resources } from '../types/game';
 import type { BuildingConfig } from '../config/buildings';
+import { getUpgradeCost, hasAnyCost } from '../utils/buildingUtils';
 import { formatTime } from '../utils/timeUtils';
 import styles from './GridCell.module.css';
 
@@ -10,6 +11,8 @@ interface OccupiedCellProps {
   instance: BuildingInstance;
   config: BuildingConfig;
   isBuildLimitReached: boolean;
+  canAfford: (cost: Resources) => boolean;
+  spend: (cost: Resources) => boolean;
   onBuildingUpdate: (instanceId: string, timerState: BuildingTimer) => void;
 }
 
@@ -17,6 +20,8 @@ function OccupiedCell({
   instance,
   config,
   isBuildLimitReached,
+  canAfford,
+  spend,
   onBuildingUpdate,
 }: OccupiedCellProps) {
   const { timerState, startTimer, completeTimer, acknowledgeComplete } = useTimer(
@@ -30,6 +35,10 @@ function OccupiedCell({
   };
 
   const handleStart = () => {
+    const upgradeCost = getUpgradeCost(config, timerState.level);
+    if (hasAnyCost(upgradeCost)) {
+      if (!spend(upgradeCost)) return;
+    }
     startTimer();
     const next: BuildingTimer = {
       ...timerState,
@@ -125,6 +134,7 @@ function OccupiedCell({
           instance={instance}
           timerState={timerState}
           isBuildLimitReached={isBuildLimitReached}
+          canAfford={canAfford}
           onStart={handleStart}
           onFinish={handleFinish}
           onAcknowledge={handleAcknowledge}
@@ -142,6 +152,8 @@ interface GridCellProps {
     buildingInstance: BuildingInstance | null;
   };
   isBuildLimitReached: boolean;
+  canAfford: (cost: Resources) => boolean;
+  spend: (cost: Resources) => boolean;
   onEmptyCellClick: (position: { x: number; y: number }) => void;
   onBuildingUpdate: (instanceId: string, timerState: BuildingTimer) => void;
   getBuildingConfig: (buildingTypeId: string) => BuildingConfig | undefined;
@@ -150,6 +162,8 @@ interface GridCellProps {
 export function GridCell({
   cell,
   isBuildLimitReached,
+  canAfford,
+  spend,
   onEmptyCellClick,
   onBuildingUpdate,
   getBuildingConfig,
@@ -175,6 +189,8 @@ export function GridCell({
       instance={cell.buildingInstance}
       config={config}
       isBuildLimitReached={isBuildLimitReached}
+      canAfford={canAfford}
+      spend={spend}
       onBuildingUpdate={onBuildingUpdate}
     />
   );

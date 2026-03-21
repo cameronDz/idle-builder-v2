@@ -13,13 +13,13 @@
   - **Option 1 (commented in CSS):** `flex-wrap: wrap` — on screens ≤600 px resources wrap onto a second row and the `|` separators are hidden; all values are always visible
   - **Option 2 (commented in CSS):** Horizontal scroll — keeps the single row and adds `overflow-x: auto`; user swipes to see all resources; no height change but resources hidden until scrolled
   - **Option 3 (active):** Scale-down — `font-size: 0.75rem` + tighter gap/padding at ≤600 px so all 5 items fit on one line; most compact but can feel tight
+- **Feature:** Building detail modal — clicking a building icon now opens a full-screen overlay modal showing: building name, current level & icon, grid position, current production rate (scaled by level), construction status with progress bar, and available actions (Start Construction / Finish Now / Acknowledge & Level Up)
+- **Feature:** Upgrade cost scales with level — each level-up costs `ceil(baseCost × upgradeCostMultiplier^currentLevel)` (e.g. a Wooden House costs 🌲18 to go from Lv 1→2, 🌲32 for Lv 2→3); cost is deducted from resources when construction starts; the modal shows the upcoming cost in red when the player cannot afford it and disables the Start Construction button accordingly
 
 ### What's broken/missing
 - No prestige system
-- No building detail/info panel (icon click is wired but renders nothing)
 
 ### Next session priorities
-- Building detail modal (show full stats, upgrade cost, production at next level)
 - Prestige system
 
 ---

@@ -109,6 +109,8 @@ export function Grid({
               key={`${cell.position.x}-${cell.position.y}`}
               cell={cell}
               isBuildLimitReached={buildLimitReached}
+              canAfford={canAfford}
+              spend={spend}
               onEmptyCellClick={handleEmptyCellClick}
               onBuildingUpdate={handleBuildingUpdate}
               getBuildingConfig={getBuildingConfig}
