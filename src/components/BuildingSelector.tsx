@@ -25,6 +25,14 @@ function BuildingCard({
   const isMaxed = count >= config.maxCount;
   const isDisabled = isMaxed || !affordable;
 
+  const productionParts: string[] = [];
+  if (config.production.gold > 0) productionParts.push(`💰${config.production.gold}`);
+  if (config.production.wood > 0) productionParts.push(`🌲${config.production.wood}`);
+  if (config.production.stone > 0) productionParts.push(`🪨${config.production.stone}`);
+  if (config.production.ore > 0) productionParts.push(`🔩${config.production.ore}`);
+  if (config.production.food > 0) productionParts.push(`🍖${config.production.food}`);
+  const productionStr = productionParts.length > 0 ? productionParts.join(' ') + '/s' : null;
+
   return (
     <button
       className={`${styles.buildingCard} ${isDisabled ? styles.disabled : ''}`}
@@ -44,10 +52,13 @@ function BuildingCard({
         <span className={styles.duration}>{formatTime(config.duration)}</span>
         <span className={`${styles.cost} ${!affordable ? styles.costUnaffordable : ''}`}>
           {config.cost.gold > 0 && `💰${config.cost.gold} `}
-          {config.cost.wood > 0 && `🪵${config.cost.wood} `}
-          {config.cost.stone > 0 && `🪨${config.cost.stone}`}
-          {config.cost.gold === 0 && config.cost.wood === 0 && config.cost.stone === 0 && 'Free'}
+          {config.cost.wood > 0 && `🌲${config.cost.wood} `}
+          {config.cost.stone > 0 && `🪨${config.cost.stone} `}
+          {config.cost.ore > 0 && `🔩${config.cost.ore} `}
+          {config.cost.food > 0 && `🍖${config.cost.food} `}
+          {config.cost.gold === 0 && config.cost.wood === 0 && config.cost.stone === 0 && config.cost.ore === 0 && config.cost.food === 0 && 'Free'}
         </span>
+        {productionStr && <span className={styles.production}>{`+${productionStr}`}</span>}
       </div>
       <span className={styles.count}>
         {count}/{config.maxCount}

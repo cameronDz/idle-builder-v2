@@ -26,23 +26,23 @@
 ## Features by Priority
 
 ### P0 — Core (Sessions 1–2)
-- Grid-based building placement (5×5)
-- Real-time construction timers (persisted offline via localStorage)
-- Building leveling with escalating durations (`duration * 2.5^level`)
-- Concurrent build limits (max 3 buildings under construction at once)
-- Resource system: gold, wood, stone
-- Building costs (deducted on placement)
-- Building production (awarded on tick)
+- ✅ Grid-based building placement (5×5)
+- ✅ Real-time construction timers (persisted offline via localStorage)
+- ✅ Building leveling with escalating durations (`duration * 2.5^level`)
+- ✅ Concurrent build limits (max 3 buildings under construction at once)
+- ✅ Resource system: gold, wood, stone, ore, food
+- ✅ Building costs (deducted on placement)
+- ✅ Building production (awarded on tick)
 
 ### P1 — Core-ish (Session 3)
-- Building synergies (adjacent buildings boost each other's production)
-- Prestige / reset mechanic (permanent global multiplier)
-- Mobile-responsive layout
+- ⬜ Building synergies (adjacent buildings boost each other's production)
+- ⬜ Prestige / reset mechanic (permanent global multiplier)
+- ⬜ Mobile-responsive layout
 
 ### P2 — Polish (Session 3–4)
-- Achievement system
-- Sound effects & visual juice
-- Tiered visual upgrades: base icon → enhanced icon → ultra icon (based on level)
+- ⬜ Achievement system
+- ⬜ Sound effects & visual juice
+- ✅ Tiered visual upgrades: base icon → enhanced icon → ultra icon (based on level)
 
 ---
 
@@ -82,8 +82,8 @@ interface BuildingTimer {
   hasStarted: boolean;
   isComplete: boolean;
   level: number;
-  progress: number;        // 0–100
-  timeRemaining: number;   // ms
+  progress: number; // 0–100
+  timeRemaining: number; // ms
 }
 
 interface GridPosition {
@@ -108,9 +108,9 @@ interface GridCell {
 interface BuildingConfig {
   id: string;
   name: string;
-  duration: number;             // base ms
+  duration: number; // base ms
   maxCount: number;
-  icon: string;                 // emoji or SVG path
+  icon: string; // emoji or SVG path
   enhancedIcon: string;
   ultraIcon: string;
   cost: Resources;
@@ -140,6 +140,7 @@ interface PrestigeState {
 | Forge | 7.5s | 3 | 25/10/20 | 2/0/3 |
 | Market | 10s | 2 | 30/20/10 | 5/1/1 |
 | Ore Mine | 8s | 3 | 15/15/10 | 1/0/4 |
+| Lumber Yard | 5s | 4 | 10/25/5 | 0/0/0 (+3 lumber) |
 
 All buildings: `upgradeCostMultiplier: 1.8`, `productionMultiplier: 1.5`
 

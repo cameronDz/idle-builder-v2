@@ -70,6 +70,7 @@ interface UseGridSystemReturn {
   getBuildingConfig: (buildingTypeId: string) => BuildingConfig | undefined;
   getBuildingCount: (buildingTypeId: string) => number;
   getBuildingsBeingBuiltCount: () => number;
+  getActiveOrCompleteCount: () => number;
   getMaxConcurrentBuilds: () => number;
   isBuildingLimitReached: () => boolean;
   getEmptyPositions: () => GridPosition[];
@@ -128,11 +129,15 @@ export function useGridSystem(): UseGridSystemReturn {
     ).length;
   }, [buildingInstances]);
 
+  const getActiveOrCompleteCount = useCallback((): number => {
+    return buildingInstances.filter(i => i.buildingTimer.hasStarted).length;
+  }, [buildingInstances]);
+
   const getMaxConcurrentBuilds = useCallback((): number => MAX_CONCURRENT_BUILDS, []);
 
   const isBuildingLimitReached = useCallback((): boolean => {
-    return getBuildingsBeingBuiltCount() >= MAX_CONCURRENT_BUILDS;
-  }, [getBuildingsBeingBuiltCount]);
+    return getActiveOrCompleteCount() >= MAX_CONCURRENT_BUILDS;
+  }, [getActiveOrCompleteCount]);
 
   const canPlaceBuilding = useCallback(
     (buildingTypeId: string): boolean => {
@@ -157,6 +162,7 @@ export function useGridSystem(): UseGridSystemReturn {
     (position: GridPosition, buildingTypeId: string): BuildingInstance | null => {
       if (!isValidPosition(position)) return null;
       if (!canPlaceBuilding(buildingTypeId)) return null;
+      if (isBuildingLimitReached()) return null;
 
       const { x, y } = position;
       if (grid[y][x].isOccupied) return null;
@@ -164,13 +170,27 @@ export function useGridSystem(): UseGridSystemReturn {
       const config = getBuildingConfig(buildingTypeId);
       if (!config) return null;
 
+      const instanceId = generateInstanceId(buildingTypeId);
+      const autoStart = !isBuildingLimitReached();
+
+      if (autoStart) {
+        try {
+          localStorage.setItem(
+            `timer_${instanceId}`,
+            JSON.stringify({ startTime: Date.now(), isCompleted: false, level: 0, baseDuration: config.duration })
+          );
+        } catch {
+          // ignore
+        }
+      }
+
       const instance: BuildingInstance = {
         buildingTypeId,
-        id: generateInstanceId(buildingTypeId),
+        id: instanceId,
         level: 0,
         position,
         buildingTimer: {
-          hasStarted: false,
+          hasStarted: autoStart,
           isComplete: false,
           level: 0,
           progress: 0,
@@ -190,7 +210,7 @@ export function useGridSystem(): UseGridSystemReturn {
 
       return instance;
     },
-    [buildingInstances, canPlaceBuilding, getBuildingConfig, grid, isValidPosition]
+    [buildingInstances, canPlaceBuilding, getBuildingConfig, grid, isBuildingLimitReached, isValidPosition]
   );
 
   const removeBuilding = useCallback(
@@ -269,6 +289,7 @@ export function useGridSystem(): UseGridSystemReturn {
     getBuildingConfig,
     getBuildingCount,
     getBuildingsBeingBuiltCount,
+    getActiveOrCompleteCount,
     getMaxConcurrentBuilds,
     isBuildingLimitReached,
     getEmptyPositions,

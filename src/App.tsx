@@ -6,7 +6,7 @@ import { useGridSystem } from './hooks/useGridSystem';
 import styles from './App.module.css';
 
 function App() {
-  const { resources, canAfford, spend, earn } = useResources();
+  const { resources, canAfford, spend, earn, resetResources } = useResources();
   const gridSystem = useGridSystem();
   const { productionPerSecond } = useProductionTick(gridSystem.buildingInstances, earn);
 
@@ -26,6 +26,7 @@ function App() {
             resources={resources}
             canAfford={canAfford}
             spend={spend}
+            resetResources={resetResources}
           />
         </div>
       </main>

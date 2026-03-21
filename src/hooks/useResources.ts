@@ -2,7 +2,7 @@ import { useState, useCallback, useEffect } from 'react';
 import type { Resources } from '../types/game';
 
 const STORAGE_KEY = 'idle-builder-resources';
-const STARTING_RESOURCES: Resources = { gold: 100, wood: 50, stone: 25 };
+const STARTING_RESOURCES: Resources = { gold: 100, wood: 50, stone: 25, ore: 0, food: 20 };
 
 function loadResources(): Resources {
   try {
@@ -27,6 +27,7 @@ export interface UseResourcesReturn {
   canAfford: (cost: Resources) => boolean;
   spend: (cost: Resources) => boolean;
   earn: (amount: Resources) => void;
+  resetResources: () => void;
 }
 
 export function useResources(): UseResourcesReturn {
@@ -47,7 +48,9 @@ export function useResources(): UseResourcesReturn {
       return (
         resources.gold >= cost.gold &&
         resources.wood >= cost.wood &&
-        resources.stone >= cost.stone
+        resources.stone >= cost.stone &&
+        resources.ore >= cost.ore &&
+        resources.food >= cost.food
       );
     },
     [resources]
@@ -58,7 +61,9 @@ export function useResources(): UseResourcesReturn {
       if (
         resources.gold < cost.gold ||
         resources.wood < cost.wood ||
-        resources.stone < cost.stone
+        resources.stone < cost.stone ||
+        resources.ore < cost.ore ||
+        resources.food < cost.food
       ) {
         return false;
       }
@@ -66,6 +71,8 @@ export function useResources(): UseResourcesReturn {
         gold: resources.gold - cost.gold,
         wood: resources.wood - cost.wood,
         stone: resources.stone - cost.stone,
+        ore: resources.ore - cost.ore,
+        food: resources.food - cost.food,
       };
       setResources(next);
       saveResources(next);
@@ -80,11 +87,19 @@ export function useResources(): UseResourcesReturn {
         gold: prev.gold + amount.gold,
         wood: prev.wood + amount.wood,
         stone: prev.stone + amount.stone,
+        ore: prev.ore + amount.ore,
+        food: prev.food + amount.food,
       };
       saveResources(next);
       return next;
     });
   }, []);
 
-  return { resources, canAfford, spend, earn };
+  const resetResources = useCallback(() => {
+    const starting = { ...STARTING_RESOURCES };
+    setResources(starting);
+    saveResources(starting);
+  }, []);
+
+  return { resources, canAfford, spend, earn, resetResources };
 }

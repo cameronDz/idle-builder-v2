@@ -14,6 +14,8 @@ export function useProductionTick(
     gold: 0,
     wood: 0,
     stone: 0,
+    ore: 0,
+    food: 0,
   });
 
   const earnRef = useRef(earn);
@@ -23,7 +25,7 @@ export function useProductionTick(
   instancesRef.current = buildingInstances;
 
   const calculateProduction = useCallback((): Resources => {
-    const total: Resources = { gold: 0, wood: 0, stone: 0 };
+    const total: Resources = { gold: 0, wood: 0, stone: 0, ore: 0, food: 0 };
     for (const instance of instancesRef.current) {
       const level = instance.buildingTimer.level;
       const isComplete = instance.buildingTimer.isComplete;
@@ -38,6 +40,8 @@ export function useProductionTick(
       total.gold += config.production.gold * multiplier;
       total.wood += config.production.wood * multiplier;
       total.stone += config.production.stone * multiplier;
+      total.ore += config.production.ore * multiplier;
+      total.food += config.production.food * multiplier;
     }
     return total;
   }, []);
@@ -46,7 +50,7 @@ export function useProductionTick(
     const interval = setInterval(() => {
       const production = calculateProduction();
       setProductionPerSecond(production);
-      if (production.gold > 0 || production.wood > 0 || production.stone > 0) {
+      if (production.gold > 0 || production.wood > 0 || production.stone > 0 || production.ore > 0 || production.food > 0) {
         earnRef.current(production);
       }
     }, 1000);

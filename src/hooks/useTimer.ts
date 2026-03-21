@@ -79,6 +79,14 @@ export function useTimer(duration: number, taskId: string): UseTimerReturn {
           timeRemaining: remaining,
         };
       }
+      // stored exists but startTime is null and not completed — building is idle between levels
+      return {
+        hasStarted: false,
+        isComplete: false,
+        level: stored.level,
+        progress: 0,
+        timeRemaining: getLevelAdjustedDuration(duration, stored.level),
+      };
     }
 
     return {
@@ -123,6 +131,7 @@ export function useTimer(duration: number, taskId: string): UseTimerReturn {
           return {
             ...prev,
             isComplete: true,
+            level: prev.level + 1,
             progress: 100,
             timeRemaining: 0,
           };
@@ -146,6 +155,18 @@ export function useTimer(duration: number, taskId: string): UseTimerReturn {
     return clearTick;
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+
+  // Persist completion to localStorage as a proper side effect (not inside a state updater)
+  useEffect(() => {
+    if (timerState.isComplete && timerState.hasStarted) {
+      saveToStorage(taskId, {
+        startTime: null,
+        isCompleted: true,
+        level: timerState.level,
+        baseDuration: duration,
+      });
+    }
+  }, [timerState.isComplete, timerState.hasStarted, timerState.level, taskId, duration]);
 
   // Cross-tab sync via StorageEvent
   useEffect(() => {

@@ -2,6 +2,8 @@ export interface Resources {
   gold: number;
   wood: number;
   stone: number;
+  ore: number;
+  food: number;
 }
 
 export interface BuildingTimer {

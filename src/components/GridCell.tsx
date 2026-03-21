@@ -75,6 +75,20 @@ function OccupiedCell({
         ? config.enhancedIcon
         : config.icon;
 
+  const level = timerState.level;
+  let productionStr: string | null = null;
+  if (level > 0) {
+    const multiplier = Math.pow(config.productionMultiplier, level - 1);
+    const parts: string[] = [];
+    if (config.production.gold > 0) parts.push(`💰${(config.production.gold * multiplier).toFixed(1)}`);
+    if (config.production.wood > 0) parts.push(`🌲${(config.production.wood * multiplier).toFixed(1)}`);
+    if (config.production.stone > 0) parts.push(`🪨${(config.production.stone * multiplier).toFixed(1)}`);
+    if (config.production.ore > 0) parts.push(`🔩${(config.production.ore * multiplier).toFixed(1)}`);
+    if (config.production.food > 0) parts.push(`🍖${(config.production.food * multiplier).toFixed(1)}`);
+
+    if (parts.length > 0) productionStr = parts.join(' ') + '/s';
+  }
+
   return (
     <div className={styles.occupiedCell}>
       <button
@@ -86,6 +100,7 @@ function OccupiedCell({
       </button>
       <span className={styles.buildingName}>{config.name}</span>
       <span className={styles.levelLabel}>{`Lv ${timerState.level}`}</span>
+      {productionStr && <span className={styles.productionInfo}>{productionStr}</span>}
 
       <div className={styles.progressBarWrapper}>
         <div

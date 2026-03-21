@@ -14,11 +14,13 @@ interface GridProps {
   getBuildingConfig: (buildingTypeId: string) => BuildingConfig | undefined;
   getBuildingCount: (buildingTypeId: string) => number;
   getBuildingsBeingBuiltCount: () => number;
+  getActiveOrCompleteCount: () => number;
   getMaxConcurrentBuilds: () => number;
   isBuildingLimitReached: () => boolean;
   resources: Resources;
   canAfford: (cost: Resources) => boolean;
   spend: (cost: Resources) => boolean;
+  resetResources: () => void;
 }
 
 export function Grid({
@@ -29,21 +31,23 @@ export function Grid({
   clearGrid,
   getBuildingConfig,
   getBuildingCount,
-  getBuildingsBeingBuiltCount,
+  getActiveOrCompleteCount,
   getMaxConcurrentBuilds,
   isBuildingLimitReached,
   canAfford,
   spend,
+  resetResources,
 }: GridProps) {
   const [selectorPosition, setSelectorPosition] = useState<GridPosition | null>(null);
   const [pendingDetailId, setPendingDetailId] = useState<string | null>(null);
 
   const totalCells = grid.length * (grid[0]?.length ?? 0);
   const placedCount = buildingInstances.length;
-  const beingBuilt = getBuildingsBeingBuiltCount();
+  const activeOrComplete = getActiveOrCompleteCount();
   const maxConcurrent = getMaxConcurrentBuilds();
 
   const handleEmptyCellClick = (position: GridPosition) => {
+    if (buildLimitReached) return;
     setSelectorPosition(position);
   };
 
@@ -75,6 +79,12 @@ export function Grid({
     }
   };
 
+  const handleResetResources = () => {
+    if (window.confirm('Reset all resources to starting values?')) {
+      resetResources();
+    }
+  };
+
   const buildLimitReached = isBuildingLimitReached();
 
   return (
@@ -86,8 +96,11 @@ export function Grid({
         </div>
         <div className={styles.headerRight}>
           <span className={`${styles.concurrentBadge} ${buildLimitReached ? styles.limitReached : ''}`}>
-            {`⚒ ${beingBuilt}/${maxConcurrent} building`}
+            {`⚒ ${activeOrComplete}/${maxConcurrent} slots`}
           </span>
+          <button className={styles.clearButton} onClick={handleResetResources}>
+            {'Clear Resources'}
+          </button>
           <button className={styles.clearButton} onClick={handleClearGrid}>
             {'Clear Grid'}
           </button>
