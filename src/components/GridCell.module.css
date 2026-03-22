@@ -77,6 +77,16 @@
     white-space: normal;
     word-break: break-word;
   }
+
+  .productionInfo {
+    display: none;
+  }
+
+  .finishButton,
+  .completeButton {
+    font-size: 0.58rem;
+    padding: 2px 5px;
+  }
 }
 
 .levelLabel {
