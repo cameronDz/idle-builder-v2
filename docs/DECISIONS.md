@@ -101,3 +101,36 @@ The right time to learn Phaser is on a project that actually calls for it: a pla
 5. **Timeline risk is concrete.** Implementing this mid-Session 2 would consume the time reserved for prestige (a Session 3 P1 goal), which would push prestige into Session 4, displacing mobile polish, which would then compress Session 5 (release). The 5-session plan has no slack.
 
 **Resolution:** Population and energy are recorded here as explicit future scope for a v3 or post-release feature. Revisit only after prestige, synergies, and mobile polish are complete.
+
+---
+
+## Decision 9 — Building interdependence (synergies) is confirmed for Session 3; resource specialization was its prerequisite
+**Date:** 2026-03-22
+**Decision:** Proceed with the planned adjacency-based synergy system in Session 3. The resource-specialization changes made in Session 1.2 are a necessary prerequisite that make this a well-defined, low-risk feature.
+
+**Context:** This was raised mid-Session 2 after the resource-production identities of several buildings were sharpened (Wooden House → gold-only, Farm → food-only, Lumber Yard → wood-only, Quarry → stone-only, etc.). The question was whether that specialization makes interdependence more or less appropriate to add.
+
+**Why the specialization was a prerequisite:**
+
+Before the Session 1.2 changes, buildings had overlapping production roles (Wooden House produced gold *and* food; Farm produced wood *and* food). With overlapping identities, adjacency synergies would have been arbitrary — why would a Wooden House boost a Farm when both were already producing food? The synergy design would have had no thematic grounding.
+
+After specialization, each building has a distinct production identity. Synergy pairs are now thematically obvious and communicate a clear settlement story:
+
+| Pair | Thematic reason |
+|---|---|
+| 🌾 Farm + 🏚️ Barn | Barn stores what Farm grows — classic food cluster |
+| 🌾 Farm + 🌀 Windmill | Windmill grinds farm grain into flour |
+| 🪵 Lumber Yard + ⚒️ Forge | Wood provides charcoal fuel for smelting |
+| ⛏️ Ore Mine + ⚒️ Forge | Raw ore flows directly into the forge |
+| ⛏️ Ore Mine + 🪨 Quarry | Extractive industry — naturally cluster together |
+| 🏠 Wooden House + 🏪 Market | Residents are the market's customers |
+| 🏰 Stone Castle + 🗼 Watch Tower | Defensive complex — tower guards the castle |
+
+**Why synergies are lower risk than population/energy (Decision 8):**
+
+1. **No new `Resources` fields.** Synergies are a production multiplier applied at tick time. They don't add new counters, don't break `canAfford`/`spend`, and don't require a localStorage migration.
+2. **Grid positions already exist.** `BuildingInstance.position` carries `{x, y}`. `useProductionTick` can check cardinal neighbors using the same `buildingInstances` array it already iterates.
+3. **Isolated change set.** The implementation requires: a `synergies: string[]` field on `BuildingConfig`, an updated `useProductionTick` that checks neighbors, and synergy data in `buildings.ts`. No UI component needs structural changes — an optional glow/indicator is purely cosmetic and can be added later.
+4. **No session-plan disruption.** Synergies are already a Session 3 P1 goal. This is a confirmation that the plan is correct, not a scope change.
+
+**Resolution:** Build adjacency synergies in Session 3 as planned. The Session 1.2 resource-specialization work is the correct foundation. See DESIGN.md § Building Synergies for the proposed synergy pairs and boost model.

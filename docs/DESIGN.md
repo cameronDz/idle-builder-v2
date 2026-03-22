@@ -1,6 +1,6 @@
 # Game Design Document — Idle Builder v2
 
-**Last updated:** 2026-03-19
+**Last updated:** 2026-03-22
 
 ---
 
@@ -35,7 +35,7 @@
 - ✅ Building production (awarded on tick)
 
 ### P1 — Core-ish (Session 3)
-- ⬜ Building synergies (adjacent buildings boost each other's production)
+- ⬜ Building synergies (adjacent buildings boost each other's production — see § Building Synergies below)
 - ⬜ Prestige / reset mechanic (permanent global multiplier)
 - ⬜ Mobile-responsive layout
 
@@ -146,6 +146,40 @@ All five resource columns are: **Gold / Wood / Stone / Ore / Food**
 | 🪨 Quarry | 6s | 4 | 10/5/0/0/0 | 0/0/**3**/0/0 |
 
 All buildings: `upgradeCostMultiplier: 1.8`, `productionMultiplier: 1.5`
+
+---
+
+## Building Synergies
+
+> Planned for Session 3. Resource specialization in Session 1.2 is the prerequisite that makes these pairings thematically grounded (see Decision 9).
+
+### Boost model
+
+When a completed building has one or more completed synergistic neighbors in the four cardinal directions (up/down/left/right), its production is multiplied by `1 + (synergyBonus × synergyCount)`. A flat `synergyBonus` of **+20% per neighbor** keeps the math simple and the benefit meaningful without being dominant.
+
+Example: A Forge with both a Lumber Yard and an Ore Mine adjacent produces `base × 1.4` — 40% more output.
+
+### Synergy pairs
+
+All synergies are **bidirectional** — each building in the pair boosts the other.
+
+| Building A | Building B | Production boost | Thematic reason |
+|---|---|---|---|
+| 🌾 Farm | 🏚️ Barn | +20% food/gold on both | Barn stores what Farm grows — classic food cluster |
+| 🌾 Farm | 🌀 Windmill | +20% food on Farm, +20% gold on Windmill | Windmill grinds farm grain into flour |
+| 🪵 Lumber Yard | ⚒️ Forge | +20% wood on Lumber Yard, +20% ore/stone on Forge | Wood charcoal fuels the smelter |
+| ⛏️ Ore Mine | ⚒️ Forge | +20% ore on Ore Mine, +20% ore/stone on Forge | Raw ore flows directly into the forge |
+| ⛏️ Ore Mine | 🪨 Quarry | +20% ore/stone on both | Extractive industry — naturally clusters together |
+| 🏠 Wooden House | 🏪 Market | +20% gold on both | Residents are the market's customers |
+| 🏰 Stone Castle | 🗼 Watch Tower | +20% gold/stone on both | Defensive complex — tower guards the castle |
+
+### Implementation plan (Session 3)
+
+1. **`BuildingConfig` (`config/buildings.ts`)** — add `synergies: string[]` field listing the building IDs that give this building a boost when adjacent.
+2. **`useProductionTick` (`hooks/useProductionTick.ts`)** — accept the full `buildingInstances` array (already has `position`) and for each active building, check the four cardinal neighbors; count how many completed neighbors are in `config.synergies`; multiply production by `1 + (0.2 × synergyCount)`.
+3. **`GridCell` (`components/GridCell.tsx`)** — add a subtle visual indicator (e.g., a colored border pulse or small ⚡ badge) when a building has ≥1 active synergy. This is cosmetic and can be deferred to the polish pass.
+
+No new `Resources` fields, no localStorage migration, no new data types required.
 
 ---
 
