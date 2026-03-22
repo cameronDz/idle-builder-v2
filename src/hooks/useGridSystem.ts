@@ -143,7 +143,18 @@ export function useGridSystem(): UseGridSystemReturn {
     (buildingTypeId: string): boolean => {
       const config = getBuildingConfig(buildingTypeId);
       if (!config) return false;
-      return getBuildingCount(buildingTypeId) < config.maxCount;
+      if (getBuildingCount(buildingTypeId) >= config.maxCount) return false;
+
+      // If this is not the foundation building, require the foundation to
+      // already exist on the grid before any other building can be placed.
+      if (!config.isFoundation) {
+        const foundationExists = buildings.some(
+          b => b.isFoundation && getBuildingCount(b.id) > 0
+        );
+        if (!foundationExists) return false;
+      }
+
+      return true;
     },
     [getBuildingConfig, getBuildingCount]
   );

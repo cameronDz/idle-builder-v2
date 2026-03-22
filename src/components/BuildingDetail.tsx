@@ -10,6 +10,8 @@ interface BuildingDetailProps {
   timerState: BuildingTimer;
   isBuildLimitReached: boolean;
   canAfford: (cost: Resources) => boolean;
+  /** False when upgradeRequiresMatchingLevel is set and the requirement is not yet met. */
+  upgradeRequirementMet: boolean;
   onStart: () => void;
   onFinish: () => void;
   onAcknowledge: () => void;
@@ -22,6 +24,7 @@ export function BuildingDetail({
   timerState,
   isBuildLimitReached,
   canAfford,
+  upgradeRequirementMet,
   onStart,
   onFinish,
   onAcknowledge,
@@ -58,6 +61,15 @@ export function BuildingDetail({
     : timerState.hasStarted
       ? `Building… ${formatTime(timerState.timeRemaining)} remaining`
       : 'Not started';
+
+  const canStart = !isBuildLimitReached && canAffordUpgrade && upgradeRequirementMet;
+  const startDisabledTitle = isBuildLimitReached
+    ? 'Max concurrent builds reached'
+    : !canAffordUpgrade
+      ? 'Not enough resources'
+      : !upgradeRequirementMet
+        ? `Need another building at level ${level} or above to upgrade`
+        : 'Start construction';
 
   return (
     <div className={styles.overlay} onClick={onClose}>
@@ -102,6 +114,17 @@ export function BuildingDetail({
             </div>
           )}
 
+          {config.upgradeRequiresMatchingLevel && !timerState.hasStarted && !timerState.isComplete && level > 0 && (
+            <div className={styles.row}>
+              <span className={styles.label}>{'Upgrade Requires'}</span>
+              <span className={`${styles.value} ${upgradeRequirementMet ? styles.requirementMet : styles.requirementUnmet}`}>
+                {upgradeRequirementMet
+                  ? `✔ Another building at level ${level}+`
+                  : `✘ Need another building at level ${level}+`}
+              </span>
+            </div>
+          )}
+
           {(timerState.hasStarted || timerState.isComplete) && (
             <div className={styles.progressBarWrapper}>
               <div
@@ -127,14 +150,8 @@ export function BuildingDetail({
             <button
               className={styles.startButton}
               onClick={onStart}
-              disabled={isBuildLimitReached || !canAffordUpgrade}
-              title={
-                isBuildLimitReached
-                  ? 'Max concurrent builds reached'
-                  : !canAffordUpgrade
-                    ? 'Not enough resources'
-                    : 'Start construction'
-              }
+              disabled={!canStart}
+              title={startDisabledTitle}
             >
               {`▶ Start Construction (${formatTime(timerState.timeRemaining)})`}
             </button>

@@ -5,13 +5,14 @@ export function getUpgradeCost(config: BuildingConfig, currentLevel: number): Re
   if (currentLevel === 0) {
     return { gold: 0, wood: 0, stone: 0, ore: 0, food: 0 };
   }
+  const base = config.upgradeCostBase ?? config.cost;
   const multiplier = Math.pow(config.upgradeCostMultiplier, currentLevel);
   return {
-    gold: Math.ceil(config.cost.gold * multiplier),
-    wood: Math.ceil(config.cost.wood * multiplier),
-    stone: Math.ceil(config.cost.stone * multiplier),
-    ore: Math.ceil(config.cost.ore * multiplier),
-    food: Math.ceil(config.cost.food * multiplier),
+    gold: Math.ceil(base.gold * multiplier),
+    wood: Math.ceil(base.wood * multiplier),
+    stone: Math.ceil(base.stone * multiplier),
+    ore: Math.ceil(base.ore * multiplier),
+    food: Math.ceil(base.food * multiplier),
   };
 }
 

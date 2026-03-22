@@ -16,17 +16,20 @@ function BuildingCard({
   config,
   count,
   affordable,
+  foundationIsBuilt,
   resources,
   onSelect,
 }: {
   config: BuildingConfig;
   count: number;
   affordable: boolean;
+  foundationIsBuilt: boolean;
   resources: Resources;
   onSelect: () => void;
 }) {
   const isMaxed = count >= config.maxCount;
-  const isDisabled = isMaxed || !affordable;
+  const requiresFoundation = !config.isFoundation && !foundationIsBuilt;
+  const isDisabled = isMaxed || !affordable || requiresFoundation;
 
   const productionParts: string[] = [];
   if (config.production.gold > 0) productionParts.push(`💰${config.production.gold}`);
@@ -43,6 +46,8 @@ function BuildingCard({
     config.cost.ore === 0 &&
     config.cost.food === 0;
 
+  const foundationName = buildings.find(b => b.isFoundation)?.name ?? 'foundation building';
+
   return (
     <button
       className={`${styles.buildingCard} ${isDisabled ? styles.disabled : ''}`}
@@ -51,9 +56,11 @@ function BuildingCard({
       title={
         isMaxed
           ? `Max ${config.maxCount} allowed`
-          : !affordable
-            ? 'Not enough resources'
-            : `Place ${config.name}`
+          : requiresFoundation
+            ? `Build the ${foundationName} first`
+            : !affordable
+              ? 'Not enough resources'
+              : `Place ${config.name}`
       }
     >
       <span className={styles.icon}>{config.icon}</span>
@@ -98,6 +105,8 @@ function BuildingCard({
 }
 
 export function BuildingSelector({ onSelect, onCancel, getBuildingCount, canAfford, resources }: BuildingSelectorProps) {
+  const foundationIsBuilt = buildings.some(b => b.isFoundation && getBuildingCount(b.id) > 0);
+
   return (
     <div className={styles.overlay} onClick={onCancel}>
       <div className={styles.modal} onClick={e => e.stopPropagation()}>
@@ -105,6 +114,11 @@ export function BuildingSelector({ onSelect, onCancel, getBuildingCount, canAffo
           <h2 className={styles.title}>{'Select Building'}</h2>
           <button className={styles.cancelButton} onClick={onCancel}>{'✕'}</button>
         </div>
+        {!foundationIsBuilt && (
+          <p className={styles.foundationHint}>
+            {'🏰 Place the Stone Castle first — it is the foundation of your settlement.'}
+          </p>
+        )}
         <div className={styles.list}>
           {buildings.map(config => (
             <BuildingCard
@@ -112,6 +126,7 @@ export function BuildingSelector({ onSelect, onCancel, getBuildingCount, canAffo
               config={config}
               count={getBuildingCount(config.id)}
               affordable={canAfford(config.cost)}
+              foundationIsBuilt={foundationIsBuilt}
               resources={resources}
               onSelect={() => onSelect(config.id)}
             />
