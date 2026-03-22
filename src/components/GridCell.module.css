@@ -88,6 +88,10 @@
     padding: 2px 4px;
     white-space: nowrap;
   }
+
+  .completeButton {
+    font-size: 0.25rem;
+  }
 }
 
 .levelLabel {
