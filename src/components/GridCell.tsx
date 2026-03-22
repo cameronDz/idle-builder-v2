@@ -120,9 +120,18 @@ function OccupiedCell({
       </div>
 
       {timerState.isComplete ? (
-        <span className={styles.completeLabel}>{'✔ Done'}</span>
+        <button className={styles.completeButton} onClick={handleAcknowledge}>
+          {'✔ Complete'}
+        </button>
       ) : timerState.hasStarted ? (
-        <span className={styles.timeRemaining}>{formatTime(timerState.timeRemaining)}</span>
+        <>
+          <span className={styles.timeRemaining}>{formatTime(timerState.timeRemaining)}</span>
+          {timerState.timeRemaining <= 30000 && (
+            <button className={styles.finishButton} onClick={handleFinish}>
+              {'⚡ Finish'}
+            </button>
+          )}
+        </>
       ) : null}
 
       {showDetail && (
