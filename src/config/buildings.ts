@@ -137,7 +137,7 @@ export const buildings: BuildingConfig[] = [
     name: 'Lumber Yard',
     duration: 5000,
     maxCount: 4,
-    icon: '�',
+    icon: '🪵',
     enhancedIcon: '🌳',
     ultraIcon: '🏭',
     cost: { gold: 10, wood: 25, stone: 5, ore: 0, food: 0 },
