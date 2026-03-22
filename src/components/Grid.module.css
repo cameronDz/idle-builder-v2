@@ -77,8 +77,21 @@
   gap: 8px;
 }
 
+@media (max-width: 768px) {
+  .gridWrapper {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .grid {
+    grid-template-columns: repeat(5, 72px);
+    gap: 6px;
+  }
+}
+
 @media (max-width: 480px) {
   .grid {
+    grid-template-columns: repeat(5, 64px);
     gap: 4px;
   }
 }

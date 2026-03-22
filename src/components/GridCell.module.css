@@ -72,6 +72,13 @@
   white-space: nowrap;
 }
 
+@media (max-width: 768px) {
+  .buildingName {
+    white-space: normal;
+    word-break: break-word;
+  }
+}
+
 .levelLabel {
   font-size: 0.6rem;
   color: #6b7280;

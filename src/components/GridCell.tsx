@@ -112,12 +112,14 @@ function OccupiedCell({
       <span className={styles.levelLabel}>{`Lv ${timerState.level}`}</span>
       {productionStr && <span className={styles.productionInfo}>{productionStr}</span>}
 
-      <div className={styles.progressBarWrapper}>
-        <div
-          className={styles.progressBar}
-          style={{ width: `${timerState.progress}%`, background: progressColor }}
-        />
-      </div>
+      {(timerState.hasStarted || timerState.isComplete) && (
+        <div className={styles.progressBarWrapper}>
+          <div
+            className={styles.progressBar}
+            style={{ width: `${timerState.progress}%`, background: progressColor }}
+          />
+        </div>
+      )}
 
       {timerState.isComplete ? (
         <button className={styles.completeButton} onClick={handleAcknowledge}>
