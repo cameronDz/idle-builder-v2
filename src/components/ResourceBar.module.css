@@ -53,8 +53,14 @@
  * 5 items fit on one line even on narrow screens.  Most compact; may feel tight.
  */
 @media (max-width: 768px) {
+  .resourceValue {
+    flex-direction: column;
+    align-items: center;
+    gap: 0;
+  }
+
   .perSecond {
-    display: none;
+    font-size: 0.7em;
   }
 }
 
