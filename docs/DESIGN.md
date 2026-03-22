@@ -200,3 +200,4 @@ The following are explicitly **out of scope** for v2:
 - No procedural map generation
 - No complex tech trees (flat building list only)
 - No Phaser or game engine (React is the right tool for a UI-driven idle game)
+- No population or energy resource types — these require new game-loop mechanics (cap logic, running costs) that don't fit the current accumulate-and-spend model; deferred to v3 (see Decision 8)

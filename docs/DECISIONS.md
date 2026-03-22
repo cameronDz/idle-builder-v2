@@ -79,3 +79,25 @@ Vanilla CSS transitions are sufficient for the core game loop. Adding Framer Mot
 15 hours is enough for one goal: ship a game OR learn an engine — not both. Phaser would require 3–5 hours of framework learning for a game that doesn't benefit from its strengths.
 
 The right time to learn Phaser is on a project that actually calls for it: a platformer, a bullet hell, a roguelite with sprite-based rendering. That project would use Phaser for what it's good at. This project uses React for what it's good at.
+
+---
+
+## Decision 8 — Population and Energy resources deferred out of v2 scope
+**Date:** 2026-03-22
+**Decision:** Do not add population or energy as resource types in v2.
+
+**Context:** This was raised mid-Session 2 as a possible addition. Session 2's core goals (resource system, building costs, production ticks) are already complete. The remaining session time is budgeted for the prestige system.
+
+**Why it's too aggressive for Session 2:**
+
+1. **Touch-count is high.** Adding any new field to the `Resources` interface cascades into at least 8 files: `types/game.ts`, `useResources.ts`, `useProductionTick.ts`, `buildingUtils.ts`, `buildings.ts` (11 buildings × 2 fields each), `ResourceBar.tsx`, `BuildingSelector.tsx`, `BuildingDetail.tsx`, and `GridCell.tsx`. That is a multi-hour horizontal refactor.
+
+2. **ResourceBar is already at capacity.** It currently shows 5 resources using a mobile scale-down hack (`font-size: 0.75rem` at ≤600 px) to fit on one line. Adding two more columns would immediately break the mobile layout with no clean fix available without a full layout redesign.
+
+3. **localStorage migration is required.** Any player with an existing save would load `population: undefined` and `energy: undefined`, causing runtime NaN errors throughout the resource math. A migration/schema-validation layer would need to be written first.
+
+4. **Population and energy are not "more numbers" — they are different mechanics.** Population is typically a *cap* resource (you need X population before you can build Y). Energy is typically a *running cost* resource (buildings consume it continuously while active). Neither fits the current "accumulate-and-spend" model in `useResources`. Implementing them correctly requires new game loop logic, not just new fields.
+
+5. **Timeline risk is concrete.** Implementing this mid-Session 2 would consume the time reserved for prestige (a Session 3 P1 goal), which would push prestige into Session 4, displacing mobile polish, which would then compress Session 5 (release). The 5-session plan has no slack.
+
+**Resolution:** Population and energy are recorded here as explicit future scope for a v3 or post-release feature. Revisit only after prestige, synergies, and mobile polish are complete.
