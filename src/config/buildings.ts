@@ -25,7 +25,7 @@ export const buildings: BuildingConfig[] = [
     ultraIcon: '🏘️',
     cost: { gold: 0, wood: 10, stone: 0, ore: 0, food: 0 },
     upgradeCostMultiplier: 1.8,
-    production: { gold: 1, wood: 0, stone: 0, ore: 0, food: 1 },
+    production: { gold: 2, wood: 0, stone: 0, ore: 0, food: 0 },
     productionMultiplier: 1.5,
   },
   {
@@ -38,7 +38,7 @@ export const buildings: BuildingConfig[] = [
     ultraIcon: '🏕️',
     cost: { gold: 5, wood: 15, stone: 0, ore: 0, food: 0 },
     upgradeCostMultiplier: 1.8,
-    production: { gold: 0, wood: 2, stone: 0, ore: 0, food: 3 },
+    production: { gold: 1, wood: 0, stone: 0, ore: 0, food: 5 },
     productionMultiplier: 1.5,
   },
   {
@@ -51,7 +51,7 @@ export const buildings: BuildingConfig[] = [
     ultraIcon: '⛩️',
     cost: { gold: 50, wood: 30, stone: 40, ore: 10, food: 0 },
     upgradeCostMultiplier: 1.8,
-    production: { gold: 5, wood: 0, stone: 3, ore: 0, food: 0 },
+    production: { gold: 8, wood: 0, stone: 5, ore: 2, food: 2 },
     productionMultiplier: 1.5,
   },
   {
