@@ -130,6 +130,7 @@
 .startButton,
 .finishButton,
 .completeButton {
+  font-size: 0.65rem;
   font-weight: 600;
   padding: 3px 8px;
   border: none;
@@ -154,7 +155,6 @@
 }
 
 .finishButton {
-  font-size: 0.65rem;
   background: #f59e0b;
   color: #fff;
 }
@@ -185,9 +185,12 @@
 
   .finishButton,
   .completeButton {
-    font-size: 0.5rem;
     padding: 2px 4px;
     white-space: nowrap;
+  }
+
+  .finishButton {
+    font-size: 0.5rem;
   }
 
   .completeButton {
