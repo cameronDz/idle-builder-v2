@@ -72,28 +72,6 @@
   white-space: nowrap;
 }
 
-@media (max-width: 768px) {
-  .buildingName {
-    white-space: normal;
-    word-break: break-word;
-  }
-
-  .productionInfo {
-    display: none;
-  }
-
-  .finishButton,
-  .completeButton {
-    font-size: 0.5rem;
-    padding: 2px 4px;
-    white-space: nowrap;
-  }
-
-  .completeButton {
-    font-size: 0.25rem;
-  }
-}
-
 .levelLabel {
   font-size: 0.6rem;
   color: #6b7280;
@@ -193,4 +171,26 @@
 
 .completeButton:hover {
   background: #16a34a;
+}
+
+@media (max-width: 768px) {
+  .buildingName {
+    white-space: normal;
+    word-break: break-word;
+  }
+
+  .productionInfo {
+    display: none;
+  }
+
+  .finishButton,
+  .completeButton {
+    font-size: 0.5rem;
+    padding: 2px 4px;
+    white-space: nowrap;
+  }
+
+  .completeButton {
+    font-size: 0.25rem;
+  }
 }
