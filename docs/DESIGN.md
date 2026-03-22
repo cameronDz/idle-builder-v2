@@ -35,7 +35,7 @@
 - ✅ Building production (awarded on tick)
 
 ### P1 — Core-ish (Session 3)
-- ⬜ Building synergies (adjacent buildings boost each other's production — see § Building Synergies below)
+- ⬜ Building synergies (building A at level X boosts production if building B exists at level Y — see § Building Synergies below)
 - ⬜ Prestige / reset mechanic (permanent global multiplier)
 - ⬜ Mobile-responsive layout
 
@@ -117,6 +117,14 @@ interface BuildingConfig {
   upgradeCostMultiplier: number;
   production: Resources;
   productionMultiplier: number;
+  synergies?: SynergyCondition[]; // optional; unlocks production boosts based on partner level
+}
+
+interface SynergyCondition {
+  partnerBuildingId: string; // building type that must exist on the grid
+  partnerMinLevel: number;   // partner must be at this level or above
+  selfMinLevel: number;      // this building must be at this level or above
+  bonus: number;             // fractional multiplier added to base, e.g. 0.25 for +25%
 }
 
 interface PrestigeState {
@@ -151,35 +159,38 @@ All buildings: `upgradeCostMultiplier: 1.8`, `productionMultiplier: 1.5`
 
 ## Building Synergies
 
-> Planned for Session 3. Resource specialization in Session 1.2 is the prerequisite that makes these pairings thematically grounded (see Decision 9).
+> Planned for Session 3. Uses a **level-requirement model** — no spatial constraint, cost is progression-based leveling (see Decision 10).
 
 ### Boost model
 
-When a completed building has one or more completed synergistic neighbors in the four cardinal directions (up/down/left/right), its production is multiplied by `1 + (synergyBonus × synergyCount)`. A flat `synergyBonus` of **+20% per neighbor** keeps the math simple and the benefit meaningful without being dominant.
+A building's production is multiplied by `1 + sum(bonus from all satisfied conditions)` where each condition in `config.synergies` contributes its `bonus` when satisfied. A condition is satisfied when:
+- **this building** is at `selfMinLevel` or above, AND
+- **at least one instance** of `partnerBuildingId` exists anywhere on the grid at `partnerMinLevel` or above
 
-Example: A Forge with both a Lumber Yard and an Ore Mine adjacent produces `base × 1.4` — 40% more output.
+Example: A level 3 Forge with a level 2 Lumber Yard AND a level 2 Ore Mine satisfies both of its conditions and produces at `base × (1 + 0.25 + 0.25)` = `base × 1.5` — 50% more output.
 
-### Synergy pairs
+### Synergy conditions
 
-All synergies are **bidirectional** — each building in the pair boosts the other.
+| Building | Self Min Level | Requires Partner | Partner Min Level | Bonus |
+|---|---|---|---|---|
+| 🌾 Farm | 2 | 🏚️ Barn | 1 | +25% production |
+| 🏚️ Barn | 2 | 🌾 Farm | 1 | +25% production |
+| ⚒️ Forge | 3 | 🪵 Lumber Yard | 2 | +25% production |
+| ⚒️ Forge | 3 | ⛏️ Ore Mine | 2 | +25% production |
+| ⛏️ Ore Mine | 3 | 🪨 Quarry | 2 | +20% production |
+| 🏠 Wooden House | 2 | 🏪 Market | 2 | +20% production |
+| 🏰 Stone Castle | 2 | 🗼 Watch Tower | 2 | +30% production |
 
-| Building A | Building B | Production boost | Thematic reason |
-|---|---|---|---|
-| 🌾 Farm | 🏚️ Barn | +20% food/gold on both | Barn stores what Farm grows — classic food cluster |
-| 🌾 Farm | 🌀 Windmill | +20% food on Farm, +20% gold on Windmill | Windmill grinds farm grain into flour |
-| 🪵 Lumber Yard | ⚒️ Forge | +20% wood on Lumber Yard, +20% ore/stone on Forge | Wood charcoal fuels the smelter |
-| ⛏️ Ore Mine | ⚒️ Forge | +20% ore on Ore Mine, +20% ore/stone on Forge | Raw ore flows directly into the forge |
-| ⛏️ Ore Mine | 🪨 Quarry | +20% ore/stone on both | Extractive industry — naturally clusters together |
-| 🏠 Wooden House | 🏪 Market | +20% gold on both | Residents are the market's customers |
-| 🏰 Stone Castle | 🗼 Watch Tower | +20% gold/stone on both | Defensive complex — tower guards the castle |
+Synergies are **stackable** within the same building: a Forge that satisfies both conditions produces at `base × 1.5`. Synergies are **not bidirectional** by default — the Farm gets a boost from having a Barn, but not vice-versa, unless the Barn also has its own condition (as above).
 
 ### Implementation plan (Session 3)
 
-1. **`BuildingConfig` (`config/buildings.ts`)** — add `synergies: string[]` field listing the building IDs that give this building a boost when adjacent.
-2. **`useProductionTick` (`hooks/useProductionTick.ts`)** — accept the full `buildingInstances` array (already has `position`) and for each active building, check the four cardinal neighbors; count how many completed neighbors are in `config.synergies`; multiply production by `1 + (0.2 × synergyCount)`.
-3. **`GridCell` (`components/GridCell.tsx`)** — add a subtle visual indicator (e.g., a colored border pulse or small ⚡ badge) when a building has ≥1 active synergy. This is cosmetic and can be deferred to the polish pass.
+1. **`SynergyCondition` interface (`types/game.ts`)** — add the interface as shown in § Data Models.
+2. **`BuildingConfig` (`config/buildings.ts`)** — add optional `synergies?: SynergyCondition[]` field; populate for the 7 conditions above (covering 5 unique building relationships).
+3. **`useProductionTick` (`hooks/useProductionTick.ts`)** — before the per-instance loop, build a `Map<buildingTypeId, maxLevel>` from all completed instances; then for each active instance, iterate `config.synergies`, check `effectiveLevel >= cond.selfMinLevel` and `partnerLevels.get(cond.partnerBuildingId) >= cond.partnerMinLevel`, and accumulate `synergyBonus`; multiply production by `1 + synergyBonus`.
+4. **`BuildingDetail` (`components/BuildingDetail.tsx`)** — add a "Synergies" subsection to the info panel listing each condition, its level requirements, and whether it is currently active. This is the primary player communication surface for this feature.
 
-No new `Resources` fields, no localStorage migration, no new data types required.
+No new `Resources` fields, no localStorage migration, no grid position lookup required.
 
 ---
 

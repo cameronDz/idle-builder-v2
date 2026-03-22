@@ -134,3 +134,29 @@ After specialization, each building has a distinct production identity. Synergy 
 4. **No session-plan disruption.** Synergies are already a Session 3 P1 goal. This is a confirmation that the plan is correct, not a scope change.
 
 **Resolution:** Build adjacency synergies in Session 3 as planned. The Session 1.2 resource-specialization work is the correct foundation. See DESIGN.md § Building Synergies for the proposed synergy pairs and boost model.
+
+---
+
+## Decision 10 — Level-requirement synergy model replaces adjacency model (supersedes Decision 9)
+**Date:** 2026-03-22
+**Decision:** Replace the adjacency-based synergy model from Decision 9 with a **level-requirement model**: Building A gets a production boost when (a) it is at level X or above, and (b) at least one Building B exists anywhere on the grid at level Y or above.
+
+**Context:** After Decision 9 was recorded, a concern was raised: does the adjacency model silently require more resources? And could synergy instead be "Building A at level X requires Building B at least level Y"?
+
+**Analysis of the adjacency model's hidden costs:**
+
+Both models require the player to invest in two building types — that resource cost is the same. However, adjacency adds a second constraint on top: the buildings must be physically adjacent. On a 5×5 grid this has real consequences:
+
+1. **Cluster tax.** To give a Forge two synergies (Lumber Yard + Ore Mine), both partners must be directly adjacent (up, down, left, or right) to the Forge simultaneously. The Forge must occupy an interior position with its two synergy partners placed around it — a tight spatial constraint on a 25-cell grid.
+2. **Hidden strategic cost.** Players lose placement freedom. A Quarry placed for its own strategic reasons may not happen to be next to an Ore Mine. The spatial requirement is an invisible "cost" paid in grid positioning rather than resources.
+3. **Harder to communicate.** "Place it next to the other one" is easy to miss; a tooltip saying "Boost unlocks at level X with a level Y partner" is explicit and scannable.
+
+**Why the level-requirement model is better:**
+
+1. **Cost is explicit and progression-based.** The investment required to unlock a synergy is leveling up — something the player is already planning to do. The cost is transparent and in the player's control.
+2. **No spatial constraint.** Buildings can be placed anywhere for strategic or aesthetic reasons. The grid remains a pure placement puzzle, not a synergy-cluster puzzle.
+3. **Simpler to implement.** `useProductionTick` already iterates `buildingInstances` with level data. A synergy check is a single pass to build a `Map<buildingTypeId, maxLevel>`, then a per-condition lookup. No grid position lookup is required, which removes the need to pass the grid into the hook.
+4. **Cleaner data model.** Replaces `synergies: string[]` (adjacent IDs) with `synergies?: SynergyCondition[]`, where each condition specifies `partnerBuildingId`, `partnerMinLevel`, `selfMinLevel`, and `bonus`. This is self-documenting and maps directly to tooltip text.
+5. **Ties synergies to the leveling milestone system.** Synergies activate at the same level thresholds that drive the visual tier upgrades (base → enhanced → ultra). Players already understand leveling as a progression goal; synergies ride that same mental model.
+
+**Resolution:** Implement the level-requirement model in Session 3. See DESIGN.md § Building Synergies for the updated synergy table and implementation plan.
