@@ -102,21 +102,23 @@ export function Grid({
         </div>
       </div>
 
-      <div className={styles.grid}>
-        {grid.map(row =>
-          row.map(cell => (
-            <GridCell
-              key={`${cell.position.x}-${cell.position.y}`}
-              cell={cell}
-              isBuildLimitReached={buildLimitReached}
-              canAfford={canAfford}
-              spend={spend}
-              onEmptyCellClick={handleEmptyCellClick}
-              onBuildingUpdate={handleBuildingUpdate}
-              getBuildingConfig={getBuildingConfig}
-            />
-          ))
-        )}
+      <div className={styles.gridWrapper}>
+        <div className={styles.grid}>
+          {grid.map(row =>
+            row.map(cell => (
+              <GridCell
+                key={`${cell.position.x}-${cell.position.y}`}
+                cell={cell}
+                isBuildLimitReached={buildLimitReached}
+                canAfford={canAfford}
+                spend={spend}
+                onEmptyCellClick={handleEmptyCellClick}
+                onBuildingUpdate={handleBuildingUpdate}
+                getBuildingConfig={getBuildingConfig}
+              />
+            ))
+          )}
+        </div>
       </div>
 
       {selectorPosition && (

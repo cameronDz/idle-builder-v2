@@ -52,6 +52,12 @@
  * OPTION 3 (ACTIVE): Scale-down — shrink font size, gap, and padding so all
  * 5 items fit on one line even on narrow screens.  Most compact; may feel tight.
  */
+@media (max-width: 768px) {
+  .perSecond {
+    display: none;
+  }
+}
+
 @media (max-width: 600px) {
   .resourceBar {
     gap: 6px;
@@ -63,10 +69,6 @@
     flex-direction: column;
     gap: 0;
     line-height: 1.2;
-  }
-
-  .perSecond {
-    font-size: 0.7em;
   }
 }
 
