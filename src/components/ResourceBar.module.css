@@ -59,6 +59,12 @@
     font-size: 0.75rem;
   }
 
+  .resourceValue {
+    flex-direction: column;
+    gap: 0;
+    line-height: 1.2;
+  }
+
   .perSecond {
     font-size: 0.7em;
   }
