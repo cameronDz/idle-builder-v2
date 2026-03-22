@@ -8,10 +8,29 @@ export interface BuildingConfig {
   icon: string;
   enhancedIcon: string;
   ultraIcon: string;
+  /** Resources spent when the building is first placed on the grid. */
   cost: Resources;
+  /**
+   * Base cost used for upgrade calculations. When set, upgrade costs scale
+   * from this value instead of `cost`. Use when the placement cost differs
+   * from the intended upgrade base (e.g. a foundation building placed for free
+   * but with expensive upgrades).
+   */
+  upgradeCostBase?: Resources;
   upgradeCostMultiplier: number;
   production: Resources;
   productionMultiplier: number;
+  /**
+   * When true this building must be placed before any other building can be
+   * placed on the grid. Only one foundation building is supported.
+   */
+  isFoundation?: boolean;
+  /**
+   * When true, starting an upgrade requires at least one other (non-self)
+   * building instance on the grid whose level is >= this building's current
+   * level. Enforces that the player has levelled up other buildings first.
+   */
+  upgradeRequiresMatchingLevel?: boolean;
 }
 
 export const buildings: BuildingConfig[] = [
@@ -45,14 +64,20 @@ export const buildings: BuildingConfig[] = [
     id: 'stone_castle',
     name: 'Stone Castle',
     duration: 12000,
-    maxCount: 2,
+    maxCount: 1,
     icon: '🏰',
     enhancedIcon: '🏯',
     ultraIcon: '⛩️',
-    cost: { gold: 50, wood: 30, stone: 40, ore: 10, food: 0 },
-    upgradeCostMultiplier: 1.8,
+    // Free to place — it is the mandatory first building.
+    cost: { gold: 0, wood: 0, stone: 0, ore: 0, food: 0 },
+    // Upgrade costs scale from this expensive base rather than the zero placement cost.
+    upgradeCostBase: { gold: 50, wood: 30, stone: 40, ore: 10, food: 0 },
+    // Steeper multiplier than all other buildings (1.8) to make late upgrades very costly.
+    upgradeCostMultiplier: 2.2,
     production: { gold: 8, wood: 0, stone: 5, ore: 2, food: 2 },
     productionMultiplier: 1.5,
+    isFoundation: true,
+    upgradeRequiresMatchingLevel: true,
   },
   {
     id: 'windmill',

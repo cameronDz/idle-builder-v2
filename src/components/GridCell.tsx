@@ -10,6 +10,7 @@ import styles from './GridCell.module.css';
 interface OccupiedCellProps {
   instance: BuildingInstance;
   config: BuildingConfig;
+  buildingInstances: BuildingInstance[];
   isBuildLimitReached: boolean;
   canAfford: (cost: Resources) => boolean;
   spend: (cost: Resources) => boolean;
@@ -19,6 +20,7 @@ interface OccupiedCellProps {
 function OccupiedCell({
   instance,
   config,
+  buildingInstances,
   isBuildLimitReached,
   canAfford,
   spend,
@@ -34,7 +36,28 @@ function OccupiedCell({
     onBuildingUpdate(instance.id, updatedState);
   };
 
+  /**
+   * When upgradeRequiresMatchingLevel is set, at least one other (non-self)
+   * building must exist on the grid with level >= this building's current level.
+   * The level-0 → 1 auto-build is never gated because it's triggered on
+   * placement, before other buildings exist.
+   */
+  const upgradeRequirementMet = (() => {
+    if (!config.upgradeRequiresMatchingLevel) return true;
+    const currentLevel = timerState.level;
+    if (currentLevel === 0) return true; // initial auto-build is always allowed
+    // Require a building of a *different type* (not just a different instance)
+    // to be at the required level. This ensures the player has diversified their
+    // settlement rather than simply having another instance of the same building.
+    return buildingInstances.some(
+      other =>
+        other.buildingTypeId !== config.id &&
+        other.buildingTimer.level >= currentLevel
+    );
+  })();
+
   const handleStart = () => {
+    if (!upgradeRequirementMet) return;
     const upgradeCost = getUpgradeCost(config, timerState.level);
     if (hasAnyCost(upgradeCost)) {
       if (!spend(upgradeCost)) return;
@@ -143,6 +166,7 @@ function OccupiedCell({
           timerState={timerState}
           isBuildLimitReached={isBuildLimitReached}
           canAfford={canAfford}
+          upgradeRequirementMet={upgradeRequirementMet}
           onStart={handleStart}
           onFinish={handleFinish}
           onAcknowledge={handleAcknowledge}
@@ -159,6 +183,7 @@ interface GridCellProps {
     position: { x: number; y: number };
     buildingInstance: BuildingInstance | null;
   };
+  buildingInstances: BuildingInstance[];
   isBuildLimitReached: boolean;
   canAfford: (cost: Resources) => boolean;
   spend: (cost: Resources) => boolean;
@@ -169,6 +194,7 @@ interface GridCellProps {
 
 export function GridCell({
   cell,
+  buildingInstances,
   isBuildLimitReached,
   canAfford,
   spend,
@@ -196,6 +222,7 @@ export function GridCell({
     <OccupiedCell
       instance={cell.buildingInstance}
       config={config}
+      buildingInstances={buildingInstances}
       isBuildLimitReached={isBuildLimitReached}
       canAfford={canAfford}
       spend={spend}

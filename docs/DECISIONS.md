@@ -160,3 +160,33 @@ Both models require the player to invest in two building types — that resource
 5. **Ties synergies to the leveling milestone system.** Synergies activate at the same level thresholds that drive the visual tier upgrades (base → enhanced → ultra). Players already understand leveling as a progression goal; synergies ride that same mental model.
 
 **Resolution:** Implement the level-requirement model in Session 3. See DESIGN.md § Building Synergies for the updated synergy table and implementation plan.
+
+---
+
+## Decision 11 — Stone Castle as a free mandatory foundation building with level-gated upgrades
+**Date:** 2026-03-22
+**Decision:** Redesign the Stone Castle as the game's unique foundation building. It must be the first building placed (free to place), can exist only once (maxCount: 1), uses a steeper upgrade cost multiplier (2.2 vs 1.8 for all others), and its upgrades require at least one other building on the grid to already be at the castle's current level.
+
+**Context:** User request: "I want it so that the castle must be the first building built and can only be built once. It should cost nothing on first build, but require other buildings at its level in order to upgrade. It should also scale building material for next level higher than the other buildings."
+
+**Implementation design:**
+
+1. **Foundation flag (`isFoundation: true`).** A new optional `isFoundation` field on `BuildingConfig` marks the castle as the prerequisite for all other buildings. `useGridSystem.canPlaceBuilding` blocks all non-foundation buildings until at least one foundation building exists. `BuildingSelector` shows a yellow hint banner and grays out non-foundation cards with a "Build the Stone Castle first" tooltip before the castle is placed.
+
+2. **Free placement (`cost: all zeros`).** Placing the castle costs nothing. This is consistent with it being the mandatory starting action — it would be punishing to require resources for a forced first step.
+
+3. **Separate upgrade cost base (`upgradeCostBase`).** Because `getUpgradeCost` scales from `config.cost`, a zero cost would make all castle upgrades free. A new optional `upgradeCostBase` field on `BuildingConfig` overrides the base used for upgrade calculations. The castle's `upgradeCostBase: { gold: 50, wood: 30, stone: 40, ore: 10 }` is the original expensive cost, making upgrades intentionally difficult.
+
+4. **Steeper multiplier (`upgradeCostMultiplier: 2.2`).** Other buildings use 1.8. The castle uses 2.2, meaning each successive upgrade costs significantly more (e.g. level-1→2 costs ×2.2 base, level-2→3 costs ×4.84 base). This creates a strong late-game sink that the castle's power justifies.
+
+5. **Level-matching upgrade gate (`upgradeRequiresMatchingLevel: true`).** A new optional field on `BuildingConfig`. When set, `OccupiedCell.handleStart` checks that at least one other building instance has `level >= castle's current level` before allowing the next construction to start. This is the "requires other buildings at its level to upgrade" mechanic. The initial level-0 auto-build is never gated (it fires on placement before any other building exists). `BuildingDetail` shows a live "Upgrade Requires" row showing whether the condition is met, and disables the Start Construction button with a descriptive tooltip when it is not.
+
+**Why this is not a difficult implementation:**
+- `isFoundation` and `canPlaceBuilding` change: ~10 lines
+- `upgradeCostBase` and `getUpgradeCost` change: ~3 lines
+- `upgradeRequiresMatchingLevel` check in `OccupiedCell`: ~10 lines
+- `BuildingDetail` UI row and button gate: ~20 lines
+- `BuildingSelector` hint + card disable reason: ~15 lines
+Total: ~60 lines across 6 files. No new state, no localStorage migration, no new hooks.
+
+**Resolution:** Implemented in the current session. All five requirements are live.

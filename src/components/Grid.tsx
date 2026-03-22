@@ -109,6 +109,7 @@ export function Grid({
               <GridCell
                 key={`${cell.position.x}-${cell.position.y}`}
                 cell={cell}
+                buildingInstances={buildingInstances}
                 isBuildLimitReached={buildLimitReached}
                 canAfford={canAfford}
                 spend={spend}

@@ -113,10 +113,21 @@ interface BuildingConfig {
   icon: string; // emoji or SVG path
   enhancedIcon: string;
   ultraIcon: string;
+  /** Resources spent on initial placement. */
   cost: Resources;
+  /**
+   * When set, upgrade costs scale from this value instead of `cost`.
+   * Used when placement cost differs from the intended upgrade base
+   * (e.g. Stone Castle is placed free but upgrades scale from its original expensive cost).
+   */
+  upgradeCostBase?: Resources;
   upgradeCostMultiplier: number;
   production: Resources;
   productionMultiplier: number;
+  /** Must be placed before any other building. */
+  isFoundation?: boolean;
+  /** When true, upgrading requires another building at the castle's current level. */
+  upgradeRequiresMatchingLevel?: boolean;
   synergies?: SynergyCondition[]; // optional; unlocks production boosts based on partner level
 }
 
@@ -139,21 +150,28 @@ interface PrestigeState {
 
 All five resource columns are: **Gold / Wood / Stone / Ore / Food**
 
-| Building | Duration | Max | Cost (G/W/S/O/F) | Production /s (G/W/S/O/F) |
-|---|---|---|---|---|
-| 🏠 Wooden House | 3s | 8 | 0/10/0/0/0 | **2**/0/0/0/0 |
-| 🌾 Farm | 6s | 6 | 5/15/0/0/0 | **1**/0/0/0/**5** |
-| 🏰 Stone Castle | 12s | 2 | 50/30/40/10/0 | **8**/0/**5**/**2**/**2** |
-| 🌀 Windmill | 4.5s | 4 | 10/20/5/0/0 | **2**/**1**/0/0/**2** |
-| 🗼 Watch Tower | 9s | 3 | 20/25/15/5/0 | **3**/0/**2**/0/0 |
-| 🏚️ Barn | 4s | 5 | 5/20/0/0/0 | **1**/**1**/0/0/**4** |
-| ⚒️ Forge | 7.5s | 3 | 25/10/20/0/0 | **2**/0/**3**/**2**/0 |
-| 🏪 Market | 10s | 2 | 30/20/10/0/0 | **5**/**1**/**1**/**1**/**1** |
-| ⛏️ Ore Mine | 8s | 3 | 15/15/10/0/0 | **1**/0/**4**/**3**/0 |
-| 🪵 Lumber Yard | 5s | 4 | 10/25/5/0/0 | 0/**3**/0/0/0 |
-| 🪨 Quarry | 6s | 4 | 10/5/0/0/0 | 0/0/**3**/0/0 |
+| Building | Duration | Max | Cost (G/W/S/O/F) | Production /s (G/W/S/O/F) | Notes |
+|---|---|---|---|---|---|
+| 🏰 Stone Castle | 12s | **1** | **Free** (upgrades scale from 50/30/40/10/0) | **8**/0/**5**/**2**/**2** | Foundation — must be first; `upgradeCostMultiplier: 2.2`; upgrade requires matching-level partner |
+| 🏠 Wooden House | 3s | 8 | 0/10/0/0/0 | **2**/0/0/0/0 | |
+| 🌾 Farm | 6s | 6 | 5/15/0/0/0 | **1**/0/0/0/**5** | |
+| 🌀 Windmill | 4.5s | 4 | 10/20/5/0/0 | **2**/**1**/0/0/**2** | |
+| 🗼 Watch Tower | 9s | 3 | 20/25/15/5/0 | **3**/0/**2**/0/0 | |
+| 🏚️ Barn | 4s | 5 | 5/20/0/0/0 | **1**/**1**/0/0/**4** | |
+| ⚒️ Forge | 7.5s | 3 | 25/10/20/0/0 | **2**/0/**3**/**2**/0 | |
+| 🏪 Market | 10s | 2 | 30/20/10/0/0 | **5**/**1**/**1**/**1**/**1** | |
+| ⛏️ Ore Mine | 8s | 3 | 15/15/10/0/0 | **1**/0/**4**/**3**/0 | |
+| 🪵 Lumber Yard | 5s | 4 | 10/25/5/0/0 | 0/**3**/0/0/0 | |
+| 🪨 Quarry | 6s | 4 | 10/5/0/0/0 | 0/0/**3**/0/0 | |
 
-All buildings: `upgradeCostMultiplier: 1.8`, `productionMultiplier: 1.5`
+All non-castle buildings: `upgradeCostMultiplier: 1.8`, `productionMultiplier: 1.5`
+
+### Stone Castle mechanics
+
+- **Foundation:** The castle is the only building available when the grid is empty. All other buildings are locked until the castle exists. The `BuildingSelector` shows a yellow hint and grays out non-castle cards with a "Build the Stone Castle first" tooltip.
+- **Free placement:** `cost: all zeros`. The forced first step should not be a resource gate.
+- **Expensive upgrades:** `upgradeCostBase: { gold: 50, wood: 30, stone: 40, ore: 10 }` with `upgradeCostMultiplier: 2.2`. Level-1→2 costs ×2.2 the base; level-2→3 costs ×4.84; each step is a significant resource sink.
+- **Level-matching upgrade gate:** To start a castle upgrade from level L to L+1, at least one other building on the grid must have `level >= L`. The `BuildingDetail` panel shows an "Upgrade Requires" row (green ✔ / red ✘) and the Start Construction button is disabled until the condition is met.
 
 ---
 

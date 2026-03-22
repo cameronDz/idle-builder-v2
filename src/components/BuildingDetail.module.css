@@ -104,6 +104,14 @@
   color: #ef4444;
 }
 
+.requirementMet {
+  color: #16a34a;
+}
+
+.requirementUnmet {
+  color: #ef4444;
+}
+
 .statusComplete {
   color: #22c55e;
   font-weight: 700;
