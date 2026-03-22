@@ -136,7 +136,7 @@ export function BuildingDetail({
                     : 'Start construction'
               }
             >
-              {`▶ Start Construction (${formatTime(config.duration)})`}
+              {`▶ Start Construction (${formatTime(timerState.timeRemaining)})`}
             </button>
           )}
         </div>
