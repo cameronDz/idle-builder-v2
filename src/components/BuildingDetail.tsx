@@ -12,6 +12,11 @@ interface BuildingDetailProps {
   canAfford: (cost: Resources) => boolean;
   /** False when upgradeRequiresMatchingLevel is set and the requirement is not yet met. */
   upgradeRequirementMet: boolean;
+  /**
+   * The castle's current level, used to cap upgrades for non-foundation buildings.
+   * Null when no cap applies (this building IS the castle, or no castle on the grid).
+   */
+  castleLevelCap: number | null;
   onStart: () => void;
   onFinish: () => void;
   onAcknowledge: () => void;
@@ -25,6 +30,7 @@ export function BuildingDetail({
   isBuildLimitReached,
   canAfford,
   upgradeRequirementMet,
+  castleLevelCap,
   onStart,
   onFinish,
   onAcknowledge,
@@ -36,6 +42,8 @@ export function BuildingDetail({
   const upgradeCostStr = formatCost(upgradeCost);
   const hasUpgradeCost = hasAnyCost(upgradeCost);
   const canAffordUpgrade = !hasUpgradeCost || canAfford(upgradeCost);
+
+  const castleLevelCapMet = castleLevelCap === null || level < castleLevelCap;
 
   const currentIcon =
     level >= 5 ? config.ultraIcon : level >= 2 ? config.enhancedIcon : config.icon;
@@ -62,14 +70,16 @@ export function BuildingDetail({
       ? `Building… ${formatTime(timerState.timeRemaining)} remaining`
       : 'Not started';
 
-  const canStart = !isBuildLimitReached && canAffordUpgrade && upgradeRequirementMet;
+  const canStart = !isBuildLimitReached && canAffordUpgrade && upgradeRequirementMet && castleLevelCapMet;
   const startDisabledTitle = isBuildLimitReached
     ? 'Max concurrent builds reached'
     : !canAffordUpgrade
       ? 'Not enough resources'
       : !upgradeRequirementMet
         ? `Need another building at level ${level} or above to upgrade`
-        : 'Start construction';
+        : !castleLevelCapMet
+          ? `Upgrade the castle to level ${level + 1} first`
+          : 'Start construction';
 
   return (
     <div className={styles.overlay} onClick={onClose}>
@@ -121,6 +131,17 @@ export function BuildingDetail({
                 {upgradeRequirementMet
                   ? `✔ Another building at level ${level}+`
                   : `✘ Need another building at level ${level}+`}
+              </span>
+            </div>
+          )}
+
+          {castleLevelCap !== null && !timerState.hasStarted && !timerState.isComplete && (
+            <div className={styles.row}>
+              <span className={styles.label}>{'Castle Level Cap'}</span>
+              <span className={`${styles.value} ${castleLevelCapMet ? styles.requirementMet : styles.requirementUnmet}`}>
+                {castleLevelCapMet
+                  ? `✔ Castle (Lv ${castleLevelCap}) allows upgrade`
+                  : `✘ Castle (Lv ${castleLevelCap}) — upgrade to Lv ${level + 1} required`}
               </span>
             </div>
           )}

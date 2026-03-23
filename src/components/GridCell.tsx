@@ -3,6 +3,7 @@ import { useTimer } from '../hooks/useTimer';
 import { BuildingDetail } from './BuildingDetail';
 import type { BuildingInstance, BuildingTimer, Resources } from '../types/game';
 import type { BuildingConfig } from '../config/buildings';
+import { buildings } from '../config/buildings';
 import { getUpgradeCost, hasAnyCost } from '../utils/buildingUtils';
 import { formatTime } from '../utils/timeUtils';
 import styles from './GridCell.module.css';
@@ -56,8 +57,24 @@ function OccupiedCell({
     );
   })();
 
+  /**
+   * The castle's current level acts as an upper bound for all other buildings.
+   * No non-foundation building may be upgraded to a level higher than the castle.
+   * Returns the castle's current level, or null when no cap applies (i.e. this
+   * IS the castle, or no castle exists on the grid yet).
+   */
+  const castleLevelCap = (() => {
+    if (config.isFoundation) return null;
+    const castleConfig = buildings.find(b => b.isFoundation);
+    if (!castleConfig) return null;
+    const castleInstance = buildingInstances.find(i => i.buildingTypeId === castleConfig.id);
+    if (!castleInstance) return null;
+    return castleInstance.buildingTimer.level;
+  })();
+
   const handleStart = () => {
     if (!upgradeRequirementMet) return;
+    if (castleLevelCap !== null && timerState.level >= castleLevelCap) return;
     const upgradeCost = getUpgradeCost(config, timerState.level);
     if (hasAnyCost(upgradeCost)) {
       if (!spend(upgradeCost)) return;
@@ -167,6 +184,7 @@ function OccupiedCell({
           isBuildLimitReached={isBuildLimitReached}
           canAfford={canAfford}
           upgradeRequirementMet={upgradeRequirementMet}
+          castleLevelCap={castleLevelCap}
           onStart={handleStart}
           onFinish={handleFinish}
           onAcknowledge={handleAcknowledge}
