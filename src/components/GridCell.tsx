@@ -4,7 +4,7 @@ import { BuildingDetail } from './BuildingDetail';
 import type { BuildingInstance, BuildingTimer, Resources } from '../types/game';
 import type { BuildingConfig } from '../config/buildings';
 import { buildings } from '../config/buildings';
-import { getUpgradeCost, hasAnyCost } from '../utils/buildingUtils';
+import { getUpgradeCost, hasAnyCost, applyDiscount } from '../utils/buildingUtils';
 import { formatTime } from '../utils/timeUtils';
 import styles from './GridCell.module.css';
 
@@ -16,6 +16,8 @@ interface OccupiedCellProps {
   canAfford: (cost: Resources) => boolean;
   spend: (cost: Resources) => boolean;
   onBuildingUpdate: (instanceId: string, timerState: BuildingTimer) => void;
+  /** Example 3 — fractional cost discount from prestige (0–0.5). */
+  costDiscount: number;
 }
 
 function OccupiedCell({
@@ -26,6 +28,7 @@ function OccupiedCell({
   canAfford,
   spend,
   onBuildingUpdate,
+  costDiscount,
 }: OccupiedCellProps) {
   const { timerState, startTimer, completeTimer, acknowledgeComplete } = useTimer(
     config.duration,
@@ -75,7 +78,8 @@ function OccupiedCell({
   const handleStart = () => {
     if (!upgradeRequirementMet) return;
     if (castleLevelCap !== null && timerState.level >= castleLevelCap) return;
-    const upgradeCost = getUpgradeCost(config, timerState.level);
+    const rawUpgradeCost = getUpgradeCost(config, timerState.level);
+    const upgradeCost = applyDiscount(rawUpgradeCost, costDiscount);
     if (hasAnyCost(upgradeCost)) {
       if (!spend(upgradeCost)) return;
     }
@@ -185,6 +189,7 @@ function OccupiedCell({
           canAfford={canAfford}
           upgradeRequirementMet={upgradeRequirementMet}
           castleLevelCap={castleLevelCap}
+          costDiscount={costDiscount}
           onStart={handleStart}
           onFinish={handleFinish}
           onAcknowledge={handleAcknowledge}
@@ -208,6 +213,8 @@ interface GridCellProps {
   onEmptyCellClick: (position: { x: number; y: number }) => void;
   onBuildingUpdate: (instanceId: string, timerState: BuildingTimer) => void;
   getBuildingConfig: (buildingTypeId: string) => BuildingConfig | undefined;
+  /** Example 3 — fractional cost discount from prestige (0–0.5). */
+  costDiscount: number;
 }
 
 export function GridCell({
@@ -219,6 +226,7 @@ export function GridCell({
   onEmptyCellClick,
   onBuildingUpdate,
   getBuildingConfig,
+  costDiscount,
 }: GridCellProps) {
   if (!cell.isOccupied || !cell.buildingInstance) {
     return (
@@ -245,6 +253,7 @@ export function GridCell({
       canAfford={canAfford}
       spend={spend}
       onBuildingUpdate={onBuildingUpdate}
+      costDiscount={costDiscount}
     />
   );
 }

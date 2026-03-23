@@ -1,7 +1,7 @@
 import type { BuildingConfig } from '../config/buildings';
 import type { BuildingInstance, BuildingTimer, Resources } from '../types/game';
 import { formatTime } from '../utils/timeUtils';
-import { getUpgradeCost, formatCost, hasAnyCost } from '../utils/buildingUtils';
+import { getUpgradeCost, formatCost, hasAnyCost, applyDiscount } from '../utils/buildingUtils';
 import styles from './BuildingDetail.module.css';
 
 interface BuildingDetailProps {
@@ -17,6 +17,8 @@ interface BuildingDetailProps {
    * Null when no cap applies (this building IS the castle, or no castle on the grid).
    */
   castleLevelCap: number | null;
+  /** Example 3 — fractional cost discount from prestige (0–0.5). */
+  costDiscount: number;
   onStart: () => void;
   onFinish: () => void;
   onAcknowledge: () => void;
@@ -31,6 +33,7 @@ export function BuildingDetail({
   canAfford,
   upgradeRequirementMet,
   castleLevelCap,
+  costDiscount,
   onStart,
   onFinish,
   onAcknowledge,
@@ -38,7 +41,8 @@ export function BuildingDetail({
 }: BuildingDetailProps) {
   const level = timerState.level;
 
-  const upgradeCost = getUpgradeCost(config, level);
+  const rawUpgradeCost = getUpgradeCost(config, level);
+  const upgradeCost = applyDiscount(rawUpgradeCost, costDiscount);
   const upgradeCostStr = formatCost(upgradeCost);
   const hasUpgradeCost = hasAnyCost(upgradeCost);
   const canAffordUpgrade = !hasUpgradeCost || canAfford(upgradeCost);

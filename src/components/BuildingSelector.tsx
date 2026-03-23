@@ -3,6 +3,7 @@ import type { BuildingConfig } from '../config/buildings';
 import type { Resources } from '../types/game';
 import styles from './BuildingSelector.module.css';
 import { formatTime } from '../utils/timeUtils';
+import { applyDiscount, hasAnyCost } from '../utils/buildingUtils';
 
 interface BuildingSelectorProps {
   onSelect: (buildingTypeId: string) => void;
@@ -10,6 +11,8 @@ interface BuildingSelectorProps {
   getBuildingCount: (buildingTypeId: string) => number;
   canAfford: (cost: Resources) => boolean;
   resources: Resources;
+  /** Example 3 — fractional cost discount from prestige (0–0.5). */
+  costDiscount: number;
 }
 
 function BuildingCard({
@@ -18,6 +21,7 @@ function BuildingCard({
   affordable,
   foundationIsBuilt,
   resources,
+  costDiscount,
   onSelect,
 }: {
   config: BuildingConfig;
@@ -25,11 +29,14 @@ function BuildingCard({
   affordable: boolean;
   foundationIsBuilt: boolean;
   resources: Resources;
+  costDiscount: number;
   onSelect: () => void;
 }) {
   const isMaxed = count >= config.maxCount;
   const requiresFoundation = !config.isFoundation && !foundationIsBuilt;
   const isDisabled = isMaxed || !affordable || requiresFoundation;
+
+  const discountedCost = applyDiscount(config.cost, costDiscount);
 
   const productionParts: string[] = [];
   if (config.production.gold > 0) productionParts.push(`💰${config.production.gold}`);
@@ -39,12 +46,7 @@ function BuildingCard({
   if (config.production.food > 0) productionParts.push(`🍖${config.production.food}`);
   const productionStr = productionParts.length > 0 ? productionParts.join(' ') + '/s' : null;
 
-  const isFree =
-    config.cost.gold === 0 &&
-    config.cost.wood === 0 &&
-    config.cost.stone === 0 &&
-    config.cost.ore === 0 &&
-    config.cost.food === 0;
+  const isFree = !hasAnyCost(discountedCost);
 
   const foundationName = buildings.find(b => b.isFoundation)?.name ?? 'foundation building';
 
@@ -68,29 +70,29 @@ function BuildingCard({
         <span className={styles.name}>{config.name}</span>
         <span className={styles.duration}>{formatTime(config.duration)}</span>
         <span className={styles.cost}>
-          {config.cost.gold > 0 && (
-            <span className={resources.gold < config.cost.gold ? styles.costUnaffordable : ''}>
-              {`💰${config.cost.gold} `}
+          {discountedCost.gold > 0 && (
+            <span className={resources.gold < discountedCost.gold ? styles.costUnaffordable : ''}>
+              {`💰${discountedCost.gold} `}
             </span>
           )}
-          {config.cost.wood > 0 && (
-            <span className={resources.wood < config.cost.wood ? styles.costUnaffordable : ''}>
-              {`🌲${config.cost.wood} `}
+          {discountedCost.wood > 0 && (
+            <span className={resources.wood < discountedCost.wood ? styles.costUnaffordable : ''}>
+              {`🌲${discountedCost.wood} `}
             </span>
           )}
-          {config.cost.stone > 0 && (
-            <span className={resources.stone < config.cost.stone ? styles.costUnaffordable : ''}>
-              {`🪨${config.cost.stone} `}
+          {discountedCost.stone > 0 && (
+            <span className={resources.stone < discountedCost.stone ? styles.costUnaffordable : ''}>
+              {`🪨${discountedCost.stone} `}
             </span>
           )}
-          {config.cost.ore > 0 && (
-            <span className={resources.ore < config.cost.ore ? styles.costUnaffordable : ''}>
-              {`🔩${config.cost.ore} `}
+          {discountedCost.ore > 0 && (
+            <span className={resources.ore < discountedCost.ore ? styles.costUnaffordable : ''}>
+              {`🔩${discountedCost.ore} `}
             </span>
           )}
-          {config.cost.food > 0 && (
-            <span className={resources.food < config.cost.food ? styles.costUnaffordable : ''}>
-              {`🍖${config.cost.food} `}
+          {discountedCost.food > 0 && (
+            <span className={resources.food < discountedCost.food ? styles.costUnaffordable : ''}>
+              {`🍖${discountedCost.food} `}
             </span>
           )}
           {isFree && 'Free'}
@@ -104,7 +106,7 @@ function BuildingCard({
   );
 }
 
-export function BuildingSelector({ onSelect, onCancel, getBuildingCount, canAfford, resources }: BuildingSelectorProps) {
+export function BuildingSelector({ onSelect, onCancel, getBuildingCount, canAfford, resources, costDiscount }: BuildingSelectorProps) {
   const foundationIsBuilt = buildings.some(b => b.isFoundation && getBuildingCount(b.id) > 0);
 
   return (
@@ -125,9 +127,10 @@ export function BuildingSelector({ onSelect, onCancel, getBuildingCount, canAffo
               key={config.id}
               config={config}
               count={getBuildingCount(config.id)}
-              affordable={canAfford(config.cost)}
+              affordable={canAfford(applyDiscount(config.cost, costDiscount))}
               foundationIsBuilt={foundationIsBuilt}
               resources={resources}
+              costDiscount={costDiscount}
               onSelect={() => onSelect(config.id)}
             />
           ))}

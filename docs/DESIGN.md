@@ -36,7 +36,7 @@
 
 ### P1 — Core-ish (Session 3)
 - ⬜ Building synergies (building A at level X boosts production if building B exists at level Y — see § Building Synergies below)
-- ⬜ Prestige / reset mechanic (permanent global multiplier)
+- ✅ Prestige / reset mechanic — 3 permanent bonus examples (see § Prestige below)
 - ⬜ Mobile-responsive layout
 
 ### P2 — Polish (Session 3–4)
@@ -172,6 +172,85 @@ All non-castle buildings: `upgradeCostMultiplier: 1.8`, `productionMultiplier: 1
 - **Free placement:** `cost: all zeros`. The forced first step should not be a resource gate.
 - **Expensive upgrades:** `upgradeCostBase: { gold: 50, wood: 30, stone: 40, ore: 10 }` with `upgradeCostMultiplier: 2.2`. Level-1→2 costs ×2.2 the base; level-2→3 costs ×4.84; each step is a significant resource sink.
 - **Level-matching upgrade gate:** To start a castle upgrade from level L to L+1, at least one other building on the grid must have `level >= L`. The `BuildingDetail` panel shows an "Upgrade Requires" row (green ✔ / red ✘) and the Start Construction button is disabled until the condition is met.
+
+---
+
+## Prestige
+
+> Implemented in Session 3. Requires **all 25 grid cells** to be occupied before the prestige button is enabled.
+
+### Trigger
+
+When the player clicks **✨ Prestige & Reset** (shown in `PrestigePanel`):
+1. The grid is cleared (`clearGrid`).
+2. Resources are reset to the post-prestige starting pack.
+3. `timesPrestiged` is incremented and saved to localStorage (`idle-builder-prestige`).
+
+### 3 Prestige Bonus Examples
+
+Each run, all three bonuses scale with the number of times the player has prestiged.
+
+#### Example 1 — Production Multiplier (`globalMultiplier`)
+
+Every building's resource output is multiplied by `globalMultiplier`.
+
+```
+globalMultiplier = 1.0 + timesPrestiged × 0.5
+```
+
+| Prestiges | Multiplier |
+|---|---|
+| 0 | ×1.0 (no bonus) |
+| 1 | ×1.5 |
+| 2 | ×2.0 |
+| 4 | ×3.0 |
+
+**Integration:** passed as the third argument to `useProductionTick`; applied inside `calculateProduction` alongside the per-level building multiplier.
+
+#### Example 2 — Starting Resources Bonus (`startingResources`)
+
+The resource pack granted at the start of each run scales upward with prestige count.
+
+```
+factor = 1 + timesPrestiged × 0.25
+startingGold = floor(100 × factor)   // 100 → 125 → 150 → …
+startingWood = floor(50  × factor)   //  50 →  62 →  75 → …
+// etc.
+```
+
+**Integration:** `resetResources` in `useResources` accepts an optional `customStarting?: Resources` argument. `usePrestige.prestige()` computes the scaled pack via `computeStartingResources(newPrestigeCount)` and passes it to `resetResources`.
+
+#### Example 3 — Building Cost Discount (`costDiscount`)
+
+All building placement and upgrade costs are reduced by a flat percentage, capped at 50 %.
+
+```
+costDiscount = min(timesPrestiged × 0.1, 0.5)
+```
+
+| Prestiges | Discount |
+|---|---|
+| 0 | 0 % |
+| 1 | 10 % |
+| 3 | 30 % |
+| 5+ | 50 % (cap) |
+
+**Integration:** `costDiscount` is threaded from `usePrestige` → `App` → `Grid` → `GridCell` / `BuildingDetail` / `BuildingSelector`. The utility function `applyDiscount(cost, discount)` in `buildingUtils.ts` applies the reduction (floor per resource). Used whenever `spend()` or `canAfford()` is called for a building cost.
+
+### Implementation files
+
+| File | Change |
+|---|---|
+| `src/hooks/usePrestige.ts` | New hook — state, storage, bonus computations, trigger |
+| `src/components/PrestigePanel.tsx` | New component — displays all 3 examples + prestige button |
+| `src/utils/buildingUtils.ts` | Added `applyDiscount(cost, discount)` |
+| `src/hooks/useProductionTick.ts` | Added `globalMultiplier` parameter (Example 1) |
+| `src/hooks/useResources.ts` | `resetResources` now accepts `customStarting?: Resources` (Example 2) |
+| `src/components/Grid.tsx` | Threads `costDiscount`, applies discount on placement spend |
+| `src/components/GridCell.tsx` | Threads `costDiscount`, applies discount on upgrade spend |
+| `src/components/BuildingDetail.tsx` | Displays discounted upgrade cost |
+| `src/components/BuildingSelector.tsx` | Displays discounted placement cost, checks affordability against discounted cost |
+| `src/App.tsx` | Wires `usePrestige`; passes `globalMultiplier`, `costDiscount`, `startingResources` |
 
 ---
 

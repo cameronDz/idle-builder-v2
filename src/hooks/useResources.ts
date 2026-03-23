@@ -27,7 +27,7 @@ export interface UseResourcesReturn {
   canAfford: (cost: Resources) => boolean;
   spend: (cost: Resources) => boolean;
   earn: (amount: Resources) => void;
-  resetResources: () => void;
+  resetResources: (customStarting?: Resources) => void;
 }
 
 export function useResources(): UseResourcesReturn {
@@ -95,8 +95,8 @@ export function useResources(): UseResourcesReturn {
     });
   }, []);
 
-  const resetResources = useCallback(() => {
-    const starting = { ...STARTING_RESOURCES };
+  const resetResources = useCallback((customStarting?: Resources) => {
+    const starting = customStarting ? { ...customStarting } : { ...STARTING_RESOURCES };
     setResources(starting);
     saveResources(starting);
   }, []);

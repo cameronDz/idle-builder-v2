@@ -31,7 +31,14 @@
 }
 
 .container {
-  max-width: 640px;
+  max-width: 720px;
   margin: 0 auto;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.sidePanel {
   width: 100%;
 }
