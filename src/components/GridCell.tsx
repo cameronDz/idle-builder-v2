@@ -14,6 +14,7 @@ interface OccupiedCellProps {
   buildingInstances: BuildingInstance[];
   isBuildLimitReached: boolean;
   canAfford: (cost: Resources) => boolean;
+  currentResources: Resources;
   spend: (cost: Resources) => boolean;
   onBuildingUpdate: (instanceId: string, timerState: BuildingTimer) => void;
   /** Example 3 — fractional cost discount from prestige (0–0.5). */
@@ -26,6 +27,7 @@ function OccupiedCell({
   buildingInstances,
   isBuildLimitReached,
   canAfford,
+  currentResources,
   spend,
   onBuildingUpdate,
   costDiscount,
@@ -187,6 +189,7 @@ function OccupiedCell({
           timerState={timerState}
           isBuildLimitReached={isBuildLimitReached}
           canAfford={canAfford}
+          currentResources={currentResources}
           upgradeRequirementMet={upgradeRequirementMet}
           castleLevelCap={castleLevelCap}
           costDiscount={costDiscount}
@@ -209,6 +212,7 @@ interface GridCellProps {
   buildingInstances: BuildingInstance[];
   isBuildLimitReached: boolean;
   canAfford: (cost: Resources) => boolean;
+  currentResources: Resources;
   spend: (cost: Resources) => boolean;
   onEmptyCellClick: (position: { x: number; y: number }) => void;
   onBuildingUpdate: (instanceId: string, timerState: BuildingTimer) => void;
@@ -222,6 +226,7 @@ export function GridCell({
   buildingInstances,
   isBuildLimitReached,
   canAfford,
+  currentResources,
   spend,
   onEmptyCellClick,
   onBuildingUpdate,
@@ -251,6 +256,7 @@ export function GridCell({
       buildingInstances={buildingInstances}
       isBuildLimitReached={isBuildLimitReached}
       canAfford={canAfford}
+      currentResources={currentResources}
       spend={spend}
       onBuildingUpdate={onBuildingUpdate}
       costDiscount={costDiscount}

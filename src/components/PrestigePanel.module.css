@@ -123,3 +123,10 @@
   color: #6ee7b7;
   font-weight: 600;
 }
+
+.resourceLines {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 2px;
+}
