@@ -27,12 +27,19 @@ export const MAX_PRESTIGES = 10;
  * | 4 – 6  | 12 |
  * | 7 – 9  | 15 |
  * | 10 (max) | 20 |
+ *
+ * TODO: The body below is changed to return 5 for ALL tiers for testing purposes only.
+ *       Revert to the commented-out tiered logic when testing is complete.
  */
-export function computeRequiredCastleLevel(nextPrestigeNumber: number): number {
-  if (nextPrestigeNumber <= 3) return 10;
-  if (nextPrestigeNumber <= 6) return 12;
-  if (nextPrestigeNumber <= 9) return 15;
-  return 20;
+export function computeRequiredCastleLevel(_nextPrestigeNumber: number): number {
+  // TODO: testing only – remove this line and restore the tiered logic below
+  return 5;
+
+  // Original tiered thresholds (restore when done testing):
+  // if (nextPrestigeNumber <= 3) return 10;
+  // if (nextPrestigeNumber <= 6) return 12;
+  // if (nextPrestigeNumber <= 9) return 15;
+  // return 20;
 }
 
 /**
