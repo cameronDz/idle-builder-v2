@@ -26,7 +26,9 @@ export const MAX_PRESTIGES = 10;
  * | 1 – 10 | 5 (testing) |
  *
  * NOTE: Lowered to level 5 for all tiers for testing purposes.
+ * TODO: Restore tiered thresholds (10/12/15/20) when done testing.
  */
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 export function computeRequiredCastleLevel(_nextPrestigeNumber: number): number {
   return 5;
 }
