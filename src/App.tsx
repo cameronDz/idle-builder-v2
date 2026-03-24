@@ -16,7 +16,8 @@ function App() {
     globalMultiplier,
     costDiscount,
     canPrestige,
-    setOccupiedCount,
+    requiredCastleLevel,
+    setCastleLevel,
     prestige,
   } = usePrestige();
 
@@ -26,12 +27,15 @@ function App() {
     globalMultiplier
   );
 
-  // Keep the prestige hook informed of how many cells are occupied so it can
-  // compute canPrestige without needing grid internals.
-  const occupiedCount = gridSystem.buildingInstances.length;
+  // Keep the prestige hook informed of the Stone Castle's current level so it
+  // can compute canPrestige against the tiered castle-level requirements.
+  const castleInstance = gridSystem.buildingInstances.find(
+    i => i.buildingTypeId === 'stone_castle'
+  );
+  const castleLevel = castleInstance?.buildingTimer.level ?? 0;
   useEffect(() => {
-    setOccupiedCount(occupiedCount);
-  }, [occupiedCount, setOccupiedCount]);
+    setCastleLevel(castleLevel);
+  }, [castleLevel, setCastleLevel]);
 
   const handlePrestige = () => {
     prestige(gridSystem.clearGrid, resetResources);
@@ -60,6 +64,8 @@ function App() {
           <div className={styles.sidePanel}>
             <PrestigePanel
               timesPrestiged={timesPrestiged}
+              castleLevel={castleLevel}
+              requiredCastleLevel={requiredCastleLevel}
               canPrestige={canPrestige}
               onPrestige={handlePrestige}
             />

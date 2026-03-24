@@ -3,11 +3,17 @@ import {
   computeGlobalMultiplier,
   computeStartingResources,
   computeCostDiscount,
+  computeRequiredCastleLevel,
+  MAX_PRESTIGES,
 } from '../hooks/usePrestige';
 import styles from './PrestigePanel.module.css';
 
 interface PrestigePanelProps {
   timesPrestiged: number;
+  /** Current Stone Castle timer level (0 = not yet levelled up). */
+  castleLevel: number;
+  /** Required castle level for the next prestige (from hook). */
+  requiredCastleLevel: number;
   canPrestige: boolean;
   onPrestige: () => void;
 }
@@ -41,10 +47,24 @@ function formatResources(r: Resources): string {
  * Each prestige reduces all building placement and upgrade costs by 10 %,
  * capped at 50 %, making expansion faster in later runs.
  *
- * The prestige button is only enabled once every cell on the 5×5 grid is filled.
+ * The prestige button is only enabled when the Stone Castle is at the required
+ * level for the next prestige tier and max prestige has not been reached.
  */
-export function PrestigePanel({ timesPrestiged, canPrestige, onPrestige }: PrestigePanelProps) {
+export function PrestigePanel({
+  timesPrestiged,
+  castleLevel,
+  requiredCastleLevel,
+  canPrestige,
+  onPrestige,
+}: PrestigePanelProps) {
   const nextPrestigeCount = timesPrestiged + 1;
+  const isMaxPrestige = timesPrestiged >= MAX_PRESTIGES;
+  const castleRequirementMet = castleLevel >= requiredCastleLevel;
+
+  // Show next-tier requirement when available
+  const nextRequiredCastleLevel = isMaxPrestige
+    ? null
+    : computeRequiredCastleLevel(nextPrestigeCount + 1);
 
   const currentMultiplier = computeGlobalMultiplier(timesPrestiged);
   const nextMultiplier = computeGlobalMultiplier(nextPrestigeCount);
@@ -66,7 +86,33 @@ export function PrestigePanel({ timesPrestiged, canPrestige, onPrestige }: Prest
       <div className={styles.header}>
         <h2 className={styles.title}>{'✨ Prestige'}</h2>
         {timesPrestiged > 0 && (
-          <span className={styles.badge}>{`×${timesPrestiged} Prestige`}</span>
+          <span className={styles.badge}>
+            {isMaxPrestige ? `★ Max Prestige` : `×${timesPrestiged} Prestige`}
+          </span>
+        )}
+      </div>
+
+      {/* Castle level requirement row */}
+      <div className={styles.bonuses}>
+        <div className={styles.bonusRow}>
+          <span className={styles.bonusIcon}>{'🏰'}</span>
+          <span className={styles.bonusLabel}>
+            {isMaxPrestige ? 'Castle Requirement' : `Castle Required (Prestige ${nextPrestigeCount})`}
+          </span>
+          <span className={`${styles.bonusValue} ${isMaxPrestige ? styles.active : castleRequirementMet ? styles.active : styles.unmet}`}>
+            {isMaxPrestige
+              ? '★ Max reached'
+              : `Lv ${castleLevel} / ${requiredCastleLevel}`}
+          </span>
+        </div>
+
+        {/* Tier preview: show the requirement for the next tier if it differs */}
+        {!isMaxPrestige && nextRequiredCastleLevel !== null && nextRequiredCastleLevel !== requiredCastleLevel && (
+          <div className={styles.bonusRow}>
+            <span className={styles.bonusIcon}>{''}</span>
+            <span className={styles.bonusLabel}>{`Castle Required (Prestige ${nextPrestigeCount + 1}+)`}</span>
+            <span className={styles.bonusValue}>{`Lv ${nextRequiredCastleLevel}`}</span>
+          </div>
         )}
       </div>
 
@@ -117,12 +163,14 @@ export function PrestigePanel({ timesPrestiged, canPrestige, onPrestige }: Prest
           onClick={handlePrestige}
           disabled={!canPrestige}
         >
-          {'✨ Prestige & Reset'}
+          {isMaxPrestige ? '★ Max Prestige Reached' : '✨ Prestige & Reset'}
         </button>
         <p className={`${styles.hint} ${canPrestige ? styles.hintReady : ''}`}>
-          {canPrestige
-            ? '🎉 All cells filled — you can prestige!'
-            : 'Fill every grid cell to unlock prestige'}
+          {isMaxPrestige
+            ? '🏆 You have reached maximum prestige!'
+            : castleRequirementMet
+              ? `🎉 Castle Lv ${castleLevel} — requirement met, prestige ready!`
+              : `Upgrade the 🏰 Castle to level ${requiredCastleLevel} to prestige`}
         </p>
       </div>
     </div>

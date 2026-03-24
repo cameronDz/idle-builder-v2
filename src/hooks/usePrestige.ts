@@ -13,10 +13,27 @@ const BASE_STARTING_RESOURCES: Resources = {
 };
 
 /**
- * The total number of grid cells (5×5). Prestige is available when every
- * cell is occupied.
+ * Maximum number of times a player can prestige.
+ * Prestige level 10 is the final tier (requires castle level 20).
  */
-const TOTAL_GRID_CELLS = 25;
+export const MAX_PRESTIGES = 10;
+
+/**
+ * Returns the Stone Castle level required to perform the nth prestige.
+ *
+ * | Next prestige # | Required castle level |
+ * |---|---|
+ * | 1 – 3  | 10 |
+ * | 4 – 6  | 12 |
+ * | 7 – 9  | 15 |
+ * | 10 (max) | 20 |
+ */
+export function computeRequiredCastleLevel(nextPrestigeNumber: number): number {
+  if (nextPrestigeNumber <= 3) return 10;
+  if (nextPrestigeNumber <= 6) return 12;
+  if (nextPrestigeNumber <= 9) return 15;
+  return 20;
+}
 
 /**
  * Example 1 — Production Multiplier
@@ -87,11 +104,20 @@ export interface UsePrestigeReturn {
   costDiscount: number;
   /**
    * Whether the prestige action is currently available.
-   * Requires all 25 grid cells to be occupied.
+   * Requires the Stone Castle to be at `requiredCastleLevel` AND that
+   * `timesPrestiged < MAX_PRESTIGES`.
    */
   canPrestige: boolean;
-  /** Set this to the number of occupied cells so the hook can compute canPrestige. */
-  setOccupiedCount: (count: number) => void;
+  /**
+   * Required Stone Castle level for the next prestige.
+   * Derived from `timesPrestiged` via `computeRequiredCastleLevel`.
+   */
+  requiredCastleLevel: number;
+  /**
+   * Set this to the Stone Castle's current timer level so the hook can
+   * compute `canPrestige`.
+   */
+  setCastleLevel: (level: number) => void;
   /**
    * Trigger prestige: increment the counter, update all bonuses, clear the
    * grid, and reset resources to the post-prestige starting pack.
@@ -101,9 +127,12 @@ export interface UsePrestigeReturn {
 
 export function usePrestige(): UsePrestigeReturn {
   const [prestigeState, setPrestigeState] = useState<PrestigeState>(loadPrestigeState);
-  const [occupiedCount, setOccupiedCount] = useState(0);
+  const [castleLevel, setCastleLevel] = useState(0);
 
-  const canPrestige = occupiedCount >= TOTAL_GRID_CELLS;
+  const nextPrestigeNumber = prestigeState.timesPrestiged + 1;
+  const requiredCastleLevel = computeRequiredCastleLevel(nextPrestigeNumber);
+  const canPrestige =
+    prestigeState.timesPrestiged < MAX_PRESTIGES && castleLevel >= requiredCastleLevel;
 
   const prestige = useCallback(
     (clearGrid: () => void, resetResources: (starting: Resources) => void) => {
@@ -131,7 +160,8 @@ export function usePrestige(): UsePrestigeReturn {
     startingResources: computeStartingResources(prestigeState.timesPrestiged),
     costDiscount: computeCostDiscount(prestigeState.timesPrestiged),
     canPrestige,
-    setOccupiedCount,
+    requiredCastleLevel,
+    setCastleLevel,
     prestige,
   };
 }

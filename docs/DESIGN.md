@@ -177,7 +177,7 @@ All non-castle buildings: `upgradeCostMultiplier: 1.8`, `productionMultiplier: 1
 
 ## Prestige
 
-> Implemented in Session 3. Requires **all 25 grid cells** to be occupied before the prestige button is enabled.
+> Implemented in Session 3. Requires the **Stone Castle to be at a specific level** (tiered per prestige number) and caps at **10 total prestiges**.
 
 ### Trigger
 
@@ -185,6 +185,27 @@ When the player clicks **✨ Prestige & Reset** (shown in `PrestigePanel`):
 1. The grid is cleared (`clearGrid`).
 2. Resources are reset to the post-prestige starting pack.
 3. `timesPrestiged` is incremented and saved to localStorage (`idle-builder-prestige`).
+
+### Castle Level Requirements (tiered)
+
+The Stone Castle must reach a minimum level before each prestige is unlocked.
+Prestige is capped at 10 total (`MAX_PRESTIGES = 10`).
+
+| Prestige # | Required Castle Level |
+|---|---|
+| 1 – 3  | 10 |
+| 4 – 6  | 12 |
+| 7 – 9  | 15 |
+| 10 (max) | 20 |
+
+Implemented via `computeRequiredCastleLevel(nextPrestigeNumber)` in `usePrestige.ts`.
+`App.tsx` derives `castleLevel` from `buildingInstances` (looks up `'stone_castle'`'s `buildingTimer.level`) and passes it to `setCastleLevel` in the hook. The hook then computes:
+
+```ts
+canPrestige = timesPrestiged < MAX_PRESTIGES && castleLevel >= requiredCastleLevel
+```
+
+`PrestigePanel` shows a live "Castle Required" row displaying the current vs required level (green when met, red when not), and updates the hint text accordingly.
 
 ### 3 Prestige Bonus Examples
 
@@ -241,8 +262,8 @@ costDiscount = min(timesPrestiged × 0.1, 0.5)
 
 | File | Change |
 |---|---|
-| `src/hooks/usePrestige.ts` | New hook — state, storage, bonus computations, trigger |
-| `src/components/PrestigePanel.tsx` | New component — displays all 3 examples + prestige button |
+| `src/hooks/usePrestige.ts` | Hook — state, storage, bonus computations, tiered castle-level requirements, trigger |
+| `src/components/PrestigePanel.tsx` | Component — displays all 3 examples + castle requirement row + prestige button |
 | `src/utils/buildingUtils.ts` | Added `applyDiscount(cost, discount)` |
 | `src/hooks/useProductionTick.ts` | Added `globalMultiplier` parameter (Example 1) |
 | `src/hooks/useResources.ts` | `resetResources` now accepts `customStarting?: Resources` (Example 2) |
@@ -250,7 +271,7 @@ costDiscount = min(timesPrestiged × 0.1, 0.5)
 | `src/components/GridCell.tsx` | Threads `costDiscount`, applies discount on upgrade spend |
 | `src/components/BuildingDetail.tsx` | Displays discounted upgrade cost |
 | `src/components/BuildingSelector.tsx` | Displays discounted placement cost, checks affordability against discounted cost |
-| `src/App.tsx` | Wires `usePrestige`; passes `globalMultiplier`, `costDiscount`, `startingResources` |
+| `src/App.tsx` | Derives `castleLevel` from `buildingInstances`, wires `setCastleLevel`, passes `castleLevel` + `requiredCastleLevel` to `PrestigePanel` |
 
 ---
 
