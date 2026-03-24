@@ -8,7 +8,9 @@ export interface UseProductionTickReturn {
 
 export function useProductionTick(
   buildingInstances: BuildingInstance[],
-  earn: (amount: Resources) => void
+  earn: (amount: Resources) => void,
+  /** Example 1 — Production Multiplier from prestige (default 1). */
+  globalMultiplier: number = 1
 ): UseProductionTickReturn {
   const [productionPerSecond, setProductionPerSecond] = useState<Resources>({
     gold: 0,
@@ -20,6 +22,9 @@ export function useProductionTick(
 
   const earnRef = useRef(earn);
   earnRef.current = earn;
+
+  const globalMultiplierRef = useRef(globalMultiplier);
+  globalMultiplierRef.current = globalMultiplier;
 
   const instancesRef = useRef(buildingInstances);
   instancesRef.current = buildingInstances;
@@ -35,7 +40,7 @@ export function useProductionTick(
       if (!config) continue;
 
       const effectiveLevel = level > 0 ? level : 1;
-      const multiplier = Math.pow(config.productionMultiplier, effectiveLevel - 1);
+      const multiplier = Math.pow(config.productionMultiplier, effectiveLevel - 1) * globalMultiplierRef.current;
 
       total.gold += config.production.gold * multiplier;
       total.wood += config.production.wood * multiplier;

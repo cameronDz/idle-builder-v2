@@ -1,14 +1,45 @@
+import { useEffect } from 'react';
 import { Grid } from './components/Grid';
 import { ResourceBar } from './components/ResourceBar';
+import { PrestigePanel } from './components/PrestigePanel';
 import { useResources } from './hooks/useResources';
 import { useProductionTick } from './hooks/useProductionTick';
 import { useGridSystem } from './hooks/useGridSystem';
+import { usePrestige } from './hooks/usePrestige';
 import styles from './App.module.css';
 
 function App() {
   const { resources, canAfford, spend, earn, resetResources } = useResources();
   const gridSystem = useGridSystem();
-  const { productionPerSecond } = useProductionTick(gridSystem.buildingInstances, earn);
+  const {
+    timesPrestiged,
+    globalMultiplier,
+    costDiscount,
+    canPrestige,
+    requiredCastleLevel,
+    setCastleLevel,
+    prestige,
+  } = usePrestige();
+
+  const { productionPerSecond } = useProductionTick(
+    gridSystem.buildingInstances,
+    earn,
+    globalMultiplier
+  );
+
+  // Keep the prestige hook informed of the Stone Castle's current level so it
+  // can compute canPrestige against the tiered castle-level requirements.
+  const castleInstance = gridSystem.buildingInstances.find(
+    i => i.buildingTypeId === 'stone_castle'
+  );
+  const castleLevel = castleInstance?.buildingTimer.level ?? 0;
+  useEffect(() => {
+    setCastleLevel(castleLevel);
+  }, [castleLevel, setCastleLevel]);
+
+  const handlePrestige = () => {
+    prestige(gridSystem.clearGrid, resetResources);
+  };
 
   return (
     <div className={styles.app}>
@@ -27,7 +58,18 @@ function App() {
             canAfford={canAfford}
             spend={spend}
             resetResources={resetResources}
+            costDiscount={costDiscount}
           />
+
+          <div className={styles.sidePanel}>
+            <PrestigePanel
+              timesPrestiged={timesPrestiged}
+              castleLevel={castleLevel}
+              requiredCastleLevel={requiredCastleLevel}
+              canPrestige={canPrestige}
+              onPrestige={handlePrestige}
+            />
+          </div>
         </div>
       </main>
     </div>

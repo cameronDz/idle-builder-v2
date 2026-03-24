@@ -3,6 +3,7 @@ import { GridCell } from './GridCell';
 import { BuildingSelector } from './BuildingSelector';
 import type { GridPosition, BuildingTimer, BuildingInstance, GridCell as GridCellType, Resources } from '../types/game';
 import type { BuildingConfig } from '../config/buildings';
+import { applyDiscount } from '../utils/buildingUtils';
 import styles from './Grid.module.css';
 
 interface GridProps {
@@ -21,6 +22,8 @@ interface GridProps {
   canAfford: (cost: Resources) => boolean;
   spend: (cost: Resources) => boolean;
   resetResources: () => void;
+  /** Example 3 — fractional cost discount from prestige (0–0.5). */
+  costDiscount: number;
 }
 
 export function Grid({
@@ -38,6 +41,7 @@ export function Grid({
   canAfford,
   spend,
   resetResources,
+  costDiscount,
 }: GridProps) {
   const [selectorPosition, setSelectorPosition] = useState<GridPosition | null>(null);
 
@@ -55,7 +59,8 @@ export function Grid({
     if (!selectorPosition) return;
     const config = getBuildingConfig(buildingTypeId);
     if (!config) return;
-    if (!spend(config.cost)) return;
+    const discountedCost = applyDiscount(config.cost, costDiscount);
+    if (!spend(discountedCost)) return;
     placeBuilding(selectorPosition, buildingTypeId);
     setSelectorPosition(null);
   };
@@ -116,6 +121,7 @@ export function Grid({
                 onEmptyCellClick={handleEmptyCellClick}
                 onBuildingUpdate={handleBuildingUpdate}
                 getBuildingConfig={getBuildingConfig}
+                costDiscount={costDiscount}
               />
             ))
           )}
@@ -129,6 +135,7 @@ export function Grid({
           getBuildingCount={getBuildingCount}
           canAfford={canAfford}
           resources={resources}
+          costDiscount={costDiscount}
         />
       )}
     </section>
