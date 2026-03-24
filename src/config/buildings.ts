@@ -50,7 +50,7 @@ export const buildings: BuildingConfig[] = [
   {
     id: 'farm',
     name: 'Farm',
-    duration: 6000,
+    duration: 1000,
     maxCount: 6,
     icon: '🌾',
     enhancedIcon: '🌻',
@@ -63,7 +63,7 @@ export const buildings: BuildingConfig[] = [
   {
     id: 'stone_castle',
     name: 'Stone Castle',
-    duration: 12000,
+    duration: 1000,
     maxCount: 1,
     icon: '🏰',
     enhancedIcon: '🏯',
