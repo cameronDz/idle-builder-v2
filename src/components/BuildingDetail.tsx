@@ -1,7 +1,7 @@
 import type { BuildingConfig } from '../config/buildings';
 import type { BuildingInstance, BuildingTimer, Resources } from '../types/game';
 import { formatTime } from '../utils/timeUtils';
-import { getUpgradeCost, formatCost, hasAnyCost, applyDiscount } from '../utils/buildingUtils';
+import { getUpgradeCost, hasAnyCost, applyDiscount, RESOURCE_KEYS, RESOURCE_EMOJIS } from '../utils/buildingUtils';
 import styles from './BuildingDetail.module.css';
 
 interface BuildingDetailProps {
@@ -10,6 +10,8 @@ interface BuildingDetailProps {
   timerState: BuildingTimer;
   isBuildLimitReached: boolean;
   canAfford: (cost: Resources) => boolean;
+  /** Current player resources, used to colour individual unaffordable costs red. */
+  currentResources: Resources;
   /** False when upgradeRequiresMatchingLevel is set and the requirement is not yet met. */
   upgradeRequirementMet: boolean;
   /**
@@ -31,6 +33,7 @@ export function BuildingDetail({
   timerState,
   isBuildLimitReached,
   canAfford,
+  currentResources,
   upgradeRequirementMet,
   castleLevelCap,
   costDiscount,
@@ -43,7 +46,6 @@ export function BuildingDetail({
 
   const rawUpgradeCost = getUpgradeCost(config, level);
   const upgradeCost = applyDiscount(rawUpgradeCost, costDiscount);
-  const upgradeCostStr = formatCost(upgradeCost);
   const hasUpgradeCost = hasAnyCost(upgradeCost);
   const canAffordUpgrade = !hasUpgradeCost || canAfford(upgradeCost);
 
@@ -122,8 +124,14 @@ export function BuildingDetail({
           {!timerState.hasStarted && !timerState.isComplete && hasUpgradeCost && (
             <div className={styles.row}>
               <span className={styles.label}>{'Upgrade Cost'}</span>
-              <span className={`${styles.value} ${canAffordUpgrade ? '' : styles.costUnaffordable}`}>
-                {upgradeCostStr}
+              <span className={`${styles.value} ${styles.costParts}`}>
+                {RESOURCE_KEYS
+                  .filter(k => upgradeCost[k] > 0)
+                  .map(k => (
+                    <span key={k} className={currentResources[k] >= upgradeCost[k] ? '' : styles.costUnaffordable}>
+                      {`${RESOURCE_EMOJIS[k]}${upgradeCost[k]}`}
+                    </span>
+                  ))}
               </span>
             </div>
           )}

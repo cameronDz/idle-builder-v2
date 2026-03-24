@@ -6,6 +6,7 @@ import {
   computeRequiredCastleLevel,
   MAX_PRESTIGES,
 } from '../hooks/usePrestige';
+import { RESOURCE_KEYS, RESOURCE_EMOJIS } from '../utils/buildingUtils';
 import styles from './PrestigePanel.module.css';
 
 interface PrestigePanelProps {
@@ -30,6 +31,20 @@ function formatResources(r: Resources): string {
   if (r.ore > 0) parts.push(`🔩${r.ore}`);
   if (r.food > 0) parts.push(`🍖${r.food}`);
   return parts.join(' ');
+}
+
+/**
+ * Renders starting resources as one line per resource type (current → next).
+ */
+function StartingResourceLines({ current, next }: { current: Resources; next: Resources }) {
+  const lines = RESOURCE_KEYS.filter(k => next[k] > 0);
+  return (
+    <div className={styles.resourceLines}>
+      {lines.map(k => (
+        <div key={k}>{`${RESOURCE_EMOJIS[k]}${current[k]} → ${RESOURCE_EMOJIS[k]}${next[k]}`}</div>
+      ))}
+    </div>
+  );
 }
 
 /**
@@ -122,7 +137,6 @@ export function PrestigePanel({
           <span className={styles.bonusIcon}>{'⚡'}</span>
           <span className={styles.bonusLabel}>
             {'Production Multiplier'}
-            {timesPrestiged > 0 && <em>{' (Example 1)'}</em>}
           </span>
           <span className={`${styles.bonusValue} ${timesPrestiged > 0 ? styles.active : ''}`}>
             {`×${currentMultiplier.toFixed(1)}`}
@@ -135,11 +149,11 @@ export function PrestigePanel({
           <span className={styles.bonusIcon}>{'🎒'}</span>
           <span className={styles.bonusLabel}>
             {'Starting Resources'}
-            {timesPrestiged > 0 && <em>{' (Example 2)'}</em>}
           </span>
           <span className={`${styles.bonusValue} ${timesPrestiged > 0 ? styles.active : ''}`}>
-            {formatResources(currentStarting)}
-            {canPrestige && ` → ${formatResources(nextStarting)}`}
+            {canPrestige
+              ? <StartingResourceLines current={currentStarting} next={nextStarting} />
+              : formatResources(currentStarting)}
           </span>
         </div>
 
@@ -148,7 +162,6 @@ export function PrestigePanel({
           <span className={styles.bonusIcon}>{'🏷️'}</span>
           <span className={styles.bonusLabel}>
             {'Cost Discount'}
-            {timesPrestiged > 0 && <em>{' (Example 3)'}</em>}
           </span>
           <span className={`${styles.bonusValue} ${timesPrestiged > 0 ? styles.active : ''}`}>
             {`${(currentDiscount * 100).toFixed(0)}%`}

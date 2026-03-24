@@ -117,6 +117,7 @@ export function Grid({
                 buildingInstances={buildingInstances}
                 isBuildLimitReached={buildLimitReached}
                 canAfford={canAfford}
+                currentResources={resources}
                 spend={spend}
                 onEmptyCellClick={handleEmptyCellClick}
                 onBuildingUpdate={handleBuildingUpdate}

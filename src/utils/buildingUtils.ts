@@ -1,6 +1,18 @@
 import type { BuildingConfig } from '../config/buildings';
 import type { Resources } from '../types/game';
 
+/** Ordered list of resource keys, used for consistent display order. */
+export const RESOURCE_KEYS: Array<keyof Resources> = ['gold', 'wood', 'stone', 'ore', 'food'];
+
+/** Emoji icon for each resource type. */
+export const RESOURCE_EMOJIS: Record<keyof Resources, string> = {
+  gold: '💰',
+  wood: '🌲',
+  stone: '🪨',
+  ore: '🔩',
+  food: '🍖',
+};
+
 export function getUpgradeCost(config: BuildingConfig, currentLevel: number): Resources {
   if (currentLevel === 0) {
     return { gold: 0, wood: 0, stone: 0, ore: 0, food: 0 };
