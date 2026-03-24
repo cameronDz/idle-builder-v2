@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import type { Resources } from '../types/game';
 import {
   computeGlobalMultiplier,
@@ -90,6 +91,8 @@ export function PrestigePanel({
   const currentDiscount = computeCostDiscount(timesPrestiged);
   const nextDiscount = computeCostDiscount(nextPrestigeCount);
 
+  const [isExpanded, setIsExpanded] = useState(true);
+
   const handlePrestige = () => {
     if (!canPrestige) return;
     if (!window.confirm('Prestige? Your grid will be cleared and resources reset. All 3 permanent bonuses will increase.')) return;
@@ -98,15 +101,25 @@ export function PrestigePanel({
 
   return (
     <div className={styles.panel}>
-      <div className={styles.header}>
+      <button
+        className={styles.header}
+        onClick={() => setIsExpanded(!isExpanded)}
+        aria-expanded={isExpanded}
+        aria-label="Toggle prestige panel"
+      >
         <h2 className={styles.title}>{'✨ Prestige'}</h2>
-        {timesPrestiged > 0 && (
-          <span className={styles.badge}>
-            {isMaxPrestige ? `★ Max Prestige` : `×${timesPrestiged} Prestige`}
-          </span>
-        )}
-      </div>
+        <div className={styles.headerRight}>
+          {timesPrestiged > 0 && (
+            <span className={styles.badge}>
+              {isMaxPrestige ? `★ Max Prestige` : `×${timesPrestiged} Prestige`}
+            </span>
+          )}
+          <span className={`${styles.chevron} ${isExpanded ? styles.chevronOpen : ''}`}>{'▾'}</span>
+        </div>
+      </button>
 
+      {isExpanded && (
+        <>
       {/* Castle level requirement row */}
       <div className={styles.bonuses}>
         <div className={styles.bonusRow}>
@@ -186,6 +199,8 @@ export function PrestigePanel({
               : `Upgrade the 🏰 Castle to level ${requiredCastleLevel} to prestige`}
         </p>
       </div>
+        </>
+      )}
     </div>
   );
 }
