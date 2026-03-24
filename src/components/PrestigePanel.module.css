@@ -63,7 +63,9 @@
 .bonusValue {
   font-weight: 700;
   color: #a5b4fc;
-  white-space: nowrap;
+  white-space: normal;
+  text-align: right;
+  min-width: 0;
 }
 
 .bonusValue.active {
