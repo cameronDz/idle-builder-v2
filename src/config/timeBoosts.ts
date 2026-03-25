@@ -21,8 +21,10 @@ export interface TimeBoostTier {
  *   exceeding one minute (roughly building level 4+).
  * - **Rush Boost** (-5 min): more expensive, aimed at late-game where timers
  *   climb into the 10–30 minute range.
+ * - **Hour Boost** (-1 hr): high cost, aimed at end-game where timers reach
+ *   the hour-plus range.
  *
- * Both tiers are visible in the BuildingDetail modal while a building is under
+ * All available tiers are visible in the BuildingDetail modal while a building is under
  * construction. Buttons are disabled when the player cannot afford the cost or
  * when the reduction would have no effect (timer already at 0).
  */
@@ -38,5 +40,11 @@ export const TIME_BOOST_TIERS: TimeBoostTier[] = [
     label: '-5 min',
     reductionMs: 300_000,
     cost: { gold: 200, wood: 100, stone: 50, ore: 0, food: 0 },
+  },
+  {
+    id: 'boost_1hr',
+    label: '-1 hr',
+    reductionMs: 3_600_000,
+    cost: { gold: 2000, wood: 1000, stone: 500, ore: 100, food: 0 },
   },
 ];
