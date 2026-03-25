@@ -2,10 +2,12 @@ import { useEffect } from 'react';
 import { Grid } from './components/Grid';
 import { ResourceBar } from './components/ResourceBar';
 import { PrestigePanel } from './components/PrestigePanel';
+import { OfflineProgressModal } from './components/OfflineProgressModal';
 import { useResources } from './hooks/useResources';
 import { useProductionTick } from './hooks/useProductionTick';
 import { useGridSystem } from './hooks/useGridSystem';
 import { usePrestige } from './hooks/usePrestige';
+import { useOfflineProgress } from './hooks/useOfflineProgress';
 import styles from './App.module.css';
 
 function App() {
@@ -28,6 +30,12 @@ function App() {
     globalMultiplier
   );
 
+  const { offlineResult, dismissOfflineResult } = useOfflineProgress(
+    gridSystem.buildingInstances,
+    globalMultiplier,
+    earn
+  );
+
   // Keep the prestige hook informed of the Stone Castle's current level so it
   // can compute canPrestige against the tiered castle-level requirements.
   const castleInstance = gridSystem.buildingInstances.find(
@@ -44,6 +52,10 @@ function App() {
 
   return (
     <div className={styles.app}>
+      {offlineResult && (
+        <OfflineProgressModal result={offlineResult} onDismiss={dismissOfflineResult} />
+      )}
+
       <header className={styles.header}>
         <h1 className={styles.title}>{'🏰 Idle Builder v2'}</h1>
         <p className={styles.subtitle}>{'Settlement building idle game with resource production'}</p>
