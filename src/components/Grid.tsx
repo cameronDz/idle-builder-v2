@@ -24,6 +24,8 @@ interface GridProps {
   resetResources: () => void;
   /** Example 3 — fractional cost discount from prestige (0–0.5). */
   costDiscount: number;
+  /** Example 4 — fractional build speed discount from prestige (0–0.1). */
+  buildSpeedDiscount: number;
 }
 
 export function Grid({
@@ -42,6 +44,7 @@ export function Grid({
   spend,
   resetResources,
   costDiscount,
+  buildSpeedDiscount,
 }: GridProps) {
   const [selectorPosition, setSelectorPosition] = useState<GridPosition | null>(null);
 
@@ -123,6 +126,7 @@ export function Grid({
                 onBuildingUpdate={handleBuildingUpdate}
                 getBuildingConfig={getBuildingConfig}
                 costDiscount={costDiscount}
+                buildSpeedDiscount={buildSpeedDiscount}
               />
             ))
           )}

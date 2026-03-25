@@ -4,6 +4,7 @@ import {
   computeGlobalMultiplier,
   computeStartingResources,
   computeCostDiscount,
+  computeBuildSpeedDiscount,
   computeRequiredCastleLevel,
   MAX_PRESTIGES,
 } from '../hooks/usePrestige';
@@ -91,7 +92,10 @@ export function PrestigePanel({
   const currentDiscount = computeCostDiscount(timesPrestiged);
   const nextDiscount = computeCostDiscount(nextPrestigeCount);
 
-  const [isExpanded, setIsExpanded] = useState(true);
+  const currentBuildSpeed = computeBuildSpeedDiscount(timesPrestiged);
+  const nextBuildSpeed = computeBuildSpeedDiscount(nextPrestigeCount);
+
+  const [isExpanded, setIsExpanded] = useState(false);
 
   const handlePrestige = () => {
     if (!canPrestige) return;
@@ -179,6 +183,18 @@ export function PrestigePanel({
           <span className={`${styles.bonusValue} ${timesPrestiged > 0 ? styles.active : ''}`}>
             {`${(currentDiscount * 100).toFixed(0)}%`}
             {canPrestige && ` → ${(nextDiscount * 100).toFixed(0)}%`}
+          </span>
+        </div>
+
+        {/* Example 4 */}
+        <div className={styles.bonusRow}>
+          <span className={styles.bonusIcon}>{'🔨'}</span>
+          <span className={styles.bonusLabel}>
+            {'Build Speed'}
+          </span>
+          <span className={`${styles.bonusValue} ${timesPrestiged > 0 ? styles.active : ''}`}>
+            {`-${(currentBuildSpeed * 100).toFixed(0)}%`}
+            {canPrestige && ` → -${(nextBuildSpeed * 100).toFixed(0)}%`}
           </span>
         </div>
       </div>

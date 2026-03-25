@@ -19,6 +19,8 @@ interface OccupiedCellProps {
   onBuildingUpdate: (instanceId: string, timerState: BuildingTimer) => void;
   /** Example 3 — fractional cost discount from prestige (0–0.5). */
   costDiscount: number;
+  /** Example 4 — fractional build speed discount from prestige (0–0.1). */
+  buildSpeedDiscount: number;
 }
 
 function OccupiedCell({
@@ -31,9 +33,11 @@ function OccupiedCell({
   spend,
   onBuildingUpdate,
   costDiscount,
+  buildSpeedDiscount,
 }: OccupiedCellProps) {
+  const adjustedDuration = Math.round(config.duration * (1 - buildSpeedDiscount));
   const { timerState, startTimer, completeTimer, acknowledgeComplete } = useTimer(
-    config.duration,
+    adjustedDuration,
     instance.id
   );
   const [showDetail, setShowDetail] = useState(false);
@@ -112,7 +116,7 @@ function OccupiedCell({
       isComplete: false,
       level: timerState.level,
       progress: 0,
-      timeRemaining: config.duration,
+      timeRemaining: adjustedDuration,
     };
     syncAndUpdate(next);
   };
@@ -219,6 +223,8 @@ interface GridCellProps {
   getBuildingConfig: (buildingTypeId: string) => BuildingConfig | undefined;
   /** Example 3 — fractional cost discount from prestige (0–0.5). */
   costDiscount: number;
+  /** Example 4 — fractional build speed discount from prestige (0–0.1). */
+  buildSpeedDiscount: number;
 }
 
 export function GridCell({
@@ -232,6 +238,7 @@ export function GridCell({
   onBuildingUpdate,
   getBuildingConfig,
   costDiscount,
+  buildSpeedDiscount,
 }: GridCellProps) {
   if (!cell.isOccupied || !cell.buildingInstance) {
     return (
@@ -260,6 +267,7 @@ export function GridCell({
       spend={spend}
       onBuildingUpdate={onBuildingUpdate}
       costDiscount={costDiscount}
+      buildSpeedDiscount={buildSpeedDiscount}
     />
   );
 }

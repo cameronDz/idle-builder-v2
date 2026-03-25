@@ -82,6 +82,18 @@ export function computeCostDiscount(timesPrestiged: number): number {
   return Math.min(timesPrestiged * 0.1, 0.5);
 }
 
+/**
+ * Example 4 — Build Speed Discount
+ * Each prestige reduces all construction durations by 1 %, capped at 10 %
+ * (matching the MAX_PRESTIGES limit of 10).
+ *   timesPrestiged=0  → 0 % faster
+ *   timesPrestiged=1  → 1 % faster
+ *   timesPrestiged=10 → 10 % faster (cap)
+ */
+export function computeBuildSpeedDiscount(timesPrestiged: number): number {
+  return Math.min(timesPrestiged * 0.01, 0.1);
+}
+
 function loadPrestigeState(): PrestigeState {
   try {
     const raw = localStorage.getItem(STORAGE_KEY);
@@ -109,6 +121,8 @@ export interface UsePrestigeReturn {
   startingResources: Resources;
   /** Example 3 — fractional discount applied to all building costs (0–0.5). */
   costDiscount: number;
+  /** Example 4 — fractional reduction applied to all construction durations (0–0.1). */
+  buildSpeedDiscount: number;
   /**
    * Whether the prestige action is currently available.
    * Requires the Stone Castle to be at `requiredCastleLevel` AND that
@@ -166,6 +180,7 @@ export function usePrestige(): UsePrestigeReturn {
     globalMultiplier: prestigeState.globalMultiplier,
     startingResources: computeStartingResources(prestigeState.timesPrestiged),
     costDiscount: computeCostDiscount(prestigeState.timesPrestiged),
+    buildSpeedDiscount: computeBuildSpeedDiscount(prestigeState.timesPrestiged),
     canPrestige,
     requiredCastleLevel,
     setCastleLevel,
