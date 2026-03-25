@@ -25,11 +25,9 @@ Output is written to `dist/`.
 
 ## How to Deploy
 
-GitHub Pages auto-deploys on every push to `main` via GitHub Actions. The repository URL is:
+GitHub Pages auto-deploys on every push to `main` via GitHub Actions. The live URL is:
 
-```
-https://github.com/cameronDz/idle-builder-v2
-```
+[https://camerondz.github.io/idle-builder-v2/](https://camerondz.github.io/idle-builder-v2/)
 
 For public release (Session 5), the built `dist/` folder will be uploaded to [itch.io](https://itch.io).
 
