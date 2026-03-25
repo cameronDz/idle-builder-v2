@@ -180,7 +180,9 @@ export function BuildingDetail({
             <div className={styles.boostSection}>
               <span className={styles.boostLabel}>{'⏩ Speed Up'}</span>
               <div className={styles.boostButtons}>
-                {TIME_BOOST_TIERS.map(tier => {
+                {TIME_BOOST_TIERS.filter((_, i) =>
+                  i === 0 || timerState.timeRemaining > TIME_BOOST_TIERS[i - 1].reductionMs
+                ).map(tier => {
                   const scaledCost: Resources = {
                     gold: tier.cost.gold * boostCostMultiplier,
                     wood: tier.cost.wood * boostCostMultiplier,
