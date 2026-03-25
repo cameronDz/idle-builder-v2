@@ -1,7 +1,7 @@
 import type { BuildingConfig } from '../config/buildings';
 import type { BuildingInstance, BuildingTimer, Resources } from '../types/game';
 import { formatTime } from '../utils/timeUtils';
-import { getUpgradeCost, hasAnyCost, applyDiscount, RESOURCE_KEYS, RESOURCE_EMOJIS } from '../utils/buildingUtils';
+import { getUpgradeCost, hasAnyCost, applyDiscount, RESOURCE_KEYS, RESOURCE_EMOJIS, formatNumber } from '../utils/buildingUtils';
 import { TIME_BOOST_TIERS } from '../config/timeBoosts';
 import styles from './BuildingDetail.module.css';
 
@@ -138,7 +138,7 @@ export function BuildingDetail({
                   .filter(k => upgradeCost[k] > 0)
                   .map(k => (
                     <span key={k} className={currentResources[k] >= upgradeCost[k] ? '' : styles.costUnaffordable}>
-                      {`${RESOURCE_EMOJIS[k]}${upgradeCost[k]}`}
+                      {`${RESOURCE_EMOJIS[k]}${formatNumber(upgradeCost[k])}`}
                     </span>
                   ))}
               </span>
@@ -193,7 +193,7 @@ export function BuildingDetail({
                   const affordable = canAfford(scaledCost);
                   const costStr = RESOURCE_KEYS
                     .filter(k => scaledCost[k] > 0)
-                    .map(k => `${RESOURCE_EMOJIS[k]}${scaledCost[k]}`)
+                    .map(k => `${RESOURCE_EMOJIS[k]}${formatNumber(scaledCost[k])}`)
                     .join(' ');
                   return (
                     <button
