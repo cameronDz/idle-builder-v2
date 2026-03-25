@@ -30,7 +30,7 @@
   border-radius: 4px;
 }
 
-
+.headerRight {
   display: flex;
   align-items: center;
   gap: 8px;
