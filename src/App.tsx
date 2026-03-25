@@ -15,6 +15,7 @@ function App() {
     timesPrestiged,
     globalMultiplier,
     costDiscount,
+    buildSpeedDiscount,
     canPrestige,
     requiredCastleLevel,
     setCastleLevel,
@@ -59,6 +60,7 @@ function App() {
             spend={spend}
             resetResources={resetResources}
             costDiscount={costDiscount}
+            buildSpeedDiscount={buildSpeedDiscount}
           />
 
           <div className={styles.sidePanel}>
