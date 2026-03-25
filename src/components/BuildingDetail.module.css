@@ -187,3 +187,48 @@
 .completeButton:hover {
   background: #16a34a;
 }
+
+.boostSection {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin-top: 4px;
+}
+
+.boostLabel {
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: #6b7280;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.boostButtons {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.boostButton {
+  font-size: 0.85rem;
+  font-weight: 600;
+  padding: 7px 14px;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  background: #8b5cf6;
+  color: #fff;
+  transition: background 0.15s;
+  text-align: left;
+}
+
+.boostButton:hover:not(:disabled) {
+  background: #7c3aed;
+}
+
+.boostButton:disabled,
+.boostButtonUnaffordable {
+  background: #d1d5db;
+  color: #9ca3af;
+  cursor: not-allowed;
+}

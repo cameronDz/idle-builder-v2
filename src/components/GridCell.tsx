@@ -36,7 +36,7 @@ function OccupiedCell({
   buildSpeedDiscount,
 }: OccupiedCellProps) {
   const adjustedDuration = Math.round(config.duration * (1 - buildSpeedDiscount));
-  const { timerState, startTimer, completeTimer, acknowledgeComplete } = useTimer(
+  const { timerState, startTimer, completeTimer, acknowledgeComplete, reduceTime } = useTimer(
     adjustedDuration,
     instance.id
   );
@@ -197,10 +197,12 @@ function OccupiedCell({
           upgradeRequirementMet={upgradeRequirementMet}
           castleLevelCap={castleLevelCap}
           costDiscount={costDiscount}
+          spend={spend}
           onStart={handleStart}
           onFinish={handleFinish}
           onAcknowledge={handleAcknowledge}
           onClose={() => setShowDetail(false)}
+          onReduceTime={reduceTime}
         />
       )}
     </div>

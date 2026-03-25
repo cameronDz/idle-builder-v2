@@ -1,5 +1,27 @@
 # Session Log
 
+## Session 2.1 — 2026-03-25
+### Goals
+- Replace the planned Achievement system with Time Reduction Upgrades
+
+### What got done
+- **Feature:** Time Reduction Upgrades replace the Achievement system (P2 Polish). Two tiers available inside the **BuildingDetail modal** while a building is under active construction:
+  - **⏩ Quick Boost** — pay 💰50 🌲25 to reduce the timer by 1 minute
+  - **⏩ Rush Boost** — pay 💰200 🌲100 🪨50 to reduce the timer by 5 minutes
+- **New file:** `src/config/timeBoosts.ts` — `TimeBoostTier` interface and `TIME_BOOST_TIERS` constant
+- **Hook:** `useTimer` — added `reduceTime(ms)` function that shifts `startTime` back in localStorage; handles overflow (immediate completion) when the reduction exceeds remaining time
+- **Component:** `BuildingDetail` — shows "⏩ Speed Up" section (boost buttons) only during active construction; buttons disabled when player cannot afford the cost; cost displayed inline
+- **Docs:** `docs/DESIGN.md` updated — Achievement system replaced by Time Reduction Upgrades section with tier table, mechanics, and implementation file list
+
+### What's broken/missing
+- Synergies not yet implemented
+
+### Next session priorities
+- Building synergies
+- Mobile-responsive layout polish
+
+---
+
 ## Session 2.0 — 2026-03-21
 ### Goals
 - Update session log and start 2.0 session

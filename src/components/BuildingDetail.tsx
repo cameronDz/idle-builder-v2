@@ -2,6 +2,7 @@ import type { BuildingConfig } from '../config/buildings';
 import type { BuildingInstance, BuildingTimer, Resources } from '../types/game';
 import { formatTime } from '../utils/timeUtils';
 import { getUpgradeCost, hasAnyCost, applyDiscount, RESOURCE_KEYS, RESOURCE_EMOJIS } from '../utils/buildingUtils';
+import { TIME_BOOST_TIERS } from '../config/timeBoosts';
 import styles from './BuildingDetail.module.css';
 
 interface BuildingDetailProps {
@@ -21,10 +22,14 @@ interface BuildingDetailProps {
   castleLevelCap: number | null;
   /** Example 3 — fractional cost discount from prestige (0–0.5). */
   costDiscount: number;
+  /** Spend resources from the player's pool; returns false if insufficient funds. */
+  spend: (cost: Resources) => boolean;
   onStart: () => void;
   onFinish: () => void;
   onAcknowledge: () => void;
   onClose: () => void;
+  /** Reduce the active construction timer by the given number of milliseconds. */
+  onReduceTime: (ms: number) => void;
 }
 
 export function BuildingDetail({
@@ -37,10 +42,12 @@ export function BuildingDetail({
   upgradeRequirementMet,
   castleLevelCap,
   costDiscount,
+  spend,
   onStart,
   onFinish,
   onAcknowledge,
   onClose,
+  onReduceTime,
 }: BuildingDetailProps) {
   const level = timerState.level;
 
@@ -164,6 +171,35 @@ export function BuildingDetail({
                 className={styles.progressBar}
                 style={{ width: `${timerState.progress}%`, background: progressColor }}
               />
+            </div>
+          )}
+
+          {timerState.hasStarted && !timerState.isComplete && (
+            <div className={styles.boostSection}>
+              <span className={styles.boostLabel}>{'⏩ Speed Up'}</span>
+              <div className={styles.boostButtons}>
+                {TIME_BOOST_TIERS.map(tier => {
+                  const affordable = canAfford(tier.cost);
+                  const costStr = RESOURCE_KEYS
+                    .filter(k => tier.cost[k] > 0)
+                    .map(k => `${RESOURCE_EMOJIS[k]}${tier.cost[k]}`)
+                    .join(' ');
+                  return (
+                    <button
+                      key={tier.id}
+                      className={`${styles.boostButton} ${affordable ? '' : styles.boostButtonUnaffordable}`}
+                      disabled={!affordable}
+                      title={affordable ? `Pay ${costStr} to reduce timer by ${tier.label}` : `Not enough resources (${costStr})`}
+                      onClick={() => {
+                        if (!spend(tier.cost)) return;
+                        onReduceTime(tier.reductionMs);
+                      }}
+                    >
+                      {`${tier.label} — ${costStr}`}
+                    </button>
+                  );
+                })}
+              </div>
             </div>
           )}
         </div>
