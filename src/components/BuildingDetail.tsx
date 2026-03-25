@@ -65,11 +65,11 @@ export function BuildingDetail({
 
   const multiplier = level > 0 ? Math.pow(config.productionMultiplier, level - 1) : 1;
   const productionParts: string[] = [];
-  if (config.production.gold > 0) productionParts.push(`💰${(config.production.gold * multiplier).toFixed(1)}`);
-  if (config.production.wood > 0) productionParts.push(`🌲${(config.production.wood * multiplier).toFixed(1)}`);
-  if (config.production.stone > 0) productionParts.push(`🪨${(config.production.stone * multiplier).toFixed(1)}`);
-  if (config.production.ore > 0) productionParts.push(`🔩${(config.production.ore * multiplier).toFixed(1)}`);
-  if (config.production.food > 0) productionParts.push(`🍖${(config.production.food * multiplier).toFixed(1)}`);
+  if (config.production.gold > 0) productionParts.push(`💰${formatNumber(config.production.gold * multiplier)}`);
+  if (config.production.wood > 0) productionParts.push(`🌲${formatNumber(config.production.wood * multiplier)}`);
+  if (config.production.stone > 0) productionParts.push(`🪨${formatNumber(config.production.stone * multiplier)}`);
+  if (config.production.ore > 0) productionParts.push(`🔩${formatNumber(config.production.ore * multiplier)}`);
+  if (config.production.food > 0) productionParts.push(`🍖${formatNumber(config.production.food * multiplier)}`);
   const productionStr = productionParts.length > 0 ? productionParts.join(' ') + '/s' : null;
 
   const progressColor =
@@ -191,8 +191,8 @@ export function BuildingDetail({
                     food: tier.cost.food * boostCostMultiplier,
                   };
                   const affordable = canAfford(scaledCost);
-                  const costStr = RESOURCE_KEYS
-                    .filter(k => scaledCost[k] > 0)
+                  const costKeys = RESOURCE_KEYS.filter(k => scaledCost[k] > 0);
+                  const costStr = costKeys
                     .map(k => `${RESOURCE_EMOJIS[k]}${formatNumber(scaledCost[k])}`)
                     .join(' ');
                   return (
@@ -206,7 +206,12 @@ export function BuildingDetail({
                         onReduceTime(tier.reductionMs);
                       }}
                     >
-                      {`${tier.label} — ${costStr}`}
+                      {`${tier.label} — `}
+                      {costKeys.map((k, i) => (
+                        <span key={k} className={currentResources[k] < scaledCost[k] ? styles.costUnaffordable : ''}>
+                          {`${RESOURCE_EMOJIS[k]}${formatNumber(scaledCost[k])}`}{i < costKeys.length - 1 ? ' ' : ''}
+                        </span>
+                      ))}
                     </button>
                   );
                 })}
