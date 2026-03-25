@@ -23,8 +23,10 @@ export interface TimeBoostTier {
  *   climb into the 10–30 minute range.
  * - **Major Boost** (-15 min): high cost, aimed at late/end-game where timers
  *   climb into the hour range.
- * - **Hour Boost** (-1 hr): highest cost, aimed at end-game where timers reach
+ * - **Hour Boost** (-1 hr): very high cost, aimed at end-game where timers reach
  *   the hour-plus range.
+ * - **Five Hour Boost** (-5 hr): highest cost, aimed at deep end-game where timers
+ *   climb into the multi-hour range.
  *
  * All available tiers are visible in the BuildingDetail modal while a building is under
  * construction. Buttons are disabled when the player cannot afford the cost or
@@ -54,5 +56,11 @@ export const TIME_BOOST_TIERS: TimeBoostTier[] = [
     label: '-1 hr',
     reductionMs: 3_600_000,
     cost: { gold: 2000, wood: 1000, stone: 500, ore: 100, food: 0 },
+  },
+  {
+    id: 'boost_5hr',
+    label: '-5 hr',
+    reductionMs: 18_000_000,
+    cost: { gold: 10_000, wood: 5_000, stone: 2_500, ore: 500, food: 0 },
   },
 ];
