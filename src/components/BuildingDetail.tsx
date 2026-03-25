@@ -58,6 +58,8 @@ export function BuildingDetail({
 
   const castleLevelCapMet = castleLevelCap === null || level < castleLevelCap;
 
+  const boostCostMultiplier = Math.max(1, castleLevelCap !== null ? castleLevelCap : level);
+
   const currentIcon =
     level >= 5 ? config.ultraIcon : level >= 2 ? config.enhancedIcon : config.icon;
 
@@ -174,15 +176,22 @@ export function BuildingDetail({
             </div>
           )}
 
-          {timerState.hasStarted && !timerState.isComplete && (
+          {timerState.hasStarted && !timerState.isComplete && timerState.timeRemaining > 30000 && (
             <div className={styles.boostSection}>
               <span className={styles.boostLabel}>{'⏩ Speed Up'}</span>
               <div className={styles.boostButtons}>
                 {TIME_BOOST_TIERS.map(tier => {
-                  const affordable = canAfford(tier.cost);
+                  const scaledCost: Resources = {
+                    gold: tier.cost.gold * boostCostMultiplier,
+                    wood: tier.cost.wood * boostCostMultiplier,
+                    stone: tier.cost.stone * boostCostMultiplier,
+                    ore: tier.cost.ore * boostCostMultiplier,
+                    food: tier.cost.food * boostCostMultiplier,
+                  };
+                  const affordable = canAfford(scaledCost);
                   const costStr = RESOURCE_KEYS
-                    .filter(k => tier.cost[k] > 0)
-                    .map(k => `${RESOURCE_EMOJIS[k]}${tier.cost[k]}`)
+                    .filter(k => scaledCost[k] > 0)
+                    .map(k => `${RESOURCE_EMOJIS[k]}${scaledCost[k]}`)
                     .join(' ');
                   return (
                     <button
@@ -191,7 +200,7 @@ export function BuildingDetail({
                       disabled={!affordable}
                       title={affordable ? `Pay ${costStr} to reduce timer by ${tier.label}` : `Not enough resources (${costStr})`}
                       onClick={() => {
-                        if (!spend(tier.cost)) return;
+                        if (!spend(scaledCost)) return;
                         onReduceTime(tier.reductionMs);
                       }}
                     >
