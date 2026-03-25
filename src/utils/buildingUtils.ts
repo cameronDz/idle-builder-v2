@@ -50,12 +50,25 @@ export function applyDiscount(cost: Resources, discount: number): Resources {
   };
 }
 
+/**
+ * Formats a number with a unit suffix for compact display.
+ * Values below 1000 are shown as integers; larger values use k/m/b/t suffixes
+ * with one decimal place (e.g. 123.4k, 1.2m, 4.5b, 6.7t).
+ */
+export function formatNumber(value: number): string {
+  if (value < 1_000) return String(Math.floor(value));
+  if (value < 1_000_000) return `${(value / 1_000).toFixed(1)}k`;
+  if (value < 1_000_000_000) return `${(value / 1_000_000).toFixed(1)}m`;
+  if (value < 1_000_000_000_000) return `${(value / 1_000_000_000).toFixed(1)}b`;
+  return `${(value / 1_000_000_000_000).toFixed(1)}t`;
+}
+
 export function formatCost(cost: Resources): string {
   const parts: string[] = [];
-  if (cost.gold > 0) parts.push(`💰${cost.gold}`);
-  if (cost.wood > 0) parts.push(`🌲${cost.wood}`);
-  if (cost.stone > 0) parts.push(`🪨${cost.stone}`);
-  if (cost.ore > 0) parts.push(`🔩${cost.ore}`);
-  if (cost.food > 0) parts.push(`🍖${cost.food}`);
+  if (cost.gold > 0) parts.push(`💰${formatNumber(cost.gold)}`);
+  if (cost.wood > 0) parts.push(`🌲${formatNumber(cost.wood)}`);
+  if (cost.stone > 0) parts.push(`🪨${formatNumber(cost.stone)}`);
+  if (cost.ore > 0) parts.push(`🔩${formatNumber(cost.ore)}`);
+  if (cost.food > 0) parts.push(`🍖${formatNumber(cost.food)}`);
   return parts.join(' ');
 }
