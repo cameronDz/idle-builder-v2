@@ -40,7 +40,7 @@
 - ⬜ Mobile-responsive layout
 
 ### P2 — Polish (Session 3–4)
-- ⬜ Achievement system
+- ⬜ Time Reduction Upgrades — spend resources to shorten active construction timers (replaces Achievement system; see § Time Reduction Upgrades below)
 - ⬜ Sound effects & visual juice
 - ✅ Tiered visual upgrades: base icon → enhanced icon → ultra icon (based on level)
 
@@ -312,7 +312,47 @@ No new `Resources` fields, no localStorage migration, no grid position lookup re
 
 ---
 
-## Building Balance — Analysis & Changes
+## Time Reduction Upgrades
+
+> Implemented (replaces the planned Achievement system). Accessible via the **BuildingDetail modal** while a building is under active construction.
+
+### Motivation
+
+An achievement system (the original P2 goal) would reward milestones passively — it gives information, not agency. Time Reduction Upgrades serve a similar "reward progression" function but let the player make an active decision: *pay now to get this building done faster*. This creates meaningful resource-spend decisions beyond the existing build-cost and upgrade-cost sinks.
+
+### Tiers
+
+Two tiers are defined in `src/config/timeBoosts.ts`. Both reduce the remaining time on the **currently selected building's** active construction timer.
+
+| Tier | Reduction | Cost |
+|---|---|---|
+| ⏩ Quick Boost | −1 minute | 💰50 🌲25 |
+| ⏩ Rush Boost  | −5 minutes | 💰200 🌲100 🪨50 |
+
+Costs are designed to become accessible around building level 4+ (when base timers start exceeding one minute). At level 3 a Wooden House takes ~47 s — boosts do nothing useful. At level 5 (~5 min) both tiers are impactful.
+
+### Mechanics
+
+- Boosts are **per-building** — they only affect the building whose detail modal is open.
+- If a boost reduces remaining time to 0 or below, the timer **completes immediately** (level increments, "✔ Acknowledge & Level Up" becomes available).
+- Boost buttons are **disabled** when the player cannot afford the cost (greyed out with a tooltip showing the full cost).
+- Boosts are hidden when the building is not under active construction (idle or already complete).
+
+### Overflow handling
+
+The reduction is applied by shifting the stored `startTime` back in time. If the shifted elapsed time `≥ adjustedDuration`, `reduceTime` in `useTimer` sets `isComplete: true` and increments the level directly, mirroring the `completeTimer` path. No negative `timeRemaining` values reach the UI.
+
+### Implementation files
+
+| File | Change |
+|---|---|
+| `src/config/timeBoosts.ts` | New — `TimeBoostTier` interface and `TIME_BOOST_TIERS` constant |
+| `src/hooks/useTimer.ts` | Added `reduceTime(ms)` exported from `UseTimerReturn` |
+| `src/components/BuildingDetail.tsx` | Added `spend` + `onReduceTime` props; renders "⏩ Speed Up" section when building is in-progress |
+| `src/components/BuildingDetail.module.css` | Styles for boost section, boost buttons, and unaffordable state |
+| `src/components/GridCell.tsx` | Threads `reduceTime` and `spend` into `BuildingDetail` |
+
+---
 
 ### Overview
 

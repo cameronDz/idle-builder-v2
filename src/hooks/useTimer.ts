@@ -41,6 +41,8 @@ interface UseTimerReturn {
   resetTimer: () => void;
   completeTimer: () => void;
   acknowledgeComplete: () => void;
+  /** Reduce the active timer by `ms` milliseconds. Completes the timer if the reduction exceeds the remaining time. No-op when the timer is not running. */
+  reduceTime: (ms: number) => void;
 }
 
 export function useTimer(duration: number, taskId: string): UseTimerReturn {
@@ -268,11 +270,58 @@ export function useTimer(duration: number, taskId: string): UseTimerReturn {
     });
   }, [clearTick, duration, taskId]);
 
+  /**
+   * Reduces the active timer by `ms` milliseconds by shifting the stored
+   * startTime back in time.  If the reduction causes elapsed >= adjustedDuration
+   * the timer completes immediately (level increments, isComplete = true).
+   * No-op when the timer has not started or is already complete, or when `ms`
+   * is not a positive number.
+   */
+  const reduceTime = useCallback((ms: number) => {
+    if (ms <= 0) return;
+    setTimerState(prev => {
+      if (!prev.hasStarted || prev.isComplete) return prev;
+
+      const stored = loadFromStorage(taskId);
+      if (!stored || stored.startTime === null) return prev;
+
+      const newStartTime = stored.startTime - ms;
+      const adjustedDuration = getLevelAdjustedDuration(duration, prev.level);
+      const elapsed = Date.now() - newStartTime;
+
+      if (elapsed >= adjustedDuration) {
+        clearTick();
+        const nextLevel = prev.level + 1;
+        saveToStorage(taskId, {
+          startTime: null,
+          isCompleted: true,
+          level: nextLevel,
+          baseDuration: duration,
+        });
+        return {
+          hasStarted: true,
+          isComplete: true,
+          level: nextLevel,
+          progress: 100,
+          timeRemaining: 0,
+        };
+      }
+
+      saveToStorage(taskId, { ...stored, startTime: newStartTime });
+      const remaining = adjustedDuration - elapsed;
+      return {
+        ...prev,
+        progress: Math.floor((elapsed / adjustedDuration) * 100),
+        timeRemaining: remaining,
+      };
+    });
+  }, [clearTick, duration, taskId]);
+
   useEffect(() => {
     return () => {
       clearTick();
     };
   }, [clearTick]);
 
-  return { timerState, startTimer, resetTimer, completeTimer, acknowledgeComplete };
+  return { timerState, startTimer, resetTimer, completeTimer, acknowledgeComplete, reduceTime };
 }
