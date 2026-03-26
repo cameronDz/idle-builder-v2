@@ -31,6 +31,8 @@ export interface TimeBoostTier {
  *   reach 24+ hours.
  * - **Century Boost** (-100 hr): legendary cost, aimed at the deepest end-game where
  *   timers climb beyond 100 hours.
+ * - **Kilo-Hour Boost** (-1k hr): ultimate cost, aimed at the absolute end-game where
+ *   timers climb into the thousand-hour range.
  *
  * All available tiers are visible in the BuildingDetail modal while a building is under
  * construction. Buttons are disabled when the player cannot afford the cost or
@@ -56,12 +58,6 @@ export const TIME_BOOST_TIERS: TimeBoostTier[] = [
     cost: { gold: 750, wood: 375, stone: 200, ore: 25, food: 0 },
   },
   {
-    id: 'boost_1ksec',
-    label: '-1k sec',
-    reductionMs: 1_000_000,
-    cost: { gold: 1000, wood: 500, stone: 250, ore: 50, food: 0 },
-  },
-  {
     id: 'boost_1hr',
     label: '-1 hr',
     reductionMs: 3_600_000,
@@ -84,5 +80,11 @@ export const TIME_BOOST_TIERS: TimeBoostTier[] = [
     label: '-100 hr',
     reductionMs: 360_000_000,
     cost: { gold: 200_000, wood: 100_000, stone: 50_000, ore: 10_000, food: 0 },
+  },
+  {
+    id: 'boost_1khr',
+    label: '-1k hr',
+    reductionMs: 3_600_000_000,
+    cost: { gold: 1_000_000, wood: 500_000, stone: 250_000, ore: 50_000, food: 0 },
   },
 ];
