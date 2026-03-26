@@ -29,6 +29,8 @@ export interface TimeBoostTier {
  *   climb into the multi-hour range.
  * - **Day Boost** (-24 hr): extreme cost, aimed at the very late-game where timers
  *   reach 24+ hours.
+ * - **Century Boost** (-100 hr): legendary cost, aimed at the deepest end-game where
+ *   timers climb beyond 100 hours.
  *
  * All available tiers are visible in the BuildingDetail modal while a building is under
  * construction. Buttons are disabled when the player cannot afford the cost or
@@ -70,5 +72,11 @@ export const TIME_BOOST_TIERS: TimeBoostTier[] = [
     label: '-24 hr',
     reductionMs: 86_400_000,
     cost: { gold: 50_000, wood: 25_000, stone: 12_500, ore: 2_500, food: 0 },
+  },
+  {
+    id: 'boost_100hr',
+    label: '-100 hr',
+    reductionMs: 360_000_000,
+    cost: { gold: 200_000, wood: 100_000, stone: 50_000, ore: 10_000, food: 0 },
   },
 ];
