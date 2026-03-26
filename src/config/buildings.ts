@@ -38,7 +38,7 @@ export const buildings: BuildingConfig[] = [
     id: 'wooden_house',
     name: 'Wooden House',
     duration: 3000,
-    maxCount: 8,
+    maxCount: 9,
     icon: '🏠',
     enhancedIcon: '🏡',
     ultraIcon: '🏘️',

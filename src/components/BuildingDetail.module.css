@@ -140,14 +140,14 @@
 
 .actions {
   display: flex;
-  flex-direction: column;
+  flex-direction: row;
+  align-items: center;
   gap: 8px;
 }
 
 .startButton,
 .finishButton,
-.completeButton,
-.destroyButton {
+.completeButton {
   font-size: 0.95rem;
   font-weight: 600;
   padding: 10px 20px;
@@ -155,7 +155,23 @@
   border-radius: 8px;
   cursor: pointer;
   transition: background 0.15s;
-  width: 100%;
+  flex: 1;
+}
+
+.destroyButton {
+  font-size: 1.1rem;
+  font-weight: 600;
+  padding: 0;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background 0.15s;
+  width: 40px;
+  height: 40px;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .startButton {
