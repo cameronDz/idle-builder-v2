@@ -203,13 +203,13 @@ export function BuildingDetail({
                       key={tier.id}
                       className={`${styles.boostButton} ${affordable ? '' : styles.boostButtonUnaffordable}`}
                       disabled={!affordable}
-                      title={affordable ? `Pay ${costStr} to reduce timer by ${tier.label}` : `Not enough resources (${costStr})`}
+                      title={affordable ? `Pay ${costStr} to reduce timer by ${formatTime(tier.reductionMs)}` : `Not enough resources (${costStr})`}
                       onClick={() => {
                         if (!spend(scaledCost)) return;
                         onReduceTime(tier.reductionMs);
                       }}
                     >
-                      {`${tier.label} — `}
+                      {`-${formatTime(tier.reductionMs)} — `}
                       {costKeys.map((k, i) => (
                         <span key={k} className={currentResources[k] < scaledCost[k] ? styles.costUnaffordable : ''}>
                           {`${RESOURCE_EMOJIS[k]}${formatNumber(scaledCost[k])}`}{i < costKeys.length - 1 ? ' ' : ''}
