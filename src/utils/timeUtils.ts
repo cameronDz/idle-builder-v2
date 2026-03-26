@@ -1,6 +1,7 @@
 /**
  * Converts milliseconds to a human-readable time string.
- * Examples: 45000 → "45s", 90000 → "1m 30s", 7500000 → "2h 5m"
+ * Small values use standard units: "45s", "1m 30s", "2h 5m".
+ * Large hour counts are compacted with k/m/b/t suffixes: "1.2kh", "3.4mh".
  */
 export function formatTime(ms: number): string {
   if (ms <= 0) return '0s';
@@ -11,6 +12,10 @@ export function formatTime(ms: number): string {
   const seconds = totalSeconds % 60;
 
   if (hours > 0) {
+    if (hours >= 1_000_000_000_000) return `${(hours / 1_000_000_000_000).toFixed(1)}th`;
+    if (hours >= 1_000_000_000) return `${(hours / 1_000_000_000).toFixed(1)}bh`;
+    if (hours >= 1_000_000) return `${(hours / 1_000_000).toFixed(1)}mh`;
+    if (hours >= 1_000) return `${(hours / 1_000).toFixed(1)}kh`;
     if (minutes > 0) return `${hours}h ${minutes}m`;
     return `${hours}h`;
   }
