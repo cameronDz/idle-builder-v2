@@ -29,10 +29,12 @@ export interface TimeBoostTier {
  *   climb into the multi-hour range.
  * - **Day Boost** (-24 hr): extreme cost, aimed at the very late-game where timers
  *   reach 24+ hours.
- * - **Century Boost** (-100 hr): legendary cost, aimed at the deepest end-game where
+ * - **Week Boost** (-1 week / 168 hr): legendary cost, aimed at the deepest end-game where
  *   timers climb beyond 100 hours.
- * - **Kilo-Hour Boost** (-1k hr): ultimate cost, aimed at the absolute end-game where
- *   timers climb into the thousand-hour range.
+ * - **Twelve-Week Boost** (-12 weeks / 2016 hr): ultimate cost, aimed at the absolute end-game where
+ *   timers climb into the multi-week range.
+ * - **Year Boost** (-1 year / 8760 hr, assuming 365-day year): supreme cost, aimed at the true end-game where
+ *   timers climb into the year range.
  *
  * All available tiers are visible in the BuildingDetail modal while a building is under
  * construction. Buttons are disabled when the player cannot afford the cost or
@@ -76,15 +78,21 @@ export const TIME_BOOST_TIERS: TimeBoostTier[] = [
     cost: { gold: 50_000, wood: 25_000, stone: 12_500, ore: 2_500, food: 0 },
   },
   {
-    id: 'boost_100hr',
-    label: '-100 hr',
-    reductionMs: 360_000_000,
-    cost: { gold: 200_000, wood: 100_000, stone: 50_000, ore: 10_000, food: 0 },
+    id: 'boost_1week',
+    label: '-1 week',
+    reductionMs: 604_800_000,
+    cost: { gold: 350_000, wood: 175_000, stone: 87_500, ore: 17_500, food: 0 },
   },
   {
-    id: 'boost_1khr',
-    label: '-1k hr',
-    reductionMs: 3_600_000_000,
-    cost: { gold: 1_000_000, wood: 500_000, stone: 250_000, ore: 50_000, food: 0 },
+    id: 'boost_12week',
+    label: '-12 weeks',
+    reductionMs: 7_257_600_000,
+    cost: { gold: 2_000_000, wood: 1_000_000, stone: 500_000, ore: 100_000, food: 0 },
+  },
+  {
+    id: 'boost_1yr',
+    label: '-1 year',
+    reductionMs: 31_536_000_000,
+    cost: { gold: 10_000_000, wood: 5_000_000, stone: 2_500_000, ore: 500_000, food: 0 },
   },
 ];
