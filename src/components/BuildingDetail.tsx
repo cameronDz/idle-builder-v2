@@ -250,7 +250,7 @@ export function BuildingDetail({
               onClick={onDestroy}
               title={'Permanently remove this building from the grid'}
             >
-              {'🗑 Destroy'}
+              {'🗑️'}
             </button>
           )}
         </div>
