@@ -140,12 +140,14 @@
 
 .actions {
   display: flex;
-  justify-content: flex-end;
+  flex-direction: column;
+  gap: 8px;
 }
 
 .startButton,
 .finishButton,
-.completeButton {
+.completeButton,
+.destroyButton {
   font-size: 0.95rem;
   font-weight: 600;
   padding: 10px 20px;
@@ -186,6 +188,15 @@
 
 .completeButton:hover {
   background: #16a34a;
+}
+
+.destroyButton {
+  background: #ef4444;
+  color: #fff;
+}
+
+.destroyButton:hover {
+  background: #dc2626;
 }
 
 .boostSection {

@@ -56,6 +56,12 @@ export const TIME_BOOST_TIERS: TimeBoostTier[] = [
     cost: { gold: 750, wood: 375, stone: 200, ore: 25, food: 0 },
   },
   {
+    id: 'boost_1ksec',
+    label: '-1k sec',
+    reductionMs: 1_000_000,
+    cost: { gold: 1000, wood: 500, stone: 250, ore: 50, food: 0 },
+  },
+  {
     id: 'boost_1hr',
     label: '-1 hr',
     reductionMs: 3_600_000,

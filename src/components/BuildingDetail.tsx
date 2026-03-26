@@ -28,6 +28,8 @@ interface BuildingDetailProps {
   onFinish: () => void;
   onAcknowledge: () => void;
   onClose: () => void;
+  /** Called when the player chooses to destroy this building. */
+  onDestroy: () => void;
   /** Reduce the active construction timer by the given number of milliseconds. */
   onReduceTime: (ms: number) => void;
 }
@@ -47,6 +49,7 @@ export function BuildingDetail({
   onFinish,
   onAcknowledge,
   onClose,
+  onDestroy,
   onReduceTime,
 }: BuildingDetailProps) {
   const level = timerState.level;
@@ -180,8 +183,8 @@ export function BuildingDetail({
             <div className={styles.boostSection}>
               <span className={styles.boostLabel}>{'⏩ Speed Up'}</span>
               <div className={styles.boostButtons}>
-                {TIME_BOOST_TIERS.filter((_, i) =>
-                  i === 0 || timerState.timeRemaining > TIME_BOOST_TIERS[i - 1].reductionMs
+                {TIME_BOOST_TIERS.filter(tier =>
+                  timerState.timeRemaining >= tier.reductionMs * 0.5
                 ).map(tier => {
                   const scaledCost: Resources = {
                     gold: tier.cost.gold * boostCostMultiplier,
@@ -239,6 +242,15 @@ export function BuildingDetail({
               title={startDisabledTitle}
             >
               {`▶ Start Construction (${formatTime(timerState.timeRemaining)})`}
+            </button>
+          )}
+          {!config.isFoundation && (
+            <button
+              className={styles.destroyButton}
+              onClick={onDestroy}
+              title={'Permanently remove this building from the grid'}
+            >
+              {'🗑 Destroy'}
             </button>
           )}
         </div>

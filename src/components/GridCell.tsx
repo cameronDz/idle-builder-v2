@@ -17,6 +17,7 @@ interface OccupiedCellProps {
   currentResources: Resources;
   spend: (cost: Resources) => boolean;
   onBuildingUpdate: (instanceId: string, timerState: BuildingTimer) => void;
+  onDestroyBuilding: (instanceId: string) => void;
   /** Example 3 — fractional cost discount from prestige (0–0.5). */
   costDiscount: number;
   /** Example 4 — fractional build speed discount from prestige (0–0.1). */
@@ -32,6 +33,7 @@ function OccupiedCell({
   currentResources,
   spend,
   onBuildingUpdate,
+  onDestroyBuilding,
   costDiscount,
   buildSpeedDiscount,
 }: OccupiedCellProps) {
@@ -121,6 +123,11 @@ function OccupiedCell({
     syncAndUpdate(next);
   };
 
+  const handleDestroy = () => {
+    if (!window.confirm(`Destroy ${config.name}? This cannot be undone.`)) return;
+    onDestroyBuilding(instance.id);
+  };
+
   const progressColor =
     timerState.progress >= 80
       ? '#22c55e'
@@ -202,6 +209,7 @@ function OccupiedCell({
           onFinish={handleFinish}
           onAcknowledge={handleAcknowledge}
           onClose={() => setShowDetail(false)}
+          onDestroy={handleDestroy}
           onReduceTime={reduceTime}
         />
       )}
@@ -222,6 +230,7 @@ interface GridCellProps {
   spend: (cost: Resources) => boolean;
   onEmptyCellClick: (position: { x: number; y: number }) => void;
   onBuildingUpdate: (instanceId: string, timerState: BuildingTimer) => void;
+  onDestroyBuilding: (instanceId: string) => void;
   getBuildingConfig: (buildingTypeId: string) => BuildingConfig | undefined;
   /** Example 3 — fractional cost discount from prestige (0–0.5). */
   costDiscount: number;
@@ -238,6 +247,7 @@ export function GridCell({
   spend,
   onEmptyCellClick,
   onBuildingUpdate,
+  onDestroyBuilding,
   getBuildingConfig,
   costDiscount,
   buildSpeedDiscount,
@@ -268,6 +278,7 @@ export function GridCell({
       currentResources={currentResources}
       spend={spend}
       onBuildingUpdate={onBuildingUpdate}
+      onDestroyBuilding={onDestroyBuilding}
       costDiscount={costDiscount}
       buildSpeedDiscount={buildSpeedDiscount}
     />

@@ -10,6 +10,7 @@ interface GridProps {
   grid: GridCellType[][];
   buildingInstances: BuildingInstance[];
   placeBuilding: (position: GridPosition, buildingTypeId: string) => BuildingInstance | null;
+  removeBuilding: (instanceId: string) => void;
   updateBuildingInstance: (instanceId: string, timerState: BuildingTimer) => void;
   clearGrid: () => void;
   getBuildingConfig: (buildingTypeId: string) => BuildingConfig | undefined;
@@ -32,6 +33,7 @@ export function Grid({
   grid,
   buildingInstances,
   placeBuilding,
+  removeBuilding,
   updateBuildingInstance,
   clearGrid,
   getBuildingConfig,
@@ -124,6 +126,7 @@ export function Grid({
                 spend={spend}
                 onEmptyCellClick={handleEmptyCellClick}
                 onBuildingUpdate={handleBuildingUpdate}
+                onDestroyBuilding={removeBuilding}
                 getBuildingConfig={getBuildingConfig}
                 costDiscount={costDiscount}
                 buildSpeedDiscount={buildSpeedDiscount}
