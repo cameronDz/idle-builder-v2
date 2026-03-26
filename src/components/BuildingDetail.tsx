@@ -185,7 +185,7 @@ export function BuildingDetail({
               <div className={styles.boostButtons}>
                 {TIME_BOOST_TIERS.filter(tier =>
                   timerState.timeRemaining >= tier.reductionMs * 0.5
-                ).map(tier => {
+                ).slice(-4).map(tier => {
                   const scaledCost: Resources = {
                     gold: tier.cost.gold * boostCostMultiplier,
                     wood: tier.cost.wood * boostCostMultiplier,
