@@ -161,7 +161,7 @@ export const buildings: BuildingConfig[] = [
     id: 'lumber_yard',
     name: 'Lumber Yard',
     duration: 5000,
-    maxCount: 6,
+    maxCount: 7,
     icon: '🪵',
     enhancedIcon: '🌳',
     ultraIcon: '🏭',
