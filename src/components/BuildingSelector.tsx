@@ -3,7 +3,8 @@ import type { BuildingConfig } from '../config/buildings';
 import type { Resources } from '../types/game';
 import styles from './BuildingSelector.module.css';
 import { formatTime } from '../utils/timeUtils';
-import { applyDiscount, hasAnyCost } from '../utils/buildingUtils';
+import { applyDiscount, hasAnyCost, RESOURCE_KEYS } from '../utils/buildingUtils';
+import { ResourceIcon } from './ResourceIcon';
 
 interface BuildingSelectorProps {
   onSelect: (buildingTypeId: string) => void;
@@ -38,13 +39,7 @@ function BuildingCard({
 
   const discountedCost = applyDiscount(config.cost, costDiscount);
 
-  const productionParts: string[] = [];
-  if (config.production.gold > 0) productionParts.push(`💰${config.production.gold}`);
-  if (config.production.wood > 0) productionParts.push(`🌲${config.production.wood}`);
-  if (config.production.stone > 0) productionParts.push(`🪨${config.production.stone}`);
-  if (config.production.ore > 0) productionParts.push(`🔩${config.production.ore}`);
-  if (config.production.food > 0) productionParts.push(`🍖${config.production.food}`);
-  const productionStr = productionParts.length > 0 ? productionParts.join(' ') + '/s' : null;
+  const productionEntries = RESOURCE_KEYS.filter(k => config.production[k] > 0);
 
   const isFree = !hasAnyCost(discountedCost);
 
@@ -70,34 +65,27 @@ function BuildingCard({
         <span className={styles.name}>{config.name}</span>
         <span className={styles.duration}>{formatTime(config.duration)}</span>
         <span className={styles.cost}>
-          {discountedCost.gold > 0 && (
-            <span className={resources.gold < discountedCost.gold ? styles.costUnaffordable : ''}>
-              {`💰${discountedCost.gold} `}
-            </span>
-          )}
-          {discountedCost.wood > 0 && (
-            <span className={resources.wood < discountedCost.wood ? styles.costUnaffordable : ''}>
-              {`🌲${discountedCost.wood} `}
-            </span>
-          )}
-          {discountedCost.stone > 0 && (
-            <span className={resources.stone < discountedCost.stone ? styles.costUnaffordable : ''}>
-              {`🪨${discountedCost.stone} `}
-            </span>
-          )}
-          {discountedCost.ore > 0 && (
-            <span className={resources.ore < discountedCost.ore ? styles.costUnaffordable : ''}>
-              {`🔩${discountedCost.ore} `}
-            </span>
-          )}
-          {discountedCost.food > 0 && (
-            <span className={resources.food < discountedCost.food ? styles.costUnaffordable : ''}>
-              {`🍖${discountedCost.food} `}
-            </span>
-          )}
+          {RESOURCE_KEYS
+            .filter(k => discountedCost[k] > 0)
+            .map(k => (
+              <span key={k} className={resources[k] < discountedCost[k] ? styles.costUnaffordable : ''}>
+                <ResourceIcon resource={k} size={12} />
+                {`${discountedCost[k]} `}
+              </span>
+            ))}
           {isFree && 'Free'}
         </span>
-        {productionStr && <span className={styles.production}>{`+${productionStr}`}</span>}
+        {productionEntries.length > 0 && (
+          <span className={styles.production}>
+            +{productionEntries.map((k, i) => (
+              <span key={k}>
+                {i > 0 && ' '}
+                <ResourceIcon resource={k} size={12} />
+                {`${config.production[k]}/s`}
+              </span>
+            ))}
+          </span>
+        )}
       </div>
       <span className={styles.count}>
         {count}/{config.maxCount}

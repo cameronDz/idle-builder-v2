@@ -4,14 +4,6 @@ import type { Resources } from '../types/game';
 /** Ordered list of resource keys, used for consistent display order. */
 export const RESOURCE_KEYS: Array<keyof Resources> = ['gold', 'wood', 'stone', 'ore', 'food'];
 
-/** Emoji icon for each resource type. */
-export const RESOURCE_EMOJIS: Record<keyof Resources, string> = {
-  gold: '💰',
-  wood: '🌲',
-  stone: '🪨',
-  ore: '🔩',
-  food: '🍖',
-};
 
 export function getUpgradeCost(config: BuildingConfig, currentLevel: number): Resources {
   if (currentLevel === 0) {
@@ -65,10 +57,10 @@ export function formatNumber(value: number): string {
 
 export function formatCost(cost: Resources): string {
   const parts: string[] = [];
-  if (cost.gold > 0) parts.push(`💰${formatNumber(cost.gold)}`);
-  if (cost.wood > 0) parts.push(`🌲${formatNumber(cost.wood)}`);
-  if (cost.stone > 0) parts.push(`🪨${formatNumber(cost.stone)}`);
-  if (cost.ore > 0) parts.push(`🔩${formatNumber(cost.ore)}`);
-  if (cost.food > 0) parts.push(`🍖${formatNumber(cost.food)}`);
-  return parts.join(' ');
+  if (cost.gold > 0) parts.push(`gold: ${formatNumber(cost.gold)}`);
+  if (cost.wood > 0) parts.push(`wood: ${formatNumber(cost.wood)}`);
+  if (cost.stone > 0) parts.push(`stone: ${formatNumber(cost.stone)}`);
+  if (cost.ore > 0) parts.push(`ore: ${formatNumber(cost.ore)}`);
+  if (cost.food > 0) parts.push(`food: ${formatNumber(cost.food)}`);
+  return parts.join(', ');
 }

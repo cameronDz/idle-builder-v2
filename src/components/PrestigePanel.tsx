@@ -8,7 +8,8 @@ import {
   computeRequiredCastleLevel,
   MAX_PRESTIGES,
 } from '../hooks/usePrestige';
-import { RESOURCE_KEYS, RESOURCE_EMOJIS } from '../utils/buildingUtils';
+import { RESOURCE_KEYS } from '../utils/buildingUtils';
+import { ResourceIcon } from './ResourceIcon';
 import styles from './PrestigePanel.module.css';
 
 interface PrestigePanelProps {
@@ -22,17 +23,23 @@ interface PrestigePanelProps {
 }
 
 /**
- * Formats a Resources object as a short resource string, e.g. "💰125 🌲62".
+ * Formats a Resources object as a short resource row, e.g. icon 125 icon 62.
  * Only includes resources with a value greater than zero.
  */
-function formatResources(r: Resources): string {
-  const parts: string[] = [];
-  if (r.gold > 0) parts.push(`💰${r.gold}`);
-  if (r.wood > 0) parts.push(`🌲${r.wood}`);
-  if (r.stone > 0) parts.push(`🪨${r.stone}`);
-  if (r.ore > 0) parts.push(`🔩${r.ore}`);
-  if (r.food > 0) parts.push(`🍖${r.food}`);
-  return parts.join(' ');
+function FormatResources({ r }: { r: Resources }) {
+  const entries = RESOURCE_KEYS.filter(k => r[k] > 0);
+  if (entries.length === 0) return null;
+  return (
+    <>
+      {entries.map((k, i) => (
+        <span key={k}>
+          {i > 0 && ' '}
+          <ResourceIcon resource={k} size={12} />
+          {r[k]}
+        </span>
+      ))}
+    </>
+  );
 }
 
 /**
@@ -43,7 +50,12 @@ function StartingResourceLines({ current, next }: { current: Resources; next: Re
   return (
     <div className={styles.resourceLines}>
       {lines.map(k => (
-        <div key={k}>{`${RESOURCE_EMOJIS[k]}${current[k]} → ${RESOURCE_EMOJIS[k]}${next[k]}`}</div>
+        <div key={k} style={{ display: 'flex', alignItems: 'center', gap: 2 }}>
+          <ResourceIcon resource={k} size={12} />
+          {`${current[k]} → `}
+          <ResourceIcon resource={k} size={12} />
+          {next[k]}
+        </div>
       ))}
     </div>
   );
@@ -170,7 +182,7 @@ export function PrestigePanel({
           <span className={`${styles.bonusValue} ${timesPrestiged > 0 ? styles.active : ''}`}>
             {canPrestige
               ? <StartingResourceLines current={currentStarting} next={nextStarting} />
-              : formatResources(currentStarting)}
+              : <FormatResources r={currentStarting} />}
           </span>
         </div>
 
