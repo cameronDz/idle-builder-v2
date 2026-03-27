@@ -1,10 +1,11 @@
 import { useState } from 'react';
 import { useTimer } from '../hooks/useTimer';
 import { BuildingDetail } from './BuildingDetail';
+import { ResourceIcon } from './ResourceIcon';
 import type { BuildingInstance, BuildingTimer, Resources } from '../types/game';
 import type { BuildingConfig } from '../config/buildings';
 import { buildings } from '../config/buildings';
-import { getUpgradeCost, hasAnyCost, applyDiscount } from '../utils/buildingUtils';
+import { getUpgradeCost, hasAnyCost, applyDiscount, RESOURCE_KEYS } from '../utils/buildingUtils';
 import { formatTime } from '../utils/timeUtils';
 import styles from './GridCell.module.css';
 
@@ -143,18 +144,10 @@ function OccupiedCell({
         : config.icon;
 
   const level = timerState.level;
-  let productionStr: string | null = null;
-  if (level > 0) {
-    const multiplier = Math.pow(config.productionMultiplier, level - 1);
-    const parts: string[] = [];
-    if (config.production.gold > 0) parts.push(`💰${(config.production.gold * multiplier).toFixed(1)}`);
-    if (config.production.wood > 0) parts.push(`🌲${(config.production.wood * multiplier).toFixed(1)}`);
-    if (config.production.stone > 0) parts.push(`🪨${(config.production.stone * multiplier).toFixed(1)}`);
-    if (config.production.ore > 0) parts.push(`🔩${(config.production.ore * multiplier).toFixed(1)}`);
-    if (config.production.food > 0) parts.push(`🍖${(config.production.food * multiplier).toFixed(1)}`);
-
-    if (parts.length > 0) productionStr = parts.join(' ') + '/s';
-  }
+  const productionEntries = level > 0
+    ? RESOURCE_KEYS.filter(k => config.production[k] > 0)
+    : [];
+  const multiplier = level > 0 ? Math.pow(config.productionMultiplier, level - 1) : 1;
 
   return (
     <div className={styles.occupiedCell}>
@@ -167,7 +160,18 @@ function OccupiedCell({
       </button>
       <span className={styles.buildingName}>{config.name}</span>
       <span className={styles.levelLabel}>{`Lv ${timerState.level}`}</span>
-      {productionStr && <span className={styles.productionInfo}>{productionStr}</span>}
+      {productionEntries.length > 0 && (
+        <span className={styles.productionInfo}>
+          {productionEntries.map((k, i) => (
+            <span key={k}>
+              {i > 0 && ' '}
+              <ResourceIcon resource={k} size={9} />
+              {(config.production[k] * multiplier).toFixed(1)}
+            </span>
+          ))}
+          {'/s'}
+        </span>
+      )}
 
       {(timerState.hasStarted || timerState.isComplete) && (
         <div className={styles.progressBarWrapper}>

@@ -1,6 +1,7 @@
 import type { Resources } from '../types/game';
 import styles from './ResourceBar.module.css';
 import { formatNumber } from '../utils/buildingUtils';
+import { ResourceIcon } from './ResourceIcon';
 
 interface ResourceBarProps {
   resources: Resources;
@@ -13,9 +14,10 @@ export function ResourceBar({ resources, productionPerSecond }: ResourceBarProps
       <div className={styles.resource}>
         <span className={styles.resourceLabel}>{'Gold'}</span>
         <span className={styles.resourceValue}>
-          {`💰 ${formatNumber(resources.gold)}`}
+          <ResourceIcon resource="gold" size={14} />
+          {' '}{formatNumber(resources.gold)}
           {productionPerSecond.gold > 0 && (
-            <span className={styles.perSecond}>{` (+${formatNumber(productionPerSecond.gold)}/s)`}</span>
+            <span className={styles.perSecond}>{`(+${formatNumber(productionPerSecond.gold)}/s)`}</span>
           )}
         </span>
       </div>
@@ -23,9 +25,10 @@ export function ResourceBar({ resources, productionPerSecond }: ResourceBarProps
       <div className={styles.resource}>
         <span className={styles.resourceLabel}>{'Wood'}</span>
         <span className={styles.resourceValue}>
-          {`🌲 ${formatNumber(resources.wood)}`}
+          <ResourceIcon resource="wood" size={14} />
+          {' '}{formatNumber(resources.wood)}
           {productionPerSecond.wood > 0 && (
-            <span className={styles.perSecond}>{` (+${formatNumber(productionPerSecond.wood)}/s)`}</span>
+            <span className={styles.perSecond}>{`(+${formatNumber(productionPerSecond.wood)}/s)`}</span>
           )}
         </span>
       </div>
@@ -33,9 +36,10 @@ export function ResourceBar({ resources, productionPerSecond }: ResourceBarProps
       <div className={styles.resource}>
         <span className={styles.resourceLabel}>{'Stone'}</span>
         <span className={styles.resourceValue}>
-          {`🪨 ${formatNumber(resources.stone)}`}
+          <ResourceIcon resource="stone" size={14} />
+          {' '}{formatNumber(resources.stone)}
           {productionPerSecond.stone > 0 && (
-            <span className={styles.perSecond}>{` (+${formatNumber(productionPerSecond.stone)}/s)`}</span>
+            <span className={styles.perSecond}>{`(+${formatNumber(productionPerSecond.stone)}/s)`}</span>
           )}
         </span>
       </div>
@@ -43,9 +47,10 @@ export function ResourceBar({ resources, productionPerSecond }: ResourceBarProps
       <div className={styles.resource}>
         <span className={styles.resourceLabel}>{'Ore'}</span>
         <span className={styles.resourceValue}>
-          {`🔩 ${formatNumber(resources.ore)}`}
+          <ResourceIcon resource="ore" size={14} />
+          {' '}{formatNumber(resources.ore)}
           {productionPerSecond.ore > 0 && (
-            <span className={styles.perSecond}>{` (+${formatNumber(productionPerSecond.ore)}/s)`}</span>
+            <span className={styles.perSecond}>{`(+${formatNumber(productionPerSecond.ore)}/s)`}</span>
           )}
         </span>
       </div>
@@ -53,9 +58,10 @@ export function ResourceBar({ resources, productionPerSecond }: ResourceBarProps
       <div className={styles.resource}>
         <span className={styles.resourceLabel}>{'Food'}</span>
         <span className={styles.resourceValue}>
-          {`🍖 ${formatNumber(resources.food)}`}
+          <ResourceIcon resource="food" size={14} />
+          {' '}{formatNumber(resources.food)}
           {productionPerSecond.food > 0 && (
-            <span className={styles.perSecond}>{` (+${formatNumber(productionPerSecond.food)}/s)`}</span>
+            <span className={styles.perSecond}>{`(+${formatNumber(productionPerSecond.food)}/s)`}</span>
           )}
         </span>
       </div>

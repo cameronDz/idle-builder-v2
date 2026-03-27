@@ -1,7 +1,8 @@
 import type { BuildingConfig } from '../config/buildings';
 import type { BuildingInstance, BuildingTimer, Resources } from '../types/game';
 import { formatTime } from '../utils/timeUtils';
-import { getUpgradeCost, hasAnyCost, applyDiscount, RESOURCE_KEYS, RESOURCE_EMOJIS, formatNumber } from '../utils/buildingUtils';
+import { getUpgradeCost, hasAnyCost, applyDiscount, RESOURCE_KEYS, formatNumber } from '../utils/buildingUtils';
+import { ResourceIcon } from './ResourceIcon';
 import { TIME_BOOST_TIERS } from '../config/timeBoosts';
 import styles from './BuildingDetail.module.css';
 
@@ -67,13 +68,7 @@ export function BuildingDetail({
     level >= 5 ? config.ultraIcon : level >= 2 ? config.enhancedIcon : config.icon;
 
   const multiplier = level > 0 ? Math.pow(config.productionMultiplier, level - 1) : 1;
-  const productionParts: string[] = [];
-  if (config.production.gold > 0) productionParts.push(`💰${formatNumber(config.production.gold * multiplier)}`);
-  if (config.production.wood > 0) productionParts.push(`🌲${formatNumber(config.production.wood * multiplier)}`);
-  if (config.production.stone > 0) productionParts.push(`🪨${formatNumber(config.production.stone * multiplier)}`);
-  if (config.production.ore > 0) productionParts.push(`🔩${formatNumber(config.production.ore * multiplier)}`);
-  if (config.production.food > 0) productionParts.push(`🍖${formatNumber(config.production.food * multiplier)}`);
-  const productionStr = productionParts.length > 0 ? productionParts.join(' ') + '/s' : null;
+  const productionEntries = RESOURCE_KEYS.filter(k => config.production[k] > 0);
 
   const progressColor =
     timerState.progress >= 80
@@ -119,10 +114,18 @@ export function BuildingDetail({
             <span className={styles.value}>{`(${instance.position.x}, ${instance.position.y})`}</span>
           </div>
 
-          {productionStr && (
+          {productionEntries.length > 0 && (
             <div className={styles.row}>
               <span className={styles.label}>{'Production'}</span>
-              <span className={`${styles.value} ${styles.production}`}>{`+${productionStr}`}</span>
+              <span className={`${styles.value} ${styles.production}`}>
+                +{productionEntries.map((k, i) => (
+                  <span key={k}>
+                    {i > 0 && ' '}
+                    <ResourceIcon resource={k} size={12} />
+                    {formatNumber(config.production[k] * multiplier)}
+                  </span>
+                ))}/s
+              </span>
             </div>
           )}
 
@@ -141,7 +144,8 @@ export function BuildingDetail({
                   .filter(k => upgradeCost[k] > 0)
                   .map(k => (
                     <span key={k} className={currentResources[k] >= upgradeCost[k] ? '' : styles.costUnaffordable}>
-                      {`${RESOURCE_EMOJIS[k]}${formatNumber(upgradeCost[k])}`}
+                      <ResourceIcon resource={k} size={12} />
+                      {formatNumber(upgradeCost[k])}
                     </span>
                   ))}
               </span>
@@ -196,8 +200,8 @@ export function BuildingDetail({
                   const affordable = canAfford(scaledCost);
                   const costKeys = RESOURCE_KEYS.filter(k => scaledCost[k] > 0);
                   const costStr = costKeys
-                    .map(k => `${RESOURCE_EMOJIS[k]}${formatNumber(scaledCost[k])}`)
-                    .join(' ');
+                    .map(k => `${k}: ${formatNumber(scaledCost[k])}`)
+                    .join(', ');
                   return (
                     <button
                       key={tier.id}
@@ -212,7 +216,8 @@ export function BuildingDetail({
                       {`-${formatTime(tier.reductionMs)} — `}
                       {costKeys.map((k, i) => (
                         <span key={k} className={currentResources[k] < scaledCost[k] ? styles.costUnaffordable : ''}>
-                          {`${RESOURCE_EMOJIS[k]}${formatNumber(scaledCost[k])}`}{i < costKeys.length - 1 ? ' ' : ''}
+                          <ResourceIcon resource={k} size={12} />
+                          {formatNumber(scaledCost[k])}{i < costKeys.length - 1 ? ' ' : ''}
                         </span>
                       ))}
                     </button>

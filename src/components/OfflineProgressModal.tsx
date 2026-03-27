@@ -1,6 +1,7 @@
 import type { Resources } from '../types/game';
 import { formatTime } from '../utils/timeUtils';
-import { RESOURCE_KEYS, RESOURCE_EMOJIS, formatNumber } from '../utils/buildingUtils';
+import { RESOURCE_KEYS, formatNumber } from '../utils/buildingUtils';
+import { ResourceIcon } from './ResourceIcon';
 import type { OfflineResult } from '../hooks/useOfflineProgress';
 import styles from './OfflineProgressModal.module.css';
 
@@ -40,7 +41,9 @@ export function OfflineProgressModal({ result, onDismiss }: OfflineProgressModal
             <ul className={styles.resourceList}>
               {resourceRows.map(key => (
                 <li key={key} className={styles.resourceRow}>
-                  <span className={styles.resourceIcon}>{RESOURCE_EMOJIS[key]}</span>
+                  <span className={styles.resourceIcon}>
+                    <ResourceIcon resource={key} size={16} />
+                  </span>
                   <span className={styles.resourceName}>
                     {key.charAt(0).toUpperCase() + key.slice(1)}
                   </span>
