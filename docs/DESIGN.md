@@ -152,16 +152,16 @@ All five resource columns are: **Gold / Wood / Stone / Ore / Food**
 
 | Building | Duration | Max | Cost (G/W/S/O/F) | Production /s (G/W/S/O/F) | Notes |
 |---|---|---|---|---|---|
-| 🏰 Stone Castle | 12s | **1** | **Free** (upgrades scale from 50/30/40/10/0) | **8**/0/**5**/**2**/**2** | Foundation — must be first; `upgradeCostMultiplier: 2.2`; upgrade requires matching-level partner |
+| 🏰 Stone Castle | 12s | **1** | **Free** (upgrades scale from 50/30/40/10/0) | **8**/0/0/0/0 | Foundation — must be first; `upgradeCostMultiplier: 2.2`; upgrade requires matching-level partner |
 | 🏠 Wooden House | 3s | 8 | 0/10/0/0/0 | **2**/0/0/0/0 | |
-| 🌾 Farm | 6s | 6 | 5/15/0/0/0 | **1**/0/0/0/**5** | |
-| 🌀 Windmill | 4.5s | 4 | 10/20/5/0/0 | **2**/**1**/0/0/**2** | |
-| 🗼 Watch Tower | 9s | 3 | 20/25/15/5/0 | **3**/0/**2**/0/0 | |
-| 🏚️ Barn | 4s | 5 | 5/20/0/0/0 | **1**/**1**/0/0/**4** | |
-| ⚒️ Forge | 7.5s | 3 | 25/10/20/0/0 | **2**/0/**3**/**2**/0 | |
-| 🏪 Market | 10s | 2 | 30/20/10/0/0 | **5**/**1**/**1**/**1**/**1** | |
-| ⛏️ Ore Mine | 8s | 3 | 15/15/10/0/0 | **1**/0/**4**/**3**/0 | |
-| 🪵 Lumber Yard | 5s | 4 | 10/25/5/0/0 | 0/**3**/0/0/0 | |
+| 🌾 Farm | 6s | 6 | 5/15/0/0/0 | 0/0/0/0/**5** | |
+| 🌀 Windmill | 4.5s | 4 | 10/20/5/0/0 | 0/0/0/0/**2** | |
+| 🗼 Watch Tower | 9s | 3 | 20/25/15/5/0 | **3**/0/0/0/0 | |
+| 🏚️ Barn | 4s | 5 | 5/20/0/0/0 | 0/0/0/0/**4** | |
+| ⚒️ Forge | 7.5s | 3 | 25/10/20/0/0 | 0/0/0/**3**/0 | |
+| 🏪 Market | 10s | 2 | 30/20/10/0/0 | **5**/0/0/0/0 | |
+| ⛏️ Ore Mine | 8s | 3 | 15/15/10/0/0 | 0/0/0/**3**/0 | |
+| 🪵 Lumber Yard | 5s | **7** | 10/25/5/0/0 | 0/**3**/0/0/0 | |
 | 🪨 Quarry | 6s | 4 | 10/5/0/0/0 | 0/0/**3**/0/0 | |
 
 All non-castle buildings: `upgradeCostMultiplier: 1.8`, `productionMultiplier: 1.5`
@@ -359,7 +359,7 @@ The reduction is applied by shifting the stored `startTime` back in time. If the
 - **Early game (free/cheap):** Wooden House (free) and Quarry (10g/5w) are the starting buildings. Barn and Farm are the next step.
 - **Mid game:** Windmill, Watch Tower, Forge, Lumber Yard, Ore Mine all require moderate mixed resources.
 - **Late game:** Stone Castle and Market are the most expensive and most powerful buildings.
-- **Resource loops:** Wood comes from Lumber Yard; Stone from Quarry/Ore Mine; Ore from Ore Mine/Forge; Food from Farm/Barn/Windmill; Gold from most buildings.
+- **Resource loops:** Wood comes from Lumber Yard; Stone from Quarry; Ore from Ore Mine/Forge; Food from Farm/Barn/Windmill; Gold from Wooden House, Watch Tower, Market, and Stone Castle.
 
 ### Suggestion 1 — Wooden House: specialize on gold (implemented)
 
@@ -371,13 +371,13 @@ The reduction is applied by shifting the stored `startTime` back in time. If the
 
 **Problem:** The original Farm produced 🌲2 wood/s + 🍖3 food/s. Farms don't harvest lumber; that overlap with the Lumber Yard was confusing and diluted the Lumber Yard's purpose as the wood specialist.
 
-**Change:** Farm now produces 💰**1** gold/s (selling crops) + 🍖**5** food/s and no wood. This makes Farm the dominant food producer, creates a clear thematic role, and gives the Lumber Yard exclusive ownership of wood production in the early game.
+**Change:** Farm now produces 🍖**5** food/s and no wood or gold. This makes Farm the dominant food producer, creates a clear thematic role, and gives the Lumber Yard exclusive ownership of wood production in the early game.
 
 ### Suggestion 3 — Stone Castle: reward the investment (implemented)
 
 **Problem:** The original Stone Castle cost 50g/30w/40s/10o — the most expensive building in the game by a wide margin — yet only produced 💰5 gold/s + 🪨3 stone/s. The Market, costing less than half as much (30g/20w/10s), produced the same 5 gold plus four other resources. The Castle offered no meaningful incentive to invest.
 
-**Change:** Stone Castle now produces 💰**8**/🪨**5**/🔩**2**/🍖**2** per second. The Castle becomes a true multi-resource powerhouse that justifies its premium cost and serves as a strong late-game target.
+**Change:** Stone Castle now produces 💰**8** gold/s (up from 5). The Castle becomes the dominant gold producer, justifying its premium upgrade cost and making it a strong late-game investment.
 
 ---
 
