@@ -84,3 +84,13 @@
     font-size: 0.8rem;
   }
 }
+
+/* ── Tiny screens (≤320px): allow horizontal scroll as last resort ─────── */
+@media (max-width: 320px) {
+  .resourceBar {
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    justify-content: flex-start;
+    -webkit-overflow-scrolling: touch;
+  }
+}

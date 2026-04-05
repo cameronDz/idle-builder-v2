@@ -67,3 +67,27 @@
     gap: 14px;
   }
 }
+
+/* ── Landscape on phone-sized screens: compact header/padding for more grid space */
+@media (orientation: landscape) and (max-height: 500px) {
+  .header {
+    padding: 6px 16px;
+  }
+
+  .title {
+    font-size: 1.1rem;
+  }
+
+  .subtitle {
+    display: none;
+  }
+
+  .main {
+    padding: 8px 10px;
+    padding-bottom: calc(8px + env(safe-area-inset-bottom));
+  }
+
+  .container {
+    gap: 10px;
+  }
+}

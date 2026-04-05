@@ -61,7 +61,7 @@
 }
 
 .buildingName {
-  font-size: 0.65rem;
+  font-size: 0.75rem;
   font-weight: 600;
   color: #374151;
   text-align: center;
@@ -73,7 +73,7 @@
 }
 
 .levelLabel {
-  font-size: 0.6rem;
+  font-size: 0.65rem;
   color: #6b7280;
   background: #f3f4f6;
   padding: 1px 5px;
@@ -183,6 +183,11 @@
     display: none;
   }
 
+  .iconButton {
+    min-width: 44px;
+    min-height: 44px;
+  }
+
   .finishButton,
   .completeButton {
     padding: 2px 4px;
@@ -235,4 +240,23 @@
 
 .completeButton:active {
   background: #16a34a;
+}
+
+/* ── Very small screens (≤360px): hide secondary labels to save space ──── */
+@media (max-width: 360px) {
+  .levelLabel {
+    display: none;
+  }
+
+  .timeRemaining {
+    display: none;
+  }
+}
+
+/* ── Tiny screens (≤320px): further compress cell height ───────────────── */
+@media (max-width: 320px) {
+  .emptyCell,
+  .occupiedCell {
+    min-height: 80px;
+  }
 }
