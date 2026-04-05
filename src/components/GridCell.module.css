@@ -197,3 +197,42 @@
     font-size: 0.45rem;
   }
 }
+/* ── Override the too-small font sizes from the 768px breakpoint above ───── */
+@media (max-width: 768px) {
+  .emptyCell,
+  .occupiedCell {
+    min-height: 92px;
+  }
+
+  .finishButton {
+    font-size: 0.6rem;
+    padding: 3px 5px;
+  }
+
+  .completeButton {
+    font-size: 0.6rem;
+    padding: 3px 5px;
+  }
+}
+
+/* ── Tap / active states for touch devices ─────────────────────────────── */
+.emptyCell:active {
+  background: #eff6ff;
+  border-color: #3b82f6;
+}
+
+.iconButton:active {
+  background: #f3f4f6;
+}
+
+.startButton:active:not(:disabled) {
+  background: #2563eb;
+}
+
+.finishButton:active {
+  background: #d97706;
+}
+
+.completeButton:active {
+  background: #16a34a;
+}

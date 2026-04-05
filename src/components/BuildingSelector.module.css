@@ -21,6 +21,20 @@
   box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
 }
 
+@media (max-width: 480px) {
+  .overlay {
+    align-items: flex-end;
+  }
+
+  .modal {
+    max-width: 100%;
+    border-radius: 16px 16px 0 0;
+    padding: 20px 16px;
+    padding-bottom: calc(20px + env(safe-area-inset-bottom));
+    max-height: 85vh;
+  }
+}
+
 .header {
   display: flex;
   align-items: center;
@@ -135,4 +149,8 @@
   font-size: 0.85rem;
   color: #713f12;
   line-height: 1.4;
+}
+.buildingCard:active:not(.disabled) {
+  background: #eff6ff;
+  border-color: #3b82f6;
 }
