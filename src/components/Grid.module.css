@@ -111,6 +111,14 @@
   }
 }
 
+/* ── Mid-point tablet: slightly tighter columns ────────────────────────── */
+@media (max-width: 600px) {
+  .grid {
+    grid-template-columns: repeat(5, 68px);
+    gap: 5px;
+  }
+}
+
 @media (max-width: 480px) {
   .grid {
     grid-template-columns: repeat(5, 64px);
@@ -120,5 +128,18 @@
   .clearButton {
     font-size: 0.68rem;
     padding: 3px 6px;
+  }
+}
+
+/* ── Very small screens: wrap header-right buttons onto their own line ─── */
+@media (max-width: 360px) {
+  .header {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .headerRight {
+    width: 100%;
+    flex-wrap: wrap;
   }
 }
