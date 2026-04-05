@@ -71,6 +71,19 @@
   border-color: #fca5a5;
 }
 
+.clearButton:active {
+  background: #fee2e2;
+  color: #991b1b;
+  border-color: #fca5a5;
+}
+
+/* Always allow horizontal scroll so the 5-column grid is reachable on any
+   screen size; touch devices get momentum scrolling via the webkit property. */
+.gridWrapper {
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
 .grid {
   display: grid;
   grid-template-columns: repeat(5, 1fr);
@@ -78,14 +91,23 @@
 }
 
 @media (max-width: 768px) {
-  .gridWrapper {
-    overflow-x: auto;
-    -webkit-overflow-scrolling: touch;
-  }
-
   .grid {
     grid-template-columns: repeat(5, 72px);
     gap: 6px;
+  }
+
+  .headerRight {
+    gap: 6px;
+  }
+
+  .clearButton {
+    font-size: 0.72rem;
+    padding: 4px 8px;
+  }
+
+  .concurrentBadge {
+    font-size: 0.72rem;
+    padding: 2px 8px;
   }
 }
 
@@ -93,5 +115,10 @@
   .grid {
     grid-template-columns: repeat(5, 64px);
     gap: 4px;
+  }
+
+  .clearButton {
+    font-size: 0.68rem;
+    padding: 3px 6px;
   }
 }

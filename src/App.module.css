@@ -28,6 +28,8 @@
 .main {
   flex: 1;
   padding: 24px 16px;
+  /* account for iOS home-bar / notch at bottom */
+  padding-bottom: calc(24px + env(safe-area-inset-bottom));
 }
 
 .container {
@@ -41,4 +43,27 @@
 
 .sidePanel {
   width: 100%;
+}
+
+@media (max-width: 600px) {
+  .header {
+    padding: 10px 16px;
+  }
+
+  .title {
+    font-size: 1.35rem;
+  }
+
+  .subtitle {
+    font-size: 0.8rem;
+  }
+
+  .main {
+    padding: 14px 10px;
+    padding-bottom: calc(14px + env(safe-area-inset-bottom));
+  }
+
+  .container {
+    gap: 14px;
+  }
 }
