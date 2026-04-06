@@ -106,6 +106,7 @@ The right time to learn Phaser is on a project that actually calls for it: a pla
 
 ## Decision 9 — Building interdependence (synergies) is confirmed for Session 3; resource specialization was its prerequisite
 **Date:** 2026-03-22
+**Status: SUPERSEDED by Decision 10, then CUT — see Scope Cuts in DESIGN.md**
 **Decision:** Proceed with the planned adjacency-based synergy system in Session 3. The resource-specialization changes made in Session 1.2 are a necessary prerequisite that make this a well-defined, low-risk feature.
 
 **Context:** This was raised mid-Session 2 after the resource-production identities of several buildings were sharpened (Wooden House → gold-only, Farm → food-only, Lumber Yard → wood-only, Quarry → stone-only, etc.). The question was whether that specialization makes interdependence more or less appropriate to add.
@@ -139,7 +140,8 @@ After specialization, each building has a distinct production identity. Synergy 
 
 ## Decision 10 — Level-requirement synergy model replaces adjacency model (supersedes Decision 9)
 **Date:** 2026-03-22
-**Decision:** Replace the adjacency-based synergy model from Decision 9 with a **level-requirement model**: Building A gets a production boost when (a) it is at level X or above, and (b) at least one Building B exists anywhere on the grid at level Y or above.
+**Status: CUT — synergies removed from v2 scope entirely; see Scope Cuts in DESIGN.md**
+**Decision:** Replace the adjacency-based synergy model from Decision 9 with a **level-requirement model**.
 
 **Context:** After Decision 9 was recorded, a concern was raised: does the adjacency model silently require more resources? And could synergy instead be "Building A at level X requires Building B at least level Y"?
 

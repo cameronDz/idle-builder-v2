@@ -88,6 +88,13 @@
   }
 
   .container {
+    flex-direction: row;
+    align-items: flex-start;
     gap: 10px;
+  }
+
+  .sidePanel {
+    width: 220px;
+    flex-shrink: 0;
   }
 }

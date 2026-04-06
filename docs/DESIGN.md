@@ -35,7 +35,6 @@
 - ✅ Building production (awarded on tick)
 
 ### P1 — Core-ish (Session 3)
-- ⬜ Building synergies (building A at level X boosts production if building B exists at level Y — see § Building Synergies below)
 - ✅ Prestige / reset mechanic — 3 permanent bonus examples (see § Prestige below)
 - ⬜ Mobile-responsive layout
 
@@ -128,14 +127,6 @@ interface BuildingConfig {
   isFoundation?: boolean;
   /** When true, upgrading requires another building at the castle's current level. */
   upgradeRequiresMatchingLevel?: boolean;
-  synergies?: SynergyCondition[]; // optional; unlocks production boosts based on partner level
-}
-
-interface SynergyCondition {
-  partnerBuildingId: string; // building type that must exist on the grid
-  partnerMinLevel: number;   // partner must be at this level or above
-  selfMinLevel: number;      // this building must be at this level or above
-  bonus: number;             // fractional multiplier added to base, e.g. 0.25 for +25%
 }
 
 interface PrestigeState {
@@ -275,43 +266,6 @@ costDiscount = min(timesPrestiged × 0.1, 0.5)
 
 ---
 
-## Building Synergies
-
-> Planned for Session 3. Uses a **level-requirement model** — no spatial constraint, cost is progression-based leveling (see Decision 10).
-
-### Boost model
-
-A building's production is multiplied by `1 + sum(bonus from all satisfied conditions)` where each condition in `config.synergies` contributes its `bonus` when satisfied. A condition is satisfied when:
-- **this building** is at `selfMinLevel` or above, AND
-- **at least one instance** of `partnerBuildingId` exists anywhere on the grid at `partnerMinLevel` or above
-
-Example: A level 3 Forge with a level 2 Lumber Yard AND a level 2 Ore Mine satisfies both of its conditions and produces at `base × (1 + 0.25 + 0.25)` = `base × 1.5` — 50% more output.
-
-### Synergy conditions
-
-| Building | Self Min Level | Requires Partner | Partner Min Level | Bonus |
-|---|---|---|---|---|
-| 🌾 Farm | 2 | 🏚️ Barn | 1 | +25% production |
-| 🏚️ Barn | 2 | 🌾 Farm | 1 | +25% production |
-| ⚒️ Forge | 3 | 🪵 Lumber Yard | 2 | +25% production |
-| ⚒️ Forge | 3 | ⛏️ Ore Mine | 2 | +25% production |
-| ⛏️ Ore Mine | 3 | 🪨 Quarry | 2 | +20% production |
-| 🏠 Wooden House | 2 | 🏪 Market | 2 | +20% production |
-| 🏰 Stone Castle | 2 | 🗼 Watch Tower | 2 | +30% production |
-
-Synergies are **stackable** within the same building: a Forge that satisfies both conditions produces at `base × 1.5`. Synergies are **not bidirectional** by default — the Farm gets a boost from having a Barn, but not vice-versa, unless the Barn also has its own condition (as above).
-
-### Implementation plan (Session 3)
-
-1. **`SynergyCondition` interface (`types/game.ts`)** — add the interface as shown in § Data Models.
-2. **`BuildingConfig` (`config/buildings.ts`)** — add optional `synergies?: SynergyCondition[]` field; populate for the 7 conditions above (covering 5 unique building relationships).
-3. **`useProductionTick` (`hooks/useProductionTick.ts`)** — before the per-instance loop, build a `Map<buildingTypeId, maxLevel>` from all completed instances; then for each active instance, iterate `config.synergies`, check `effectiveLevel >= cond.selfMinLevel` and `partnerLevels.get(cond.partnerBuildingId) >= cond.partnerMinLevel`, and accumulate `synergyBonus`; multiply production by `1 + synergyBonus`.
-4. **`BuildingDetail` (`components/BuildingDetail.tsx`)** — add a "Synergies" subsection to the info panel listing each condition, its level requirements, and whether it is currently active. This is the primary player communication surface for this feature.
-
-No new `Resources` fields, no localStorage migration, no grid position lookup required.
-
----
-
 ## Time Reduction Upgrades
 
 > Implemented (replaces the planned Achievement system). Accessible via the **BuildingDetail modal** while a building is under active construction.
@@ -387,7 +341,7 @@ The reduction is applied by shifting the stored `startTime` back in time. If the
 |---|---|
 | **1** | Scaffold new repo, port grid + timer system, get core placement working |
 | **2** | Resource system, building costs, production ticks |
-| **3** | Synergies, prestige, juice & polish |
+| **3** | Prestige, juice & polish |
 | **4** | Bug bash, mobile responsiveness, persistence hardening |
 | **5** | Build, deploy to itch.io, release, marketing |
 
@@ -404,3 +358,4 @@ The following are explicitly **out of scope** for v2:
 - No complex tech trees (flat building list only)
 - No Phaser or game engine (React is the right tool for a UI-driven idle game)
 - No population or energy resource types — these require new game-loop mechanics (cap logic, running costs) that don't fit the current accumulate-and-spend model; deferred to v3 (see Decision 8)
+- No building synergies — cut from scope; the flat production model is sufficient for v2 (see Decisions 9 & 10)
