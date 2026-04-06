@@ -34,6 +34,10 @@
     padding-bottom: calc(20px + env(safe-area-inset-bottom));
     max-height: 85vh;
   }
+
+  .actions {
+    flex-direction: column;
+  }
 }
 
 .header {
