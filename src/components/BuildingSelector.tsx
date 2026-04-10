@@ -5,6 +5,7 @@ import styles from './BuildingSelector.module.css';
 import { formatTime } from '../utils/timeUtils';
 import { applyDiscount, hasAnyCost, RESOURCE_KEYS } from '../utils/buildingUtils';
 import { ResourceIcon } from './ResourceIcon';
+import { useBodyScrollLock } from '../hooks/useBodyScrollLock';
 
 interface BuildingSelectorProps {
   onSelect: (buildingTypeId: string) => void;
@@ -95,6 +96,7 @@ function BuildingCard({
 }
 
 export function BuildingSelector({ onSelect, onCancel, getBuildingCount, canAfford, resources, costDiscount }: BuildingSelectorProps) {
+  useBodyScrollLock();
   const foundationIsBuilt = buildings.some(b => b.isFoundation && getBuildingCount(b.id) > 0);
 
   return (

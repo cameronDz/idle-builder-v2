@@ -20,6 +20,8 @@
   box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
   max-height: 85vh;
   overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+  overscroll-behavior: contain;
 }
 
 @media (max-width: 480px) {
@@ -37,6 +39,10 @@
 
   .actions {
     flex-direction: column;
+  }
+
+  .boostButton {
+    min-height: 44px;
   }
 }
 
@@ -271,6 +277,10 @@
 
 .boostButton:hover:not(:disabled) {
   background: #7c3aed;
+}
+
+.boostButton:active:not(:disabled) {
+  background: #6d28d9;
 }
 
 .boostButton:disabled,

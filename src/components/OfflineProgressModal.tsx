@@ -3,6 +3,7 @@ import { formatTime } from '../utils/timeUtils';
 import { RESOURCE_KEYS, formatNumber } from '../utils/buildingUtils';
 import { ResourceIcon } from './ResourceIcon';
 import type { OfflineResult } from '../hooks/useOfflineProgress';
+import { useBodyScrollLock } from '../hooks/useBodyScrollLock';
 import styles from './OfflineProgressModal.module.css';
 
 interface OfflineProgressModalProps {
@@ -11,6 +12,7 @@ interface OfflineProgressModalProps {
 }
 
 export function OfflineProgressModal({ result, onDismiss }: OfflineProgressModalProps) {
+  useBodyScrollLock();
   const { earned, elapsedMs, isMaxTime } = result;
 
   const resourceRows = RESOURCE_KEYS.filter(key => earned[key] > 0);
