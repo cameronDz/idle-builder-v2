@@ -35,7 +35,7 @@ export interface TimeBoostTier {
  *   timers climb into the multi-week range.
  * - **Year Boost** (-1 year / 8760 hr, assuming 365-day year): supreme cost, aimed at the true end-game where
  *   timers climb into the year range.
- * - **Six-Year Boost** (-6 years / 52560 hr): ultimate cost, aimed at the absolute pinnacle of the end-game where
+ * - **Six-Year Boost** (-6 years / 52560 hr, 6 × 365-day year): ultimate cost, aimed at the absolute pinnacle of the end-game where
  *   timers climb beyond the single-year mark.
  *
  * All available tiers are visible in the BuildingDetail modal while a building is under
