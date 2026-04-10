@@ -1,6 +1,6 @@
 # Idle Builder v2
 
-**Idle Builder v2** — A settlement-building idle game with resource production, building synergies, and prestige resets. Built with React 19 + TypeScript + Vite 7.
+**Idle Builder v2** — A settlement-building idle game with resource production and prestige resets. Built with React 19 + TypeScript + Vite 7.
 
 Place buildings on a 5×5 grid, manage resources, level up your settlement, and eventually prestige for permanent multipliers. Progress persists even when you're away.
 
@@ -101,6 +101,6 @@ See [docs/DESIGN.md](docs/DESIGN.md) for the full game design document.
 **Session Plan:**
 - **Session 1** — Scaffold + grid + timer system *(this PR)*
 - **Session 2** — Resource system, building costs, production ticks
-- **Session 3** — Synergies, prestige, juice & polish
+- **Session 3** — Prestige, juice & polish
 - **Session 4** — Bug bash, mobile responsiveness, persistence hardening
 - **Session 5** — Build, deploy to itch.io, release

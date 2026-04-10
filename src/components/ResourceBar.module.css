@@ -92,5 +92,7 @@
     overflow-x: auto;
     justify-content: flex-start;
     -webkit-overflow-scrolling: touch;
+    /* Prevent the horizontal scroll from propagating to the page */
+    overscroll-behavior-x: contain;
   }
 }

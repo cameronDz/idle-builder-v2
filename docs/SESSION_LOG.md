@@ -14,10 +14,9 @@
 - **Docs:** `docs/DESIGN.md` updated — Achievement system replaced by Time Reduction Upgrades section with tier table, mechanics, and implementation file list
 
 ### What's broken/missing
-- Synergies not yet implemented
+- Mobile-responsive layout polish
 
 ### Next session priorities
-- Building synergies
 - Mobile-responsive layout polish
 
 ---
