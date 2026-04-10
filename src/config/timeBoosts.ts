@@ -35,6 +35,8 @@ export interface TimeBoostTier {
  *   timers climb into the multi-week range.
  * - **Year Boost** (-1 year / 8760 hr, assuming 365-day year): supreme cost, aimed at the true end-game where
  *   timers climb into the year range.
+ * - **Six-Year Boost** (-6 years / 52560 hr): ultimate cost, aimed at the absolute pinnacle of the end-game where
+ *   timers climb beyond the single-year mark.
  *
  * All available tiers are visible in the BuildingDetail modal while a building is under
  * construction. Buttons are disabled when the player cannot afford the cost or
@@ -94,5 +96,11 @@ export const TIME_BOOST_TIERS: TimeBoostTier[] = [
     label: '-1 year',
     reductionMs: 31_536_000_000,
     cost: { gold: 10_000_000, wood: 5_000_000, stone: 2_500_000, ore: 500_000, food: 0 },
+  },
+  {
+    id: 'boost_6yr',
+    label: '-6 years',
+    reductionMs: 189_216_000_000,
+    cost: { gold: 60_000_000, wood: 30_000_000, stone: 15_000_000, ore: 3_000_000, food: 0 },
   },
 ];

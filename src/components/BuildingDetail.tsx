@@ -4,6 +4,7 @@ import { formatTime } from '../utils/timeUtils';
 import { getUpgradeCost, hasAnyCost, applyDiscount, RESOURCE_KEYS, formatNumber } from '../utils/buildingUtils';
 import { ResourceIcon } from './ResourceIcon';
 import { TIME_BOOST_TIERS } from '../config/timeBoosts';
+import { useBodyScrollLock } from '../hooks/useBodyScrollLock';
 import styles from './BuildingDetail.module.css';
 
 interface BuildingDetailProps {
@@ -53,6 +54,7 @@ export function BuildingDetail({
   onDestroy,
   onReduceTime,
 }: BuildingDetailProps) {
+  useBodyScrollLock();
   const level = timerState.level;
 
   const rawUpgradeCost = getUpgradeCost(config, level);
