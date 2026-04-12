@@ -215,6 +215,39 @@
   }
 }
 
+/* ── Landscape phone: compact layout for narrow 220px side panel ─────────── */
+@media (orientation: landscape) and (max-height: 500px) {
+  .panel {
+    padding: 8px 12px;
+    gap: 8px;
+  }
+
+  .title {
+    font-size: 0.9rem;
+  }
+
+  .bonusRow {
+    flex-wrap: wrap;
+    gap: 4px;
+    font-size: 0.78rem;
+  }
+
+  .bonusValue {
+    text-align: left;
+    white-space: normal;
+  }
+
+  .prestigeButton {
+    padding: 8px 12px;
+    font-size: 0.85rem;
+    min-height: 36px;
+  }
+
+  .hint {
+    font-size: 0.7rem;
+  }
+}
+
 .prestigeButton:active:not(:disabled) {
   background: #4338ca;
   transform: translateY(0);
