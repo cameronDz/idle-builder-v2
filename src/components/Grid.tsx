@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useMemo, useState } from 'react';
 import { GridCell } from './GridCell';
 import { BuildingSelector } from './BuildingSelector';
 import type { GridPosition, BuildingTimer, BuildingInstance, GridCell as GridCellType, Resources } from '../types/game';
@@ -91,7 +91,7 @@ export function Grid({
   };
 
   const buildLimitReached = isBuildingLimitReached();
-  const isDevMode = localStorage.getItem('devMode') === 'true';
+  const isDevMode = useMemo(() => localStorage.getItem('devMode') === 'true', []);
 
   return (
     <section className={styles.gridSection}>
@@ -105,14 +105,14 @@ export function Grid({
             {`⚒ ${activeOrComplete}/${maxConcurrent} slots`}
           </span>
           {isDevMode && (
-            <button className={styles.clearButton} onClick={handleResetResources}>
-              {'Clear Resources'}
-            </button>
-          )}
-          {isDevMode && (
-            <button className={styles.clearButton} onClick={handleClearGrid}>
-              {'Clear Grid'}
-            </button>
+            <>
+              <button className={styles.clearButton} onClick={handleResetResources}>
+                {'Clear Resources'}
+              </button>
+              <button className={styles.clearButton} onClick={handleClearGrid}>
+                {'Clear Grid'}
+              </button>
+            </>
           )}
         </div>
       </div>
