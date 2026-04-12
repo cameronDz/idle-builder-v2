@@ -33,6 +33,31 @@ For public release (Session 5), the built `dist/` folder will be uploaded to [it
 
 ---
 
+## Dev Mode
+
+A hidden dev mode is available for testing and debugging. It exposes extra buttons in the Building Grid header:
+
+- **Clear Resources** — resets all resources to starting values
+- **Clear Grid** — removes all buildings from the grid (with confirmation)
+
+To enable dev mode, open the browser console and run:
+
+```js
+localStorage.setItem('devMode', 'true');
+location.reload();
+```
+
+To disable:
+
+```js
+localStorage.removeItem('devMode');
+location.reload();
+```
+
+Dev mode is read once on mount and is never enabled in production by default.
+
+---
+
 ## Tech Stack
 
 | Layer | Technology |
