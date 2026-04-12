@@ -1,0 +1,27 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" width="32" height="32">
+  <!-- Background -->
+  <rect width="32" height="32" rx="6" fill="#1e3a5f"/>
+  <!-- 3x3 grid cells (2px gap, 8px cells) -->
+  <!-- Row 1 -->
+  <rect x="3"  y="3"  width="8" height="8" rx="2" fill="#374151" opacity="0.7"/>
+  <rect x="12" y="3"  width="8" height="8" rx="2" fill="#374151" opacity="0.7"/>
+  <rect x="21" y="3"  width="8" height="8" rx="2" fill="#374151" opacity="0.7"/>
+  <!-- Row 2 -->
+  <rect x="3"  y="12" width="8" height="8" rx="2" fill="#374151" opacity="0.7"/>
+  <!-- Centre cell: castle highlight -->
+  <rect x="12" y="12" width="8" height="8" rx="2" fill="#e5a91a"/>
+  <rect x="21" y="12" width="8" height="8" rx="2" fill="#374151" opacity="0.7"/>
+  <!-- Row 3 -->
+  <rect x="3"  y="21" width="8" height="8" rx="2" fill="#374151" opacity="0.7"/>
+  <rect x="12" y="21" width="8" height="8" rx="2" fill="#374151" opacity="0.7"/>
+  <rect x="21" y="21" width="8" height="8" rx="2" fill="#374151" opacity="0.7"/>
+  <!-- Castle icon in centre cell -->
+  <!-- Battlements -->
+  <rect x="13" y="13" width="2" height="2" rx="0.5" fill="#1e3a5f"/>
+  <rect x="15.5" y="13" width="1" height="2" rx="0.5" fill="#1e3a5f"/>
+  <rect x="17" y="13" width="2" height="2" rx="0.5" fill="#1e3a5f"/>
+  <!-- Tower body -->
+  <rect x="13" y="15" width="6" height="4" rx="0.5" fill="#1e3a5f"/>
+  <!-- Gate -->
+  <rect x="15" y="17" width="2" height="2" rx="1" fill="#e5a91a"/>
+</svg>

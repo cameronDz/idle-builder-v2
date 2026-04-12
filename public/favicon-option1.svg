@@ -1,0 +1,22 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" width="32" height="32">
+  <!-- Sky/background -->
+  <rect width="32" height="32" rx="6" fill="#1e3a5f"/>
+  <!-- Flag pole -->
+  <rect x="15" y="4" width="1.5" height="7" fill="#e5c97a"/>
+  <!-- Flag -->
+  <polygon points="16.5,4 22,6.5 16.5,9" fill="#e5c97a"/>
+  <!-- Battlements (three merlons) -->
+  <rect x="8"  y="11" width="4" height="5" rx="1" fill="#9ca3af"/>
+  <rect x="14" y="11" width="4" height="5" rx="1" fill="#b0bec5"/>
+  <rect x="20" y="11" width="4" height="5" rx="1" fill="#9ca3af"/>
+  <!-- Main tower body -->
+  <rect x="8" y="16" width="16" height="10" rx="1" fill="#6b7280"/>
+  <!-- Gate arch -->
+  <rect x="13" y="21" width="6" height="5" rx="3" fill="#1e3a5f"/>
+  <!-- Window left -->
+  <rect x="10" y="18" width="2.5" height="3" rx="1" fill="#1e3a5f"/>
+  <!-- Window right -->
+  <rect x="19.5" y="18" width="2.5" height="3" rx="1" fill="#1e3a5f"/>
+  <!-- Ground -->
+  <rect x="4" y="26" width="24" height="2" rx="1" fill="#4b5563"/>
+</svg>
