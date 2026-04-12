@@ -66,6 +66,10 @@
   .container {
     gap: 14px;
   }
+
+  .sidePanel {
+    order: -1;
+  }
 }
 
 /* ── Landscape on phone-sized screens: compact header/padding for more grid space */
