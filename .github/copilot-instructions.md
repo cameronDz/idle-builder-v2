@@ -6,7 +6,7 @@
 - Keep changes small, targeted, and consistent with current code style.
 
 ## Always follow this workflow
-1. Install dependencies: `corepack enable && corepack prepare pnpm@9.0.0 --activate && pnpm install --frozen-lockfile`
+1. Install dependencies: `corepack enable && corepack prepare pnpm@9 --activate && pnpm install --frozen-lockfile`
 2. Validate before and after meaningful code edits:
    - `pnpm lint`
    - `pnpm build`
