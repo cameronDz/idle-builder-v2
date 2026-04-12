@@ -167,6 +167,7 @@
   background: #22c55e;
   color: #fff;
   width: 100%;
+  font-size: 0.55rem;
 }
 
 .completeButton:hover {
@@ -200,7 +201,7 @@
   }
 
   .completeButton {
-    font-size: 0.65rem;
+    font-size: 0.55rem;
     padding: 3px 4px;
     white-space: normal;
     word-break: break-word;
