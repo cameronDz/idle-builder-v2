@@ -92,15 +92,11 @@
   }
 
   .container {
-    flex-direction: row;
-    align-items: flex-start;
     gap: 10px;
   }
 
   .sidePanel {
-    width: 220px;
-    flex-shrink: 0;
-    overflow-y: auto;
-    max-height: calc(100vh - 60px);
+    order: -1;
+    width: 100%;
   }
 }

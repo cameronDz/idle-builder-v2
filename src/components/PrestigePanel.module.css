@@ -215,7 +215,7 @@
   }
 }
 
-/* ── Landscape phone: compact layout for narrow 220px side panel ─────────── */
+/* ── Landscape phone: compact layout ─────────── */
 @media (orientation: landscape) and (max-height: 500px) {
   .panel {
     padding: 8px 12px;
