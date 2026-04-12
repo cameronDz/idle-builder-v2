@@ -116,7 +116,7 @@ export function PrestigePanel({
   };
 
   return (
-    <div className={styles.panel}>
+    <div className={`${styles.panel} ${canPrestige ? styles.panelReady : ''}`}>
       <button
         className={styles.header}
         onClick={() => setIsExpanded(!isExpanded)}
@@ -125,11 +125,13 @@ export function PrestigePanel({
       >
         <h2 className={styles.title}>{'✨ Prestige'}</h2>
         <div className={styles.headerRight}>
-          {timesPrestiged > 0 && (
+          {canPrestige ? (
+            <span className={styles.readyBadge}>{'🎉 READY!'}</span>
+          ) : timesPrestiged > 0 ? (
             <span className={styles.badge}>
               {isMaxPrestige ? `★ Max Prestige` : `×${timesPrestiged} Prestige`}
             </span>
-          )}
+          ) : null}
           <span className={`${styles.chevron} ${isExpanded ? styles.chevronOpen : ''}`}>{'▾'}</span>
         </div>
       </button>

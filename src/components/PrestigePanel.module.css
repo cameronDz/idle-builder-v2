@@ -68,6 +68,27 @@
   white-space: nowrap;
 }
 
+.panelReady {
+  border-color: #6ee7b7;
+  box-shadow: 0 0 12px 2px rgba(110, 231, 183, 0.45);
+}
+
+@keyframes prestigePulse {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50% { opacity: 0.8; transform: scale(1.05); }
+}
+
+.readyBadge {
+  font-size: 0.75rem;
+  font-weight: 700;
+  background: #059669;
+  color: #ecfdf5;
+  padding: 2px 10px;
+  border-radius: 12px;
+  white-space: nowrap;
+  animation: prestigePulse 1.6s ease-in-out infinite;
+}
+
 .bonuses {
   display: flex;
   flex-direction: column;
