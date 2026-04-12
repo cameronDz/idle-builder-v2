@@ -77,11 +77,8 @@
   border-color: #fca5a5;
 }
 
-/* Always allow horizontal scroll so the 5-column grid is reachable on any
-   screen size; touch devices get momentum scrolling via the webkit property. */
 .gridWrapper {
-  overflow-x: auto;
-  -webkit-overflow-scrolling: touch;
+  width: 100%;
 }
 
 .grid {
@@ -92,7 +89,6 @@
 
 @media (max-width: 768px) {
   .grid {
-    grid-template-columns: repeat(5, 72px);
     gap: 6px;
   }
 
@@ -111,17 +107,8 @@
   }
 }
 
-/* ── Mid-point tablet: slightly tighter columns ────────────────────────── */
-@media (max-width: 600px) {
-  .grid {
-    grid-template-columns: repeat(5, 68px);
-    gap: 5px;
-  }
-}
-
 @media (max-width: 480px) {
   .grid {
-    grid-template-columns: repeat(5, 64px);
     gap: 4px;
   }
 
