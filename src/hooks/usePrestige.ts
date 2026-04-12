@@ -23,14 +23,18 @@ export const MAX_PRESTIGES = 10;
  *
  * | Next prestige # | Required castle level |
  * |---|---|
- * | 1 – 3  | 10 |
- * | 4 – 6  | 12 |
- * | 7 – 9  | 15 |
- * | 10 (max) | 20 |
+ * | 1              |  5 |
+ * | 2              |  8 |
+ * | 3              | 10 |
+ * | 4 – 6          | 12 |
+ * | 7 – 9          | 15 |
+ * | 10 (max)       | 20 |
  *
  */
 export function computeRequiredCastleLevel(nextPrestigeNumber: number): number {
-  if (nextPrestigeNumber <= 3) return 10;
+  if (nextPrestigeNumber === 1) return 5;
+  if (nextPrestigeNumber === 2) return 8;
+  if (nextPrestigeNumber === 3) return 10;
   if (nextPrestigeNumber <= 6) return 12;
   if (nextPrestigeNumber <= 9) return 15;
   return 20;
