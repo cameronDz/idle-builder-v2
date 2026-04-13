@@ -48,25 +48,6 @@ export const buildings: BuildingConfig[] = [
     productionMultiplier: 1.5,
   },
   {
-    id: 'stone_castle',
-    name: 'Stone Castle',
-    duration: 12000,
-    maxCount: 1,
-    icon: '🏰',
-    enhancedIcon: '🏯',
-    ultraIcon: '⛩️',
-    // Free to place — it is the mandatory first building.
-    cost: { gold: 0, wood: 0, stone: 0, ore: 0 },
-    // Upgrade costs scale from this expensive base rather than the zero placement cost.
-    upgradeCostBase: { gold: 50, wood: 30, stone: 40, ore: 10 },
-    // Steeper multiplier than all other buildings (1.8) to make late upgrades very costly.
-    upgradeCostMultiplier: 2.2,
-    production: { gold: 8, wood: 0, stone: 0, ore: 0 },
-    productionMultiplier: 1.5,
-    isFoundation: true,
-    upgradeRequiresMatchingLevel: true,
-  },
-  {
     id: 'watch_tower',
     name: 'Watch Tower',
     duration: 9000,
@@ -143,5 +124,24 @@ export const buildings: BuildingConfig[] = [
     upgradeCostMultiplier: 1.8,
     production: { gold: 0, wood: 0, stone: 3, ore: 0 },
     productionMultiplier: 1.5,
+  },
+  {
+    id: 'stone_castle',
+    name: 'Stone Castle',
+    duration: 12000,
+    maxCount: 1,
+    icon: '🏰',
+    enhancedIcon: '🏯',
+    ultraIcon: '⛩️',
+    // Free to place — it is the mandatory first building.
+    cost: { gold: 0, wood: 0, stone: 0, ore: 0 },
+    // Upgrade costs scale from this expensive base rather than the zero placement cost.
+    upgradeCostBase: { gold: 50, wood: 30, stone: 40, ore: 10 },
+    // Steeper multiplier than all other buildings (1.8) to make late upgrades very costly.
+    upgradeCostMultiplier: 2.2,
+    production: { gold: 8, wood: 0, stone: 0, ore: 0 },
+    productionMultiplier: 1.5,
+    isFoundation: true,
+    upgradeRequiresMatchingLevel: true,
   },
 ];
