@@ -54,17 +54,6 @@ export function ResourceBar({ resources, productionPerSecond }: ResourceBarProps
           )}
         </span>
       </div>
-      <span className={styles.separator}>{'|'}</span>
-      <div className={styles.resource}>
-        <span className={styles.resourceLabel}>{'Food'}</span>
-        <span className={styles.resourceValue}>
-          <ResourceIcon resource="food" size={14} />
-          {' '}{formatNumber(resources.food)}
-          {productionPerSecond.food > 0 && (
-            <span className={styles.perSecond}>{`(+${formatNumber(productionPerSecond.food)}/s)`}</span>
-          )}
-        </span>
-      </div>
     </div>
   );
 }

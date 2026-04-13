@@ -3,7 +3,6 @@ export interface Resources {
   wood: number;
   stone: number;
   ore: number;
-  food: number;
 }
 
 export interface BuildingTimer {

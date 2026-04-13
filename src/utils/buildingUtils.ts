@@ -2,12 +2,12 @@ import type { BuildingConfig } from '../config/buildings';
 import type { Resources } from '../types/game';
 
 /** Ordered list of resource keys, used for consistent display order. */
-export const RESOURCE_KEYS: Array<keyof Resources> = ['gold', 'wood', 'stone', 'ore', 'food'];
+export const RESOURCE_KEYS: Array<keyof Resources> = ['gold', 'wood', 'stone', 'ore'];
 
 
 export function getUpgradeCost(config: BuildingConfig, currentLevel: number): Resources {
   if (currentLevel === 0) {
-    return { gold: 0, wood: 0, stone: 0, ore: 0, food: 0 };
+    return { gold: 0, wood: 0, stone: 0, ore: 0 };
   }
   const base = config.upgradeCostBase ?? config.cost;
   const multiplier = Math.pow(config.upgradeCostMultiplier, currentLevel);
@@ -16,12 +16,11 @@ export function getUpgradeCost(config: BuildingConfig, currentLevel: number): Re
     wood: Math.ceil(base.wood * multiplier),
     stone: Math.ceil(base.stone * multiplier),
     ore: Math.ceil(base.ore * multiplier),
-    food: Math.ceil(base.food * multiplier),
   };
 }
 
 export function hasAnyCost(cost: Resources): boolean {
-  return cost.gold > 0 || cost.wood > 0 || cost.stone > 0 || cost.ore > 0 || cost.food > 0;
+  return cost.gold > 0 || cost.wood > 0 || cost.stone > 0 || cost.ore > 0;
 }
 
 /**
@@ -38,7 +37,6 @@ export function applyDiscount(cost: Resources, discount: number): Resources {
     wood: Math.floor(cost.wood * factor),
     stone: Math.floor(cost.stone * factor),
     ore: Math.floor(cost.ore * factor),
-    food: Math.floor(cost.food * factor),
   };
 }
 
@@ -61,6 +59,5 @@ export function formatCost(cost: Resources): string {
   if (cost.wood > 0) parts.push(`wood: ${formatNumber(cost.wood)}`);
   if (cost.stone > 0) parts.push(`stone: ${formatNumber(cost.stone)}`);
   if (cost.ore > 0) parts.push(`ore: ${formatNumber(cost.ore)}`);
-  if (cost.food > 0) parts.push(`food: ${formatNumber(cost.food)}`);
   return parts.join(', ');
 }

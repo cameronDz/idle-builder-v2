@@ -2,7 +2,7 @@ import { useState, useCallback, useEffect } from 'react';
 import type { Resources } from '../types/game';
 
 const STORAGE_KEY = 'idle-builder-resources';
-const STARTING_RESOURCES: Resources = { gold: 100, wood: 50, stone: 25, ore: 0, food: 20 };
+const STARTING_RESOURCES: Resources = { gold: 100, wood: 50, stone: 25, ore: 0 };
 
 function loadResources(): Resources {
   try {
@@ -49,8 +49,7 @@ export function useResources(): UseResourcesReturn {
         resources.gold >= cost.gold &&
         resources.wood >= cost.wood &&
         resources.stone >= cost.stone &&
-        resources.ore >= cost.ore &&
-        resources.food >= cost.food
+        resources.ore >= cost.ore
       );
     },
     [resources]
@@ -62,8 +61,7 @@ export function useResources(): UseResourcesReturn {
         resources.gold < cost.gold ||
         resources.wood < cost.wood ||
         resources.stone < cost.stone ||
-        resources.ore < cost.ore ||
-        resources.food < cost.food
+        resources.ore < cost.ore
       ) {
         return false;
       }
@@ -72,7 +70,6 @@ export function useResources(): UseResourcesReturn {
         wood: resources.wood - cost.wood,
         stone: resources.stone - cost.stone,
         ore: resources.ore - cost.ore,
-        food: resources.food - cost.food,
       };
       setResources(next);
       saveResources(next);
@@ -88,7 +85,6 @@ export function useResources(): UseResourcesReturn {
         wood: prev.wood + amount.wood,
         stone: prev.stone + amount.stone,
         ore: prev.ore + amount.ore,
-        food: prev.food + amount.food,
       };
       saveResources(next);
       return next;

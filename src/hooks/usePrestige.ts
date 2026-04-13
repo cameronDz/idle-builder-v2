@@ -9,7 +9,6 @@ const BASE_STARTING_RESOURCES: Resources = {
   wood: 50,
   stone: 25,
   ore: 0,
-  food: 20,
 };
 
 /**
@@ -65,7 +64,6 @@ export function computeStartingResources(timesPrestiged: number): Resources {
     wood: Math.floor(BASE_STARTING_RESOURCES.wood * factor),
     stone: Math.floor(BASE_STARTING_RESOURCES.stone * factor),
     ore: Math.floor(BASE_STARTING_RESOURCES.ore * factor),
-    food: Math.floor(BASE_STARTING_RESOURCES.food * factor),
   };
 }
 

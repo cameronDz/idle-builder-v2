@@ -197,7 +197,6 @@ export function BuildingDetail({
                     wood: tier.cost.wood * boostCostMultiplier,
                     stone: tier.cost.stone * boostCostMultiplier,
                     ore: tier.cost.ore * boostCostMultiplier,
-                    food: tier.cost.food * boostCostMultiplier,
                   };
                   const affordable = canAfford(scaledCost);
                   const costKeys = RESOURCE_KEYS.filter(k => scaledCost[k] > 0);
