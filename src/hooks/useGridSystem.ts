@@ -9,6 +9,9 @@ const STORAGE_KEY_GRID = 'idle-builder-grid';
 const STORAGE_KEY_INSTANCES = 'idle-builder-instances';
 const MAX_CONCURRENT_BUILDS = 3;
 
+// The grid position where the castle is placed on a fresh game.
+const CASTLE_START_POSITION: GridPosition = { x: 2, y: 0 };
+
 function createEmptyGrid(): GridCell[][] {
   return Array.from({ length: GRID_ROWS }, (_, y) =>
     Array.from({ length: GRID_COLS }, (_, x) => ({
@@ -59,6 +62,56 @@ function saveInstances(instances: BuildingInstance[]): void {
   }
 }
 
+/**
+ * Creates the initial game state for a fresh save: a single Stone Castle
+ * pre-placed at CASTLE_START_POSITION. Persists the result to localStorage
+ * so subsequent loads read the saved data.
+ */
+function createDefaultState(): { grid: GridCell[][], instances: BuildingInstance[] } {
+  const grid = createEmptyGrid();
+  const castleConfig = buildings.find(b => b.isFoundation);
+  if (!castleConfig) {
+    saveGrid(grid);
+    saveInstances([]);
+    return { grid, instances: [] };
+  }
+
+  const instanceId = generateInstanceId(castleConfig.id);
+  const position = CASTLE_START_POSITION;
+
+  // Write timer entry so useTimer resumes from this start time.
+  try {
+    localStorage.setItem(
+      `timer_${instanceId}`,
+      JSON.stringify({ startTime: Date.now(), isCompleted: false, level: 0, baseDuration: castleConfig.duration })
+    );
+  } catch {
+    // ignore
+  }
+
+  const instance: BuildingInstance = {
+    buildingTypeId: castleConfig.id,
+    id: instanceId,
+    level: 0,
+    position,
+    buildingTimer: {
+      hasStarted: true,
+      isComplete: false,
+      level: 0,
+      progress: 0,
+      timeRemaining: castleConfig.duration,
+    },
+  };
+
+  grid[position.y][position.x].buildingInstance = instance;
+  grid[position.y][position.x].isOccupied = true;
+
+  const instances = [instance];
+  saveGrid(grid);
+  saveInstances(instances);
+  return { grid, instances };
+}
+
 interface UseGridSystemReturn {
   grid: GridCell[][];
   buildingInstances: BuildingInstance[];
@@ -78,9 +131,20 @@ interface UseGridSystemReturn {
 }
 
 export function useGridSystem(): UseGridSystemReturn {
-  const [grid, setGrid] = useState<GridCell[][]>(() => loadGrid() ?? createEmptyGrid());
+  // Compute both slices of state in a single initializer to avoid redundant
+  // localStorage reads and to guarantee they are consistent with each other.
+  const [initialState] = useState(() => {
+    const saved = loadInstances();
+    if (saved === null) {
+      // Truly fresh game — seed the grid with the default castle placement.
+      return createDefaultState();
+    }
+    return { grid: loadGrid() ?? createEmptyGrid(), instances: saved };
+  });
+
+  const [grid, setGrid] = useState<GridCell[][]>(initialState.grid);
   const [buildingInstances, setBuildingInstances] = useState<BuildingInstance[]>(
-    () => loadInstances() ?? []
+    initialState.instances
   );
 
   // Keep grid in sync with building instances on mount

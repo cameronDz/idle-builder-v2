@@ -99,6 +99,15 @@ export function BuildingSelector({ onSelect, onCancel, getBuildingCount, canAffo
   useBodyScrollLock();
   const foundationIsBuilt = buildings.some(b => b.isFoundation && getBuildingCount(b.id) > 0);
 
+  // When no castle exists, promote it to the top of the list so the player
+  // can see immediately what they need to build first.
+  const orderedBuildings = foundationIsBuilt
+    ? buildings
+    : [
+        ...buildings.filter(b => b.isFoundation),
+        ...buildings.filter(b => !b.isFoundation),
+      ];
+
   return (
     <div className={styles.overlay} onClick={onCancel}>
       <div className={styles.modal} onClick={e => e.stopPropagation()}>
@@ -112,7 +121,7 @@ export function BuildingSelector({ onSelect, onCancel, getBuildingCount, canAffo
           </p>
         )}
         <div className={styles.list}>
-          {buildings.map(config => (
+          {orderedBuildings.map(config => (
             <BuildingCard
               key={config.id}
               config={config}
