@@ -32,6 +32,8 @@ interface BuildingDetailProps {
   onClose: () => void;
   /** Called when the player chooses to destroy this building. */
   onDestroy: () => void;
+  /** Whether this building is currently allowed to be destroyed. */
+  canDestroy: boolean;
   /** Reduce the active construction timer by the given number of milliseconds. */
   onReduceTime: (ms: number) => void;
 }
@@ -52,6 +54,7 @@ export function BuildingDetail({
   onAcknowledge,
   onClose,
   onDestroy,
+  canDestroy,
   onReduceTime,
 }: BuildingDetailProps) {
   useBodyScrollLock();
@@ -250,7 +253,7 @@ export function BuildingDetail({
               {`▶ Start Construction (${formatTime(timerState.timeRemaining)})`}
             </button>
           )}
-          {!config.isFoundation && (
+          {canDestroy && (
             <button
               className={styles.destroyButton}
               onClick={onDestroy}

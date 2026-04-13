@@ -129,6 +129,12 @@ function OccupiedCell({
     onDestroyBuilding(instance.id);
   };
 
+  // Foundation buildings may only be removed while still at level ≤ 1 and
+  // when no other buildings are present on the grid.
+  const canDestroy = config.isFoundation
+    ? timerState.level <= 1 && buildingInstances.length === 1
+    : true;
+
   const progressColor =
     timerState.progress >= 80
       ? '#22c55e'
@@ -214,6 +220,7 @@ function OccupiedCell({
           onAcknowledge={handleAcknowledge}
           onClose={() => setShowDetail(false)}
           onDestroy={handleDestroy}
+          canDestroy={canDestroy}
           onReduceTime={reduceTime}
         />
       )}
