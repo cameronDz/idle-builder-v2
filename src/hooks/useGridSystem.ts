@@ -3,14 +3,15 @@ import type { GridCell, GridPosition, BuildingInstance, BuildingTimer } from '..
 import { buildings } from '../config/buildings';
 import type { BuildingConfig } from '../config/buildings';
 
-const GRID_SIZE = 5;
+const GRID_COLS = 5;
+const GRID_ROWS = 4;
 const STORAGE_KEY_GRID = 'idle-builder-grid';
 const STORAGE_KEY_INSTANCES = 'idle-builder-instances';
 const MAX_CONCURRENT_BUILDS = 3;
 
 function createEmptyGrid(): GridCell[][] {
-  return Array.from({ length: GRID_SIZE }, (_, y) =>
-    Array.from({ length: GRID_SIZE }, (_, x) => ({
+  return Array.from({ length: GRID_ROWS }, (_, y) =>
+    Array.from({ length: GRID_COLS }, (_, x) => ({
       buildingInstance: null,
       isOccupied: false,
       position: { x, y },
@@ -113,7 +114,7 @@ export function useGridSystem(): UseGridSystemReturn {
 
   const isValidPosition = useCallback((position: GridPosition): boolean => {
     const { x, y } = position;
-    return x >= 0 && x < GRID_SIZE && y >= 0 && y < GRID_SIZE;
+    return x >= 0 && x < GRID_COLS && y >= 0 && y < GRID_ROWS;
   }, []);
 
   const getBuildingCount = useCallback(

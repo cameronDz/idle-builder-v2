@@ -22,7 +22,7 @@ function computeProduction(
   buildingInstances: BuildingInstance[],
   globalMultiplier: number
 ): Resources {
-  const total: Resources = { gold: 0, wood: 0, stone: 0, ore: 0, food: 0 };
+  const total: Resources = { gold: 0, wood: 0, stone: 0, ore: 0 };
   for (const instance of buildingInstances) {
     const level = instance.buildingTimer.level;
     const isComplete = instance.buildingTimer.isComplete;
@@ -39,7 +39,6 @@ function computeProduction(
     total.wood += config.production.wood * multiplier;
     total.stone += config.production.stone * multiplier;
     total.ore += config.production.ore * multiplier;
-    total.food += config.production.food * multiplier;
   }
   return total;
 }
@@ -84,7 +83,6 @@ export function useOfflineProgress(
               wood: Math.floor(perSecond.wood * offlineSeconds),
               stone: Math.floor(perSecond.stone * offlineSeconds),
               ore: Math.floor(perSecond.ore * offlineSeconds),
-              food: Math.floor(perSecond.food * offlineSeconds),
             };
             const hasAnyEarned = Object.values(earned).some(v => v > 0);
             if (hasAnyEarned) {
