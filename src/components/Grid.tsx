@@ -1,6 +1,7 @@
 import { useMemo, useState } from 'react';
 import { GridCell } from './GridCell';
 import { BuildingSelector } from './BuildingSelector';
+import { ConfirmDialog } from './ConfirmDialog';
 import type { GridPosition, BuildingTimer, BuildingInstance, GridCell as GridCellType, Resources } from '../types/game';
 import type { BuildingConfig } from '../config/buildings';
 import { applyDiscount } from '../utils/buildingUtils';
@@ -49,6 +50,7 @@ export function Grid({
   buildSpeedDiscount,
 }: GridProps) {
   const [selectorPosition, setSelectorPosition] = useState<GridPosition | null>(null);
+  const [confirmAction, setConfirmAction] = useState<'clearGrid' | 'resetResources' | null>(null);
 
   const totalCells = grid.length * (grid[0]?.length ?? 0);
   const placedCount = buildingInstances.length;
@@ -79,15 +81,11 @@ export function Grid({
   };
 
   const handleClearGrid = () => {
-    if (window.confirm('Clear the entire grid? This cannot be undone.')) {
-      clearGrid();
-    }
+    setConfirmAction('clearGrid');
   };
 
   const handleResetResources = () => {
-    if (window.confirm('Reset all resources to starting values?')) {
-      resetResources();
-    }
+    setConfirmAction('resetResources');
   };
 
   const buildLimitReached = isBuildingLimitReached();
@@ -149,6 +147,24 @@ export function Grid({
           canAfford={canAfford}
           resources={resources}
           costDiscount={costDiscount}
+        />
+      )}
+
+      {confirmAction === 'clearGrid' && (
+        <ConfirmDialog
+          message="Clear the entire grid? This cannot be undone."
+          confirmLabel="Clear Grid"
+          onConfirm={() => { setConfirmAction(null); clearGrid(); }}
+          onCancel={() => setConfirmAction(null)}
+        />
+      )}
+
+      {confirmAction === 'resetResources' && (
+        <ConfirmDialog
+          message="Reset all resources to starting values?"
+          confirmLabel="Reset"
+          onConfirm={() => { setConfirmAction(null); resetResources(); }}
+          onCancel={() => setConfirmAction(null)}
         />
       )}
     </section>

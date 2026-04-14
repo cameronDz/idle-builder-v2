@@ -10,6 +10,7 @@ import {
 } from '../hooks/usePrestige';
 import { RESOURCE_KEYS } from '../utils/buildingUtils';
 import { ResourceIcon } from './ResourceIcon';
+import { ConfirmDialog } from './ConfirmDialog';
 import styles from './PrestigePanel.module.css';
 
 interface PrestigePanelProps {
@@ -108,11 +109,11 @@ export function PrestigePanel({
   const nextBuildSpeed = computeBuildSpeedDiscount(nextPrestigeCount);
 
   const [isExpanded, setIsExpanded] = useState(false);
+  const [showPrestigeConfirm, setShowPrestigeConfirm] = useState(false);
 
   const handlePrestige = () => {
     if (!canPrestige) return;
-    if (!window.confirm('Prestige? Your grid will be cleared and resources reset. All 3 permanent bonuses will increase.')) return;
-    onPrestige();
+    setShowPrestigeConfirm(true);
   };
 
   return (
@@ -230,6 +231,15 @@ export function PrestigePanel({
         </p>
       </div>
         </>
+      )}
+
+      {showPrestigeConfirm && (
+        <ConfirmDialog
+          message="Prestige? Your grid will be cleared and resources reset. All permanent bonuses will increase."
+          confirmLabel="✨ Prestige"
+          onConfirm={() => { setShowPrestigeConfirm(false); onPrestige(); }}
+          onCancel={() => setShowPrestigeConfirm(false)}
+        />
       )}
     </div>
   );
