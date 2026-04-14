@@ -1,3 +1,4 @@
+import { useEffect } from 'react';
 import { useBodyScrollLock } from '../hooks/useBodyScrollLock';
 import styles from './ConfirmDialog.module.css';
 
@@ -18,6 +19,18 @@ export function ConfirmDialog({
 }: ConfirmDialogProps) {
   useBodyScrollLock();
 
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') onCancel();
+    };
+    document.addEventListener('keydown', handleKeyDown);
+    return () => document.removeEventListener('keydown', handleKeyDown);
+  }, [onCancel]);
+
+  const handleModalClick = (e: React.MouseEvent) => {
+    e.stopPropagation();
+  };
+
   return (
     <div className={styles.overlay} onClick={onCancel}>
       <div
@@ -25,7 +38,7 @@ export function ConfirmDialog({
         role="dialog"
         aria-modal="true"
         aria-labelledby="confirm-dialog-message"
-        onClick={e => e.stopPropagation()}
+        onClick={handleModalClick}
       >
         <p className={styles.message} id="confirm-dialog-message">{message}</p>
         <div className={styles.actions}>
