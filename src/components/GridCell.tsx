@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { useTimer } from '../hooks/useTimer';
 import { BuildingDetail } from './BuildingDetail';
+import { ConfirmDialog } from './ConfirmDialog';
 import { ResourceIcon } from './ResourceIcon';
 import type { BuildingInstance, BuildingTimer, Resources } from '../types/game';
 import type { BuildingConfig } from '../config/buildings';
@@ -44,6 +45,7 @@ function OccupiedCell({
     instance.id
   );
   const [showDetail, setShowDetail] = useState(false);
+  const [showDestroyConfirm, setShowDestroyConfirm] = useState(false);
 
   const syncAndUpdate = (updatedState: BuildingTimer) => {
     onBuildingUpdate(instance.id, updatedState);
@@ -125,8 +127,7 @@ function OccupiedCell({
   };
 
   const handleDestroy = () => {
-    if (!window.confirm(`Destroy ${config.name}? This cannot be undone.`)) return;
-    onDestroyBuilding(instance.id);
+    setShowDestroyConfirm(true);
   };
 
   // Foundation buildings may only be removed while still at level ≤ 1 and
@@ -202,6 +203,15 @@ function OccupiedCell({
           )}
         </>
       ) : null}
+
+      {showDestroyConfirm && (
+        <ConfirmDialog
+          message={`Destroy ${config.name}? This cannot be undone.`}
+          confirmLabel="Destroy"
+          onConfirm={() => { setShowDestroyConfirm(false); onDestroyBuilding(instance.id); }}
+          onCancel={() => setShowDestroyConfirm(false)}
+        />
+      )}
 
       {showDetail && (
         <BuildingDetail
