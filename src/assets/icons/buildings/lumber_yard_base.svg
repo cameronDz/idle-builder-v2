@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16">
+  <!-- Pine tree -->
+  <polygon points="8,1 14,11 2,11" fill="#16a34a" stroke="#15803d" stroke-width="0.5"/>
+  <polygon points="8,4 13,12 3,12" fill="#22c55e" stroke="#16a34a" stroke-width="0.5"/>
+  <rect x="6.5" y="12" width="3" height="3" fill="#92400e"/>
+</svg>

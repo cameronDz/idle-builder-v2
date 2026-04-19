@@ -1,0 +1,18 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16">
+  <!-- Construction crane -->
+  <!-- Vertical mast -->
+  <rect x="7" y="2" width="2" height="13" fill="#fbbf24" stroke="#d97706" stroke-width="0.4"/>
+  <!-- Horizontal arm -->
+  <rect x="2" y="2" width="12" height="1.5" fill="#fbbf24" stroke="#d97706" stroke-width="0.4"/>
+  <!-- Counter weight arm -->
+  <rect x="2" y="2" width="4" height="1" fill="#f59e0b"/>
+  <!-- Counter weight -->
+  <rect x="1" y="3.5" width="2" height="2" fill="#6b7280"/>
+  <!-- Support diagonal -->
+  <line x1="9" y1="3.5" x2="13" y2="6" stroke="#d97706" stroke-width="1"/>
+  <!-- Hook cable -->
+  <line x1="13" y1="3.5" x2="13" y2="10" stroke="#374151" stroke-width="0.75"/>
+  <rect x="12" y="10" width="2" height="1.5" fill="#374151"/>
+  <!-- Base / platform -->
+  <rect x="6" y="14" width="4" height="2" fill="#6b7280"/>
+</svg>

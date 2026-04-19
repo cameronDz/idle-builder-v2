@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16">
+  <!-- Mountain with snow cap -->
+  <polygon points="8,1 15,15 1,15" fill="#6b7280" stroke="#374151" stroke-width="0.5"/>
+  <polygon points="8,1 11,7 5,7" fill="#f1f5f9"/>
+  <!-- Second smaller peak -->
+  <polygon points="12,5 15.5,13 8.5,13" fill="#9ca3af" stroke="#6b7280" stroke-width="0.5"/>
+</svg>

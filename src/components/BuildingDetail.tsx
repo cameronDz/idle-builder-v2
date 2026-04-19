@@ -104,7 +104,7 @@ export function BuildingDetail({
       <div className={styles.modal} onClick={e => e.stopPropagation()}>
         <div className={styles.header}>
           <div className={styles.titleRow}>
-            <span className={styles.icon}>{currentIcon}</span>
+            <img src={currentIcon} alt={config.name} className={styles.icon} />
             <div>
               <h2 className={styles.title}>{config.name}</h2>
               <span className={styles.levelBadge}>{`Level ${level}`}</span>

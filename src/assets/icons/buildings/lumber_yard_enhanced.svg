@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16">
+  <!-- Deciduous tree -->
+  <circle cx="8" cy="6" r="5" fill="#16a34a" stroke="#15803d" stroke-width="0.5"/>
+  <circle cx="5.5" cy="8" r="3.5" fill="#22c55e"/>
+  <circle cx="10.5" cy="8" r="3.5" fill="#22c55e"/>
+  <circle cx="8" cy="5" r="4" fill="#4ade80"/>
+  <rect x="7" y="11" width="2" height="4" fill="#92400e"/>
+</svg>

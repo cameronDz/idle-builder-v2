@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16">
+  <!-- Simple wooden house -->
+  <!-- Roof -->
+  <polygon points="1,7 15,7 8,2" fill="#b45309" stroke="#92400e" stroke-width="0.5"/>
+  <!-- Walls -->
+  <rect x="2" y="7" width="12" height="8" fill="#fef3c7" stroke="#d97706" stroke-width="0.5"/>
+  <!-- Door -->
+  <rect x="6" y="10" width="4" height="5" fill="#92400e"/>
+  <!-- Window -->
+  <rect x="3" y="8" width="3" height="3" fill="#93c5fd" stroke="#3b82f6" stroke-width="0.4"/>
+  <line x1="4.5" y1="8" x2="4.5" y2="11" stroke="#3b82f6" stroke-width="0.4"/>
+  <line x1="3" y1="9.5" x2="6" y2="9.5" stroke="#3b82f6" stroke-width="0.4"/>
+  <rect x="10" y="8" width="3" height="3" fill="#93c5fd" stroke="#3b82f6" stroke-width="0.4"/>
+  <line x1="11.5" y1="8" x2="11.5" y2="11" stroke="#3b82f6" stroke-width="0.4"/>
+  <line x1="10" y1="9.5" x2="13" y2="9.5" stroke="#3b82f6" stroke-width="0.4"/>
+</svg>

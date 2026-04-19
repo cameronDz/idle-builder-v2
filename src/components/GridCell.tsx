@@ -163,7 +163,9 @@ function OccupiedCell({
         onClick={() => setShowDetail(true)}
         title={`${config.name} — click for details`}
       >
-        <span className={styles.buildingIcon}>{currentIcon}</span>
+        <span className={styles.buildingIcon}>
+          <img src={currentIcon} alt={config.name} width="28" height="28" />
+        </span>
       </button>
       <span className={styles.buildingName}>{config.name}</span>
       <span className={styles.levelLabel}>{`Lv ${timerState.level}`}</span>

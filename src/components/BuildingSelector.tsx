@@ -61,7 +61,7 @@ function BuildingCard({
               : `Place ${config.name}`
       }
     >
-      <span className={styles.icon}>{config.icon}</span>
+      <img src={config.icon} alt={config.name} className={styles.icon} />
       <div className={styles.info}>
         <span className={styles.name}>{config.name}</span>
         <span className={styles.duration}>{formatTime(config.duration)}</span>
