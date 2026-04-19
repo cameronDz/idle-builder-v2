@@ -1,0 +1,21 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16">
+  <!-- Stone Castle -->
+  <!-- Base wall -->
+  <rect x="1" y="8" width="14" height="7" fill="#9ca3af" stroke="#6b7280" stroke-width="0.5"/>
+  <!-- Central tower -->
+  <rect x="5" y="4" width="6" height="11" fill="#6b7280" stroke="#4b5563" stroke-width="0.5"/>
+  <!-- Battlements - wall top -->
+  <rect x="1" y="7" width="2" height="2" fill="#6b7280"/>
+  <rect x="4.5" y="7" width="2" height="2" fill="#6b7280"/>
+  <rect x="9.5" y="7" width="2" height="2" fill="#6b7280"/>
+  <rect x="13" y="7" width="2" height="2" fill="#6b7280"/>
+  <!-- Battlements - tower top -->
+  <rect x="5" y="2.5" width="1.5" height="2" fill="#4b5563"/>
+  <rect x="7.5" y="2.5" width="1.5" height="2" fill="#4b5563"/>
+  <rect x="10" y="2.5" width="1.5" height="2" fill="#4b5563"/>
+  <!-- Gate arch -->
+  <rect x="6.5" y="11" width="3" height="4" fill="#1f2937"/>
+  <path d="M6.5,11 Q8,9.5 9.5,11" fill="#1f2937"/>
+  <!-- Window -->
+  <rect x="7" y="6" width="2" height="2" fill="#93c5fd"/>
+</svg>

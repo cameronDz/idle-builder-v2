@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16">
+  <!-- Wrench -->
+  <!-- Handle -->
+  <rect x="6.5" y="7" width="2.5" height="8" rx="1" fill="#6b7280" stroke="#374151" stroke-width="0.5" transform="rotate(-40 7.75 11)"/>
+  <!-- Head / open end -->
+  <path d="M10,1 C12.5,1 14,2.5 14,4.5 C14,5.5 13.5,6.5 12.5,7 L11,5.5 C11.5,5.2 12,4.8 12,4.5 C12,3.5 11,2.5 10,2.5 C9,2.5 8,3.5 8,4.5 C8,4.8 8.3,5.3 8.8,5.6 L7.3,7.1 C6.5,6.5 6,5.5 6,4.5 C6,2.5 7.8,1 10,1 Z" fill="#6b7280" stroke="#374151" stroke-width="0.4"/>
+  <!-- Bolt in jaw -->
+  <circle cx="10" cy="4.5" r="1.5" fill="none" stroke="#d97706" stroke-width="0.75"/>
+</svg>

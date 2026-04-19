@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16">
+  <!-- Row of 3 small houses -->
+  <!-- Left house -->
+  <polygon points="1,8 6,8 3.5,5" fill="#b45309" stroke="#92400e" stroke-width="0.4"/>
+  <rect x="1" y="8" width="5" height="7" fill="#fef3c7" stroke="#d97706" stroke-width="0.4"/>
+  <rect x="2.5" y="10" width="2" height="5" fill="#92400e"/>
+  <!-- Middle house -->
+  <polygon points="5.5,7 10.5,7 8,4" fill="#92400e" stroke="#78350f" stroke-width="0.4"/>
+  <rect x="5.5" y="7" width="5" height="8" fill="#fef9c3" stroke="#ca8a04" stroke-width="0.4"/>
+  <rect x="7" y="10" width="2" height="5" fill="#78350f"/>
+  <!-- Right house -->
+  <polygon points="10,8 15,8 12.5,5" fill="#b45309" stroke="#92400e" stroke-width="0.4"/>
+  <rect x="10" y="8" width="5" height="7" fill="#fef3c7" stroke="#d97706" stroke-width="0.4"/>
+  <rect x="11.5" y="10" width="2" height="5" fill="#92400e"/>
+</svg>

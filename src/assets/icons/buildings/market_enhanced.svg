@@ -1,0 +1,17 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16">
+  <!-- Department store - taller multi-story building -->
+  <rect x="2" y="3" width="12" height="12" fill="#e5e7eb" stroke="#6b7280" stroke-width="0.5"/>
+  <!-- Floors separator -->
+  <line x1="2" y1="8" x2="14" y2="8" stroke="#9ca3af" stroke-width="0.5"/>
+  <!-- Windows top floor -->
+  <rect x="3" y="4" width="2" height="2.5" fill="#93c5fd" stroke="#3b82f6" stroke-width="0.4"/>
+  <rect x="7" y="4" width="2" height="2.5" fill="#93c5fd" stroke="#3b82f6" stroke-width="0.4"/>
+  <rect x="11" y="4" width="2" height="2.5" fill="#93c5fd" stroke="#3b82f6" stroke-width="0.4"/>
+  <!-- Windows bottom floor -->
+  <rect x="3" y="9" width="2" height="2.5" fill="#93c5fd" stroke="#3b82f6" stroke-width="0.4"/>
+  <rect x="11" y="9" width="2" height="2.5" fill="#93c5fd" stroke="#3b82f6" stroke-width="0.4"/>
+  <!-- Door -->
+  <rect x="6.5" y="10" width="3" height="5" fill="#92400e"/>
+  <!-- Sign band -->
+  <rect x="2" y="3" width="12" height="1.5" fill="#facc15"/>
+</svg>

@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16">
+  <!-- Rock / boulder -->
+  <path d="M3,13 C1,13 1,9 2,7 L5,3 L10,2 L14,6 L15,10 L13,13 Z" fill="#9ca3af" stroke="#6b7280" stroke-width="0.5"/>
+  <path d="M4.5,5.5 L7,4 L10.5,5" stroke="#d1d5db" stroke-width="0.75" fill="none" stroke-linecap="round"/>
+  <path d="M3,9 L5,11" stroke="#d1d5db" stroke-width="0.75" fill="none" stroke-linecap="round"/>
+</svg>

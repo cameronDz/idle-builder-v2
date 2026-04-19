@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16">
+  <!-- Hex bolt / nut -->
+  <!-- Hex shape (outer) -->
+  <polygon points="8,1 13.2,4 13.2,10 8,13 2.8,10 2.8,4" fill="#6b7280" stroke="#374151" stroke-width="0.75"/>
+  <!-- Hex hole (inner) -->
+  <polygon points="8,4 10.5,5.5 10.5,8.5 8,10 5.5,8.5 5.5,5.5" fill="#374151"/>
+  <!-- Bolt shaft below -->
+  <rect x="7" y="13" width="2" height="3" fill="#6b7280" stroke="#374151" stroke-width="0.4"/>
+  <!-- Thread lines on shaft -->
+  <line x1="7" y1="14" x2="9" y2="14" stroke="#9ca3af" stroke-width="0.5"/>
+  <line x1="7" y1="15" x2="9" y2="15" stroke="#9ca3af" stroke-width="0.5"/>
+</svg>
